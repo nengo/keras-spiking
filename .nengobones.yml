@@ -1,0 +1,114 @@
+project_name: Keras Spiking
+pkg_name: keras_spiking
+repo_name: nengo/keras-spiking
+
+description: Spiking neuron integration for Keras
+copyright_start: 2020
+
+license_rst: {}
+
+contributing_rst: {}
+
+contributors_rst: {}
+
+manifest_in: {}
+
+setup_cfg:
+  pytest:
+    xfail_strict: True
+  pylint:
+    known_third_party:
+      - tensorflow
+
+docs_conf_py:
+  extensions:
+    - nengo_sphinx_theme.ext.autoautosummary
+  analytics_id: UA-41658423-2
+  doctest_setup:
+    - import numpy as np
+    - import tensorflow as tf
+
+ci_scripts:
+  - template: static
+  - template: test
+    coverage: true
+    pip_install:
+      - $TF_VERSION
+      - $NUMPY_VERSION
+  - template: docs
+    pip_install:
+      - $TF_VERSION
+      - $NUMPY_VERSION
+  - template: examples
+    pip_install:
+      - $TF_VERSION
+      - $NUMPY_VERSION
+  - template: deploy
+
+travis_yml:
+  python: 3.8
+  global_vars:
+    NUMPY_VERSION: numpy>=1.16.0
+    TF_VERSION: tensorflow-cpu
+  jobs:
+    - script: static
+    - script: test
+    - script: test
+      env:
+        TF_VERSION: tensorflow-cpu==2.1.0
+        NUMPY_VERSION: numpy==1.16.0
+      python: 3.6
+#    - script: docs
+#    - script: examples
+  pypi_user: drasmuss
+  deploy_dists:
+    - sdist
+    - bdist_wheel
+  slack_notifications: "Dbw76uL1u8b0J+wq/WbiIPLXvj8cuPKyGRVwfd8d8TCc5DQPegSbbw285945\
+    hTJuWUX4RZb7H/WjD5HWn5GcupGHbbvv9JW5hZJRdzdm9jaflkikHLsAD/aXZnnO5OoqOtSAqfFTkv0I\
+    O9Ag0OFxfIpI0oNfoIqtoo3WRS9kzk5Lp/E8QGs7Iv5fK+oulk6BG3tzUAMXmjIjFsMcg0W0kdSaRDSy\
+    SqTZtVnY48ksGpxiOostzOdchtcuF8BTTZwZeJckrCYYxYUOzPG9IBgFfMcCGsLy7k42yBYjedKVgCw6\
+    EtCbxygv8tUqElUda6hRN5J96Q8VXXb0YGdGoWm2tv6qWsyMew3MGquorr4GfUhKPdBjBMtPsGlYI8z4\
+    VR1cM/wiAT9dXdQ00q3+iskMGLUc5JXrNj97D2W3ioOjZEE+SsHb66ldgb85s3QukF+ZD01YY6+cHjCR\
+    oenN5jk9Lx5Lq6IAMnYhXty3XyutnJ0rFbIzWLfFouKyLK6kTlIVM1CjhU2rTmT4FOAqcmUHMDVwr+L2\
+    3NRAgR/ohP8KqHJBRvYNZQuf0xnQBY2VRDB7SbVahM/83nX/XoQ4b3WqT0MNYw0uDiNKbfwS6XW8vrir\
+    kH54Yz3bGU73VFrgU/lqmtIP2ob7tzPAgILs60vL99z5/x/T+HJFC4OZmEoRzq8="
+
+codecov_yml:
+  abs_target: 100%
+
+setup_py:
+  include_package_data: True
+  install_req:
+    - numpy>=1.16.0
+    - tensorflow>=2.1.0
+  docs_req:
+    - jupyter>=1.0.0
+    - matplotlib>=2.0.0
+    - nbsphinx>=0.3.5
+    - nengo-sphinx-theme>=1.2.1
+    - numpydoc>=0.6.0
+    - sphinx>=3.0.0
+  tests_req:
+    - pylint>=1.9.2
+    - pytest>=3.6.0
+    - pytest-allclose>=1.0.0
+    - pytest-cov>=2.6.0
+    - pytest-rng>=1.0.0
+    - pytest-xdist>=1.16.0
+  classifiers:
+      - "Development Status :: 3 - Alpha"
+      - "Intended Audience :: Science/Research"
+      - "License :: Free for non-commercial use"
+      - "Operating System :: Microsoft :: Windows"
+      - "Operating System :: POSIX :: Linux"
+      - "Programming Language :: Python"
+      - "Programming Language :: Python :: 3.6"
+      - "Programming Language :: Python :: 3.7"
+      - "Programming Language :: Python :: 3.8"
+      - "Topic :: Scientific/Engineering"
+      - "Topic :: Scientific/Engineering :: Artificial Intelligence"
+
+pyproject_toml: {}
+
+pre_commit_config_yaml: {}
