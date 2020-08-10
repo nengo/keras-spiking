@@ -114,13 +114,16 @@ def test_spiking_swap_functional(allclose):
     )
 
 
-def test_stateful(allclose, rng, seed):
-    layer = layers.SpikingActivation(
-        tf.nn.relu, stateful=False, return_state=True, return_sequences=True, seed=seed
-    )
-    layer_stateful = layers.SpikingActivation(
-        tf.nn.relu, stateful=True, return_state=True, return_sequences=True, seed=seed
-    )
+@pytest.mark.parametrize(
+    "Layer",
+    (
+        lambda **kwargs: layers.SpikingActivation(tf.nn.relu, seed=0, **kwargs),
+        lambda **kwargs: layers.Lowpass(0.01, **kwargs),
+    ),
+)
+def test_stateful(Layer, allclose, rng):
+    layer = Layer(stateful=False, return_state=True, return_sequences=True)
+    layer_stateful = Layer(stateful=True, return_state=True, return_sequences=True)
 
     x = rng.uniform(size=(32, 100, 32))
     # note: need to set initial state to zero due to bug in TF, see
@@ -143,21 +146,31 @@ def test_stateful(allclose, rng, seed):
     assert allclose(layer_stateful(x[:, -10:])[1], states[-1])
 
 
-def test_unroll(allclose, seed, rng):
-    layer = layers.SpikingActivation(tf.nn.relu, return_sequences=True, seed=seed)
-    layer_unroll = layers.SpikingActivation(
-        tf.nn.relu, return_sequences=True, seed=seed, unroll=True
-    )
+@pytest.mark.parametrize(
+    "Layer",
+    (
+        lambda **kwargs: layers.SpikingActivation(tf.nn.relu, seed=0, **kwargs),
+        lambda **kwargs: layers.Lowpass(0.01, **kwargs),
+    ),
+)
+def test_unroll(Layer, allclose, rng):
+    layer = Layer(return_sequences=True)
+    layer_unroll = Layer(return_sequences=True, unroll=True)
 
     x = rng.uniform(size=(32, 100, 32))
     assert allclose(layer(x), layer_unroll(x))
 
 
-def test_time_major(allclose, rng, seed):
-    layer = layers.SpikingActivation(tf.nn.relu, return_sequences=True, seed=seed)
-    layer_time_major = layers.SpikingActivation(
-        tf.nn.relu, return_sequences=True, seed=seed, time_major=True
-    )
+@pytest.mark.parametrize(
+    "Layer",
+    (
+        lambda **kwargs: layers.SpikingActivation(tf.nn.relu, seed=0, **kwargs),
+        lambda **kwargs: layers.Lowpass(0.01, **kwargs),
+    ),
+)
+def test_time_major(Layer, allclose, rng):
+    layer = Layer(return_sequences=True)
+    layer_time_major = Layer(return_sequences=True, time_major=True)
 
     x = rng.uniform(size=(32, 100, 32))
     assert allclose(
@@ -170,10 +183,17 @@ def test_save_load(use_cell, allclose, tmpdir, seed):
     inp = tf.keras.Input((None, 32))
     if use_cell:
         out = tf.keras.layers.RNN(
-            layers.SpikingActivationCell(units=32, activation=tf.nn.relu, seed=seed)
+            layers.SpikingActivationCell(units=32, activation=tf.nn.relu, seed=seed),
+            return_sequences=True,
         )(inp)
+        out = tf.keras.layers.RNN(
+            layers.LowpassCell(tau=0.01, units=32), return_sequences=True
+        )(out)
     else:
-        out = layers.SpikingActivation(tf.nn.relu, seed=seed)(inp)
+        out = layers.SpikingActivation(tf.nn.relu, seed=seed, return_sequences=True)(
+            inp
+        )
+        out = layers.Lowpass(tau=0.01, return_sequences=True)(out)
 
     model = tf.keras.Model(inp, out)
 
@@ -181,11 +201,88 @@ def test_save_load(use_cell, allclose, tmpdir, seed):
 
     model_load = tf.keras.models.load_model(
         str(tmpdir),
-        custom_objects={"SpikingActivationCell": layers.SpikingActivationCell}
+        custom_objects={
+            "SpikingActivationCell": layers.SpikingActivationCell,
+            "LowpassCell": layers.LowpassCell,
+        }
         if use_cell
-        else {"SpikingActivation": layers.SpikingActivation},
+        else {"SpikingActivation": layers.SpikingActivation, "Lowpass": layers.Lowpass},
     )
 
     assert allclose(
         model.predict(np.ones((32, 10, 32))), model_load.predict(np.ones((32, 10, 32)))
     )
+
+
+@pytest.mark.parametrize("dt", (0.001, 1))
+def test_lowpass_tau(dt, allclose, rng):
+    nengo = pytest.importorskip("nengo")
+
+    # verify that the keras-spiking lowpass implementation matches the nengo lowpass
+    # implementation
+    layer = layers.Lowpass(tau=0.1, dt=dt)
+
+    x = rng.randn(10, 100, 32)
+    y = layer(x)
+
+    y_nengo = nengo.Lowpass(0.1).filt(x, axis=1, dt=dt)
+
+    assert allclose(y, y_nengo[:, -1])
+
+
+def test_lowpass_apply_during_training(allclose, rng):
+    x = rng.randn(10, 100, 32)
+
+    layer = layers.Lowpass(tau=0.1, apply_during_training=False, return_sequences=True)
+    assert allclose(layer(x, training=True), x)
+    assert not allclose(layer(x, training=False), x)
+
+    layer = layers.Lowpass(tau=0.1, apply_during_training=True, return_sequences=True)
+    assert not allclose(layer(x, training=True), x)
+
+
+def test_lowpass_trainable(allclose):
+    inp = tf.keras.Input((None, 1))
+    layer_trained = layers.Lowpass(0.01, apply_during_training=True)
+    layer_skip = layers.Lowpass(0.01, apply_during_training=False)
+    layer_untrained = layers.Lowpass(0.01, apply_during_training=True, trainable=False)
+
+    model = tf.keras.Model(
+        inp, [layer_trained(inp), layer_skip(inp), layer_untrained(inp)]
+    )
+
+    model.compile(loss="mse", optimizer=tf.optimizers.SGD(0.5))
+    model.fit(np.zeros((1, 1, 1)), [np.ones((1, 1, 1))] * 3, epochs=10, verbose=0)
+
+    # trainable layer should learn to output 1
+    ys = model.predict(np.zeros((1, 1, 1)))
+    assert allclose(ys[0], 1)
+    assert not allclose(ys[1], 1)
+    assert not allclose(ys[2], 1)
+
+    # for trainable layer, smoothing * initial_level should go to 1
+    assert allclose(
+        tf.nn.sigmoid(layer_trained.layer.cell.smoothing)
+        * layer_trained.layer.cell.initial_level,
+        1,
+    )
+
+    # other layers should stay at initial value
+    assert allclose(layer_skip.layer.cell.initial_level.numpy(), 0)
+    assert allclose(layer_untrained.layer.cell.initial_level.numpy(), 0)
+    assert allclose(
+        layer_skip.layer.cell.smoothing.numpy(), layer_skip.layer.cell.smoothing_init
+    )
+    assert allclose(
+        layer_untrained.layer.cell.smoothing.numpy(),
+        layer_untrained.layer.cell.smoothing_init,
+    )
+
+
+def test_lowpass_validation():
+    with pytest.raises(ValueError, match="tau must be a positive number"):
+        layers.LowpassCell(tau=0, units=1)
+
+    with pytest.raises(ValueError, match="tau must be a positive number"):
+        # note: error won't be raised until layer is applied (when LowpassCell is built)
+        layers.Lowpass(tau=0)(np.zeros((1, 1, 1)))
