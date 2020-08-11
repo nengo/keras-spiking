@@ -30,6 +30,8 @@ docs_conf_py:
 
 ci_scripts:
   - template: static
+    codespell_ignore_words:
+      - hist
   - template: test
     coverage: true
     pip_install:
@@ -59,7 +61,7 @@ travis_yml:
         NUMPY_VERSION: numpy==1.16.0
       python: 3.6
 #    - script: docs
-#    - script: examples
+    - script: examples
   pypi_user: drasmuss
   deploy_dists:
     - sdist
