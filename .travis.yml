@@ -39,6 +39,10 @@ jobs:
       NUMPY_VERSION="numpy==1.16.0"
       SCRIPT="test"
     python: 3.6
+  -
+    env:
+      SCRIPT="examples"
+    services: ['xvfb']
   - stage: deploy
     if: branch =~ ^release-candidate-* OR tag =~ ^v[0-9]*
     env: SCRIPT="deploy"
