@@ -30,6 +30,7 @@ jobs:
   -
     env:
       SCRIPT="static"
+    stage: basic
   -
     env:
       SCRIPT="test"
@@ -41,8 +42,15 @@ jobs:
     python: 3.6
   -
     env:
-      SCRIPT="examples"
-    services: ['xvfb']
+      TF_VERSION="tensorflow-gpu"
+      GPU_NUM="0"
+      SCRIPT="remote-docs"
+    stage: advanced
+  -
+    env:
+      TF_VERSION="tensorflow-gpu"
+      GPU_NUM="0"
+      SCRIPT="remote-examples"
   - stage: deploy
     if: branch =~ ^release-candidate-* OR tag =~ ^v[0-9]*
     env: SCRIPT="deploy"
