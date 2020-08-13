@@ -50,6 +50,16 @@ numpydoc_show_class_members = False
 # -- nbsphinx
 nbsphinx_timeout = -1
 
+# -- nengo_sphinx_theme.ext.autoautosummary
+autoautosummary_change_modules = {
+    "keras_spiking": [
+        "keras_spiking.layers.SpikingActivationCell",
+        "keras_spiking.layers.SpikingActivation",
+        "keras_spiking.layers.LowpassCell",
+        "keras_spiking.layers.Lowpass",
+    ],
+}
+
 # -- sphinx
 nitpicky = True
 exclude_patterns = [

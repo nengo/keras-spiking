@@ -27,6 +27,12 @@ docs_conf_py:
   doctest_setup:
     - import numpy as np
     - import tensorflow as tf
+  autoautosummary_change_modules:
+    keras_spiking:
+      - keras_spiking.layers.SpikingActivationCell
+      - keras_spiking.layers.SpikingActivation
+      - keras_spiking.layers.LowpassCell
+      - keras_spiking.layers.Lowpass
 
 ci_scripts:
   - template: static
@@ -45,6 +51,16 @@ ci_scripts:
     pip_install:
       - $TF_VERSION
       - $NUMPY_VERSION
+  - template: remote-script
+    remote_script: docs
+    output_name: remote-docs
+    host: azure-docs
+    travis_var_key: 2895d60e3414
+  - template: remote-script
+    remote_script: examples
+    output_name: remote-examples
+    host: azure-examples
+    travis_var_key: 2895d60e3414
   - template: deploy
 
 travis_yml:
@@ -53,15 +69,23 @@ travis_yml:
     NUMPY_VERSION: numpy>=1.16.0
     TF_VERSION: tensorflow-cpu
   jobs:
-    - script: static
+    - stage: basic
+      script: static
     - script: test
     - script: test
       env:
         TF_VERSION: tensorflow-cpu==2.1.0
         NUMPY_VERSION: numpy==1.16.0
       python: 3.6
-#    - script: docs
-    - script: examples
+    - stage: advanced
+      script: remote-docs
+      env:
+        TF_VERSION: tensorflow-gpu
+        GPU_NUM: 0
+    - script: remote-examples
+      env:
+        TF_VERSION: tensorflow-gpu
+        GPU_NUM: 0
   pypi_user: drasmuss
   deploy_dists:
     - sdist
