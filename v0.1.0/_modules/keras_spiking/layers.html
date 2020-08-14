@@ -1,0 +1,923 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>keras_spiking.layers &#8212; Keras Spiking 0.1.0 docs</title>
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+<link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,400i,600|Rajdhani:700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+<link rel="stylesheet" href="https://www.nengo.ai/css/bootstrap.css" type="text/css">
+<style>
+  body .title-bar,
+  body .documentation-source h1:after {
+    background-color: #a8acaf;
+  }
+</style>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-41658423-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-41658423-2');
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/scrollreveal"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stickyfill/2.1.0/stickyfill.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+<!-- From basic/layout.html -->
+<script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  
+  
+<script src="../../_static/underscore.js"></script>
+  
+  
+<script src="../../_static/doctools.js"></script>
+  
+  
+<script src="../../_static/language_data.js"></script>
+  
+  
+<script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+  
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  </head><body class="bg-dark">
+
+<header class="fixed-top header-top shadow-sm">
+  <nav class="navbar navbar-expand-md navbar-light bg-white">
+    <a class="navbar-brand" href="https://www.nengo.ai/">
+      <img
+        src="https://www.nengo.ai/design/_images/general-full-light.svg"
+        alt="Nengo"
+        class="logo"
+      />
+    </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbar-collapse"
+      aria-controls="navbar-collapse"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar-collapse">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="https://www.nengo.ai/">What is Nengo?</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://www.nengo.ai/examples/">Examples</a>
+        </li>
+        <li class="nav-item dropdown active">
+          <a
+            class="nav-link dropdown-toggle"
+            id="navbar-dropdown-docs"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            href="#"
+            >Documentation</a
+          >
+          <div
+            class="dropdown-menu shadow-lg border-0"
+            aria-labelledby="navbar-dropdown-docs"
+          >
+            
+            <a class="dropdown-item" href="https://www.nengo.ai/nengo/">Nengo Core</a>
+            <a class="dropdown-item" href="https://github.com/nengo/nengo-gui/">Nengo GUI</a>
+            <a class="dropdown-item" href="https://www.nengo.ai/nengo-dl/">Nengo DL</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="https://www.nengo.ai/nengo-spa/">Nengo SPA</a>
+            <a class="dropdown-item" href="https://www.nengo.ai/nengo-extras/">Nengo Extras</a>
+            <a class="dropdown-item" href="https://arvoelke.github.io/nengolib-docs/">Nengolib</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="https://www.nengo.ai/nengo-fpga/">Nengo FPGA</a>
+            <a class="dropdown-item" href="https://www.nengo.ai/nengo-loihi/">Nengo Loihi</a>
+            <a class="dropdown-item" href="https://github.com/nengo/nengo-ocl">Nengo OpenCL</a>
+            <a class="dropdown-item" href="https://github.com/project-rig/nengo_spinnaker">Nengo SpiNNaker</a>
+            <a class="dropdown-item" href="https://github.com/nengo/nengo-mpi">Nengo MPI</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="https://www.nengo.ai/documentation/"
+              >All documentation</a
+            >
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            id="navbar-dropdown-community"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            href="#"
+            >Community</a
+          >
+          <div
+            class="dropdown-menu shadow-lg border-0"
+            aria-labelledby="navbar-dropdown-community"
+          >
+            <a class="dropdown-item" href="https://forum.nengo.ai">Forum</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="https://www.nengo.ai/people/"
+              >People</a
+            >
+            <a class="dropdown-item" href="https://www.nengo.ai/summer-school/"
+              >Summer school</a
+            >
+            <a class="dropdown-item" href="https://www.nengo.ai/contributing/"
+              >Contributing</a
+            >
+            <a class="dropdown-item" href="https://www.nengo.ai/publications/"
+              >Publications</a
+            >
+            <a class="dropdown-item" href="https://www.nengo.ai/videos/"
+              >Videos</a
+            >
+            <a class="dropdown-item" href="https://www.nengo.ai/conduct/"
+              >Code of conduct</a
+            >
+            <a class="dropdown-item" href="https://www.nengo.ai/caa/">CAA</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link btn btn-success btn-sm text-white"
+            href="https://www.nengo.ai/getting-started/"
+            >Getting started</a
+          >
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>
+<div class="main-content gradient-top">
+  <div class="container-fluid">
+    <div class="row"><a class="toggle-sidenav d-block d-md-none" href="#"
+  ><i class="icon-close fa fa-fw fa-arrow-left"></i
+  ><i class="icon-open fa fa-fw fa-arrow-right"></i
+></a>
+<div role="complementary" class="sidenav col-4 col-xl-3 p-0 border-right">
+  <h3 class="pt-5 px-5">
+    <a href="../../index.html">
+      <img
+        class="img-fluid documentation-image"
+        src="https://www.nengo.ai/design/_images/general-full-light.svg"
+        alt="Keras Spiking"
+      />
+    </a>
+  </h3>
+<form class="px-5 py-3 my-0 border-bottom" action="../../search.html" method="get">
+  <div class="form-group form-group-single">
+    <input type="text" name="q" class="form-control" placeholder="Search" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+    <button type="submit" class="btn btn-link">
+      <img src="https://www.nengo.ai/img/icon-search.svg" alt="Go" />
+    </button>
+  </div>
+</form><div class="p-5 toctree">
+  
+    <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project.html">Project information</a></li>
+</ul>
+
+  
+  </div>
+  
+  <form class="p-5 my-0 border-top">
+    <div class="form-group">
+      <label class="text-gray">Version:</label>
+      <select class="custom-select" onchange="switchVersion(this);">
+        
+        
+        <option value="../../../_modules/keras_spiking/layers.html">latest</option>
+        
+        
+          
+        <option selected>v0.1.0</option>
+          
+        
+      </select>
+    </div>
+  </form>
+  
+</div>
+      
+
+      <div class="col-12 col-md-8 col-xl-9">
+        <div class="container">
+          <div class="row">
+            <div class="col-10 offset-1 pb-5 documentation-source" role="main">
+              
+  <h1>Source code for keras_spiking.layers</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Components for building spiking models in Keras.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">from</span> <span class="nn">tensorflow.python.framework</span> <span class="kn">import</span> <span class="n">smart_cond</span>
+
+
+<div class="viewcode-block" id="SpikingActivationCell"><a class="viewcode-back" href="../../reference.html#keras_spiking.SpikingActivationCell">[docs]</a><span class="k">class</span> <span class="nc">SpikingActivationCell</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    RNN cell for converting an arbitrary activation function to a spiking equivalent.</span>
+
+<span class="sd">    Neurons will spike at a rate proportional to the output of the base activation</span>
+<span class="sd">    function. For example, if the activation function is outputting a value of 10, then</span>
+<span class="sd">    the wrapped SpikingActivationCell will output spikes at a rate of 10Hz (i.e., 10</span>
+<span class="sd">    spikes per 1 simulated second, where 1 simulated second is equivalent to ``1/dt``</span>
+<span class="sd">    time steps). Each spike will have height ``1/dt`` (so that the integral of the</span>
+<span class="sd">    spiking output will be the same as the integral of the base activation output).</span>
+<span class="sd">    Note that if the base activation is outputting a negative value then the spikes</span>
+<span class="sd">    will have height ``-1/dt``. Multiple spikes per timestep are also possible, in</span>
+<span class="sd">    which case the output will be ``n/dt`` (where ``n`` is the number of spikes).</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+
+<span class="sd">    This cell needs to be wrapped in a ``tf.keras.layers.RNN``, like</span>
+
+<span class="sd">    .. testcode::</span>
+
+<span class="sd">        my_layer = tf.keras.layers.RNN(</span>
+<span class="sd">            keras_spiking.SpikingActivationCell(units=10, activation=tf.nn.relu)</span>
+<span class="sd">        )</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    units : int</span>
+<span class="sd">        Dimensionality of layer.</span>
+<span class="sd">    activation : callable</span>
+<span class="sd">        Activation function to be converted to spiking equivalent.</span>
+<span class="sd">    dt : float</span>
+<span class="sd">        Length of time (in seconds) represented by one time step.</span>
+<span class="sd">    seed : int</span>
+<span class="sd">        Seed for random state initialization.</span>
+<span class="sd">    spiking_aware_training : bool</span>
+<span class="sd">        If True (default), use the spiking activation function</span>
+<span class="sd">        for the forward pass and the base activation function for the backward pass.</span>
+<span class="sd">        If False, use the base activation function for the forward and</span>
+<span class="sd">        backward pass during training.</span>
+<span class="sd">    kwargs : dict</span>
+<span class="sd">        Passed on to `tf.keras.layers.Layer</span>
+<span class="sd">        &lt;https://www.tensorflow.org/api_docs/python/tf/keras/layers/Layer&gt;`_.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">units</span><span class="p">,</span>
+        <span class="n">activation</span><span class="p">,</span>
+        <span class="n">dt</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+        <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="c1"># TODO: should this default to True or False?</span>
+        <span class="n">spiking_aware_training</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="n">units</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">activations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">activation</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">=</span> <span class="n">dt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spiking_aware_training</span> <span class="o">=</span> <span class="n">spiking_aware_training</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">units</span><span class="p">,)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_size</span> <span class="o">=</span> <span class="p">(</span><span class="n">units</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="SpikingActivationCell.get_initial_state"><a class="viewcode-back" href="../../reference.html#keras_spiking.SpikingActivationCell.get_initial_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_initial_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set up initial spiking state.</span>
+
+<span class="sd">        Initial state is chosen from a uniform distribution, seeded based on the seed</span>
+<span class="sd">        passed on construction (if one was given).</span>
+
+<span class="sd">        Note: state will be initialized automatically, user does not need to call this</span>
+<span class="sd">        themselves.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">seed</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">((),</span> <span class="n">maxval</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">iinfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span>
+        <span class="p">)</span>
+
+        <span class="c1"># TODO: we could make the initial voltages trainable</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">stateless_uniform</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">),</span> <span class="n">seed</span><span class="o">=</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">seed</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="SpikingActivationCell.call"><a class="viewcode-back" href="../../reference.html#keras_spiking.SpikingActivationCell.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute layer output.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">training</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">training</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">learning_phase</span><span class="p">()</span>
+
+        <span class="n">voltage</span> <span class="o">=</span> <span class="n">states</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">smart_cond</span><span class="o">.</span><span class="n">smart_cond</span><span class="p">(</span>
+            <span class="n">tf</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">training</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">bool</span><span class="p">),</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">spiking_aware_training</span><span class="p">),</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">(</span><span class="n">inputs</span><span class="p">),</span> <span class="n">voltage</span><span class="p">),</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_spikes</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">voltage</span><span class="p">),</span>
+        <span class="p">)</span></div>
+
+    <span class="nd">@tf</span><span class="o">.</span><span class="n">custom_gradient</span>
+    <span class="k">def</span> <span class="nf">_compute_spikes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">voltage</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute spiking output, with custom gradient for spiking aware training.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        inputs : ``tf.Tensor``</span>
+<span class="sd">            Input to the activation function.</span>
+<span class="sd">        voltage : ``tf.Tensor``</span>
+<span class="sd">            Spiking voltage state.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        spikes : ``tf.Tensor``</span>
+<span class="sd">            Output spike values (0 or ``n/dt`` for each element in ``inputs``, where</span>
+<span class="sd">            ``n`` is the number of spikes).</span>
+<span class="sd">        voltage : ``tf.Tensor``</span>
+<span class="sd">            Updated voltage state.</span>
+<span class="sd">        grad : callable</span>
+<span class="sd">            Custom gradient function for spiking aware training.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">GradientTape</span><span class="p">()</span> <span class="k">as</span> <span class="n">g</span><span class="p">:</span>
+            <span class="n">g</span><span class="o">.</span><span class="n">watch</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+            <span class="n">rates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="n">voltage</span> <span class="o">=</span> <span class="n">voltage</span> <span class="o">+</span> <span class="n">rates</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span>
+        <span class="n">n_spikes</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">voltage</span><span class="p">)</span>
+        <span class="n">voltage</span> <span class="o">-=</span> <span class="n">n_spikes</span>
+        <span class="n">spikes</span> <span class="o">=</span> <span class="n">n_spikes</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span>
+
+        <span class="k">def</span> <span class="nf">grad</span><span class="p">(</span><span class="n">grad_spikes</span><span class="p">,</span> <span class="n">grad_voltage</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">g</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">rates</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span> <span class="o">*</span> <span class="n">grad_spikes</span><span class="p">,</span>
+                <span class="kc">None</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">spikes</span><span class="p">,</span> <span class="n">voltage</span><span class="p">),</span> <span class="n">grad</span>
+
+<div class="viewcode-block" id="SpikingActivationCell.get_config"><a class="viewcode-back" href="../../reference.html#keras_spiking.SpikingActivationCell.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return config of layer (for serialization during model saving/loading).&quot;&quot;&quot;</span>
+
+        <span class="n">cfg</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="nb">dict</span><span class="p">(</span>
+                <span class="n">units</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">,</span>
+                <span class="n">activation</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">activations</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">),</span>
+                <span class="n">dt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span>
+                <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
+                <span class="n">spiking_aware_training</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">spiking_aware_training</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cfg</span></div></div>
+
+
+<div class="viewcode-block" id="SpikingActivation"><a class="viewcode-back" href="../../reference.html#keras_spiking.SpikingActivation">[docs]</a><span class="k">class</span> <span class="nc">SpikingActivation</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Layer for converting an arbitrary activation function to a spiking equivalent.</span>
+
+<span class="sd">    Neurons will spike at a rate proportional to the output of the base activation</span>
+<span class="sd">    function. For example, if the activation function is outputting a value of 10, then</span>
+<span class="sd">    the wrapped SpikingActivationCell will output spikes at a rate of 10Hz (i.e., 10</span>
+<span class="sd">    spikes per 1 simulated second, where 1 simulated second is equivalent to ``1/dt``</span>
+<span class="sd">    time steps). Each spike will have height ``1/dt`` (so that the integral of the</span>
+<span class="sd">    spiking output will be the same as the integral of the base activation output).</span>
+<span class="sd">    Note that if the base activation is outputting a negative value then the spikes</span>
+<span class="sd">    will have height ``-1/dt``. Multiple spikes per timestep are also possible, in</span>
+<span class="sd">    which case the output will be ``n/dt`` (where ``n`` is the number of spikes).</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This is equivalent to</span>
+<span class="sd">    ``tf.keras.layers.RNN(SpikingActivationCell(...) ...)``, it just takes care of</span>
+<span class="sd">    the RNN construction automatically.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    activation : callable</span>
+<span class="sd">        Activation function to be converted to spiking equivalent.</span>
+<span class="sd">    dt : float</span>
+<span class="sd">        Length of time (in seconds) represented by one time step.</span>
+<span class="sd">    seed : int</span>
+<span class="sd">        Seed for random state initialization.</span>
+<span class="sd">    spiking_aware_training : bool</span>
+<span class="sd">        If True (default), use the spiking activation function</span>
+<span class="sd">        for the forward pass and the base activation function for the backward pass.</span>
+<span class="sd">        If False, use the base activation function for the forward and</span>
+<span class="sd">        backward pass during training.</span>
+<span class="sd">    return_sequences : bool</span>
+<span class="sd">        Whether to return the last output in the output sequence (default), or the</span>
+<span class="sd">        full sequence.</span>
+<span class="sd">    return state : bool</span>
+<span class="sd">        Whether to return the state in addition to the output.</span>
+<span class="sd">    stateful : bool</span>
+<span class="sd">        If False (default), each time the layer is called it will begin from the same</span>
+<span class="sd">        initial conditions. If True, each call will resume from the terminal state of</span>
+<span class="sd">        the previous call (``my_layer.reset_states()`` can be called to reset the state</span>
+<span class="sd">        to initial conditions).</span>
+<span class="sd">    unroll : bool</span>
+<span class="sd">        If True, the network will be unrolled, else a symbolic loop will be used.</span>
+<span class="sd">        Unrolling can speed up computations, although it tends to be more</span>
+<span class="sd">        memory-intensive. Unrolling is only suitable for short sequences.</span>
+<span class="sd">    time_major : bool</span>
+<span class="sd">        The shape format of the input and output tensors. If True, the inputs and</span>
+<span class="sd">        outputs will be in shape ``(timesteps, batch, ...)``, whereas in the False case,</span>
+<span class="sd">        it will be ``(batch, timesteps, ...)``. Using ``time_major=True`` is a bit more</span>
+<span class="sd">        efficient because it avoids transposes at the beginning and end of the layer</span>
+<span class="sd">        calculation. However, most TensorFlow data is batch-major, so by default this</span>
+<span class="sd">        layer accepts input and emits output in batch-major form.</span>
+<span class="sd">    kwargs : dict</span>
+<span class="sd">        Passed on to `tf.keras.layers.Layer</span>
+<span class="sd">        &lt;https://www.tensorflow.org/api_docs/python/tf/keras/layers/Layer&gt;`_.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">activation</span><span class="p">,</span>
+        <span class="n">dt</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+        <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">spiking_aware_training</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">return_sequences</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">return_state</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">stateful</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">unroll</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">time_major</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">activation</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">activations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">activation</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">=</span> <span class="n">dt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spiking_aware_training</span> <span class="o">=</span> <span class="n">spiking_aware_training</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">return_sequences</span> <span class="o">=</span> <span class="n">return_sequences</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">return_state</span> <span class="o">=</span> <span class="n">return_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stateful</span> <span class="o">=</span> <span class="n">stateful</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unroll</span> <span class="o">=</span> <span class="n">unroll</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_major</span> <span class="o">=</span> <span class="n">time_major</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="SpikingActivation.build"><a class="viewcode-back" href="../../reference.html#keras_spiking.SpikingActivation.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shapes</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Builds the RNN/SpikingActivationCell layers contained within this layer.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method should not be called manually; rather, use the implicit layer</span>
+<span class="sd">        callable behaviour (like ``my_layer(inputs)``), which will apply this method</span>
+<span class="sd">        with some additional bookkeeping.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">input_shapes</span><span class="p">)</span>
+
+        <span class="c1"># we initialize these here, rather than in ``__init__``, so that we can</span>
+        <span class="c1"># determine ``units`` automatically</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">RNN</span><span class="p">(</span>
+            <span class="n">SpikingActivationCell</span><span class="p">(</span>
+                <span class="n">activation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">,</span>
+                <span class="n">units</span><span class="o">=</span><span class="n">input_shapes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                <span class="n">dt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span>
+                <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
+                <span class="n">spiking_aware_training</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">spiking_aware_training</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">return_sequences</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">return_sequences</span><span class="p">,</span>
+            <span class="n">return_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">return_state</span><span class="p">,</span>
+            <span class="n">stateful</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stateful</span><span class="p">,</span>
+            <span class="n">unroll</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unroll</span><span class="p">,</span>
+            <span class="n">time_major</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">time_major</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">input_shapes</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SpikingActivation.call"><a class="viewcode-back" href="../../reference.html#keras_spiking.SpikingActivation.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">constants</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply this layer to inputs.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method should not be called manually; rather, use the implicit layer</span>
+<span class="sd">        callable behaviour (like ``my_layer(inputs)``), which will apply this method</span>
+<span class="sd">        with some additional bookkeeping.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="o">.</span><span class="n">call</span><span class="p">(</span>
+            <span class="n">inputs</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="n">training</span><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><span class="n">initial_state</span><span class="p">,</span> <span class="n">constants</span><span class="o">=</span><span class="n">constants</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="SpikingActivation.reset_states"><a class="viewcode-back" href="../../reference.html#keras_spiking.SpikingActivation.reset_states">[docs]</a>    <span class="k">def</span> <span class="nf">reset_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reset the internal state of the layer (only necessary if ``stateful=True``).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        states : `~numpy.ndarray`</span>
+<span class="sd">            Optional state array that can be used to override the values returned by</span>
+<span class="sd">            `.SpikingActivationCell.get_initial_state`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="o">.</span><span class="n">reset_states</span><span class="p">(</span><span class="n">states</span><span class="o">=</span><span class="n">states</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SpikingActivation.get_config"><a class="viewcode-back" href="../../reference.html#keras_spiking.SpikingActivation.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return config of layer (for serialization during model saving/loading).&quot;&quot;&quot;</span>
+
+        <span class="n">cfg</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="nb">dict</span><span class="p">(</span>
+                <span class="n">activation</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">activations</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">activation</span><span class="p">),</span>
+                <span class="n">dt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span>
+                <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
+                <span class="n">spiking_aware_training</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">spiking_aware_training</span><span class="p">,</span>
+                <span class="n">return_sequences</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">return_sequences</span><span class="p">,</span>
+                <span class="n">return_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">return_state</span><span class="p">,</span>
+                <span class="n">stateful</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stateful</span><span class="p">,</span>
+                <span class="n">unroll</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unroll</span><span class="p">,</span>
+                <span class="n">time_major</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">time_major</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cfg</span></div></div>
+
+
+<div class="viewcode-block" id="LowpassCell"><a class="viewcode-back" href="../../reference.html#keras_spiking.LowpassCell">[docs]</a><span class="k">class</span> <span class="nc">LowpassCell</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    RNN cell for a lowpass filter.</span>
+
+<span class="sd">    The initial filter state and filter time constants are both trainable parameters.</span>
+<span class="sd">    However, if ``apply_during_training=False`` then the parameters are not part</span>
+<span class="sd">    of the training loop, and so will never be updated.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+
+<span class="sd">    This cell needs to be wrapped in a ``tf.keras.layers.RNN``, like</span>
+
+<span class="sd">    .. testcode::</span>
+
+<span class="sd">        my_layer = tf.keras.layers.RNN(keras_spiking.LowpassCell(units=10, tau=0.01))</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    units : int</span>
+<span class="sd">        Dimensionality of layer.</span>
+<span class="sd">    tau : float</span>
+<span class="sd">        Time constant of filter (in seconds).</span>
+<span class="sd">    dt : float</span>
+<span class="sd">        Length of time (in seconds) represented by one time step.</span>
+<span class="sd">    apply_during_training : bool</span>
+<span class="sd">        If False, this layer will effectively be ignored during training (this</span>
+<span class="sd">        often makes sense in concert with the swappable training behaviour in, e.g.,</span>
+<span class="sd">        `.SpikingActivation`, since if the activations are not spiking during training</span>
+<span class="sd">        then we often don&#39;t need to filter them either).</span>
+<span class="sd">    level_initializer : str or ``tf.keras.initializers.Initializer``</span>
+<span class="sd">        Initializer for filter state.</span>
+<span class="sd">    kwargs : dict</span>
+<span class="sd">        Passed on to `tf.keras.layers.Layer</span>
+<span class="sd">        &lt;https://www.tensorflow.org/api_docs/python/tf/keras/layers/Layer&gt;`_.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">units</span><span class="p">,</span>
+        <span class="n">tau</span><span class="p">,</span>
+        <span class="n">dt</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+        <span class="c1"># TODO: better name for this parameter?</span>
+        <span class="n">apply_during_training</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">level_initializer</span><span class="o">=</span><span class="s2">&quot;zeros&quot;</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">tau</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;tau must be a positive number&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">units</span> <span class="o">=</span> <span class="n">units</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tau</span> <span class="o">=</span> <span class="n">tau</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">=</span> <span class="n">dt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">apply_during_training</span> <span class="o">=</span> <span class="n">apply_during_training</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">level_initializer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">initializers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">level_initializer</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_size</span> <span class="o">=</span> <span class="n">units</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_size</span> <span class="o">=</span> <span class="n">units</span>
+
+        <span class="c1"># apply ZOH discretization</span>
+        <span class="n">tau</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">dt</span> <span class="o">/</span> <span class="n">tau</span><span class="p">)</span>
+
+        <span class="c1"># compute inverse sigmoid of tau, so that when we apply the sigmoid</span>
+        <span class="c1"># later we&#39;ll get the tau value specified</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smoothing_init</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">tau</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">tau</span><span class="p">))</span>
+
+<div class="viewcode-block" id="LowpassCell.build"><a class="viewcode-back" href="../../reference.html#keras_spiking.LowpassCell.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shapes</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Build parameters associated with this layer.&quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">input_shapes</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_level</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_weight</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;initial_level&quot;</span><span class="p">,</span>
+            <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">),</span>
+            <span class="n">initializer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">level_initializer</span><span class="p">,</span>
+            <span class="n">trainable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">apply_during_training</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_weight</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;level_smoothing&quot;</span><span class="p">,</span>
+            <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">),</span>
+            <span class="n">initializer</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">initializers</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">smoothing_init</span>
+            <span class="p">),</span>
+            <span class="n">trainable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">apply_during_training</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="LowpassCell.get_initial_state"><a class="viewcode-back" href="../../reference.html#keras_spiking.LowpassCell.get_initial_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_initial_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get initial filter state.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_level</span><span class="p">,</span> <span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="LowpassCell.call"><a class="viewcode-back" href="../../reference.html#keras_spiking.LowpassCell.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply this layer to inputs.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method should not be called manually; rather, use the implicit layer</span>
+<span class="sd">        callable behaviour (like ``my_layer(inputs)``), which will apply this method</span>
+<span class="sd">        with some additional bookkeeping.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">training</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">training</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">learning_phase</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">apply</span><span class="p">():</span>
+            <span class="n">smoothing</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">smoothing</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">smoothing</span><span class="p">)</span> <span class="o">*</span> <span class="n">inputs</span> <span class="o">+</span> <span class="n">smoothing</span> <span class="o">*</span> <span class="n">states</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,)</span>
+
+        <span class="k">return</span> <span class="n">smart_cond</span><span class="o">.</span><span class="n">smart_cond</span><span class="p">(</span>
+            <span class="n">tf</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">training</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">bool</span><span class="p">),</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_during_training</span><span class="p">),</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">states</span><span class="p">),</span>
+            <span class="n">apply</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="LowpassCell.get_config"><a class="viewcode-back" href="../../reference.html#keras_spiking.LowpassCell.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return config of layer (for serialization during model saving/loading).&quot;&quot;&quot;</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="nb">dict</span><span class="p">(</span>
+                <span class="n">units</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">units</span><span class="p">,</span>
+                <span class="n">tau</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
+                <span class="n">dt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span>
+                <span class="n">apply_during_training</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">apply_during_training</span><span class="p">,</span>
+                <span class="n">level_initializer</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">initializers</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">level_initializer</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">config</span></div></div>
+
+
+<span class="c1"># TODO: reduce code duplication between this and SpikingActivation</span>
+<div class="viewcode-block" id="Lowpass"><a class="viewcode-back" href="../../reference.html#keras_spiking.Lowpass">[docs]</a><span class="k">class</span> <span class="nc">Lowpass</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Layer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Layer implementing a lowpass filter.</span>
+
+<span class="sd">    The initial filter state and filter time constants are both trainable parameters.</span>
+<span class="sd">    However, if ``apply_during_training=False`` then the parameters are not part</span>
+<span class="sd">    of the training loop, and so will never be updated.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This is equivalent to</span>
+<span class="sd">    ``tf.keras.layers.RNN(LowpassCell(...) ...)``, it just takes care of</span>
+<span class="sd">    the RNN construction automatically.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tau : float</span>
+<span class="sd">        Time constant of filter (in seconds).</span>
+<span class="sd">    dt : float</span>
+<span class="sd">        Length of time (in seconds) represented by one time step.</span>
+<span class="sd">    apply_during_training : bool</span>
+<span class="sd">        If False, this layer will effectively be ignored during training (this</span>
+<span class="sd">        often makes sense in concert with the swappable training behaviour in, e.g.,</span>
+<span class="sd">        `.SpikingActivation`, since if the activations are not spiking during training</span>
+<span class="sd">        then we often don&#39;t need to filter them either).</span>
+<span class="sd">    level_initializer : str or ``tf.keras.initializers.Initializer``</span>
+<span class="sd">        Initializer for filter state.</span>
+<span class="sd">    return_sequences : bool</span>
+<span class="sd">        Whether to return the last output in the output sequence (default), or the</span>
+<span class="sd">        full sequence.</span>
+<span class="sd">    return state : bool</span>
+<span class="sd">        Whether to return the state in addition to the output.</span>
+<span class="sd">    stateful : bool</span>
+<span class="sd">        If False (default), each time the layer is called it will begin from the same</span>
+<span class="sd">        initial conditions. If True, each call will resume from the terminal state of</span>
+<span class="sd">        the previous call (``my_layer.reset_states()`` can be called to reset the state</span>
+<span class="sd">        to initial conditions).</span>
+<span class="sd">    unroll : bool</span>
+<span class="sd">        If True, the network will be unrolled, else a symbolic loop will be used.</span>
+<span class="sd">        Unrolling can speed up computations, although it tends to be more</span>
+<span class="sd">        memory-intensive. Unrolling is only suitable for short sequences.</span>
+<span class="sd">    time_major : bool</span>
+<span class="sd">        The shape format of the input and output tensors. If True, the inputs and</span>
+<span class="sd">        outputs will be in shape ``(timesteps, batch, ...)``, whereas in the False case,</span>
+<span class="sd">        it will be ``(batch, timesteps, ...)``. Using ``time_major=True`` is a bit more</span>
+<span class="sd">        efficient because it avoids transposes at the beginning and end of the layer</span>
+<span class="sd">        calculation. However, most TensorFlow data is batch-major, so by default this</span>
+<span class="sd">        layer accepts input and emits output in batch-major form.</span>
+<span class="sd">    kwargs : dict</span>
+<span class="sd">        Passed on to `tf.keras.layers.Layer</span>
+<span class="sd">        &lt;https://www.tensorflow.org/api_docs/python/tf/keras/layers/Layer&gt;`_.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">tau</span><span class="p">,</span>
+        <span class="n">dt</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+        <span class="n">apply_during_training</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">level_initializer</span><span class="o">=</span><span class="s2">&quot;zeros&quot;</span><span class="p">,</span>
+        <span class="n">return_sequences</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">return_state</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">stateful</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">unroll</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">time_major</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tau</span> <span class="o">=</span> <span class="n">tau</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">=</span> <span class="n">dt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">apply_during_training</span> <span class="o">=</span> <span class="n">apply_during_training</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">level_initializer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">initializers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">level_initializer</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">return_sequences</span> <span class="o">=</span> <span class="n">return_sequences</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">return_state</span> <span class="o">=</span> <span class="n">return_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stateful</span> <span class="o">=</span> <span class="n">stateful</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unroll</span> <span class="o">=</span> <span class="n">unroll</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_major</span> <span class="o">=</span> <span class="n">time_major</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Lowpass.build"><a class="viewcode-back" href="../../reference.html#keras_spiking.Lowpass.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shapes</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Builds the RNN/SpikingActivationCell layers contained within this layer.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method should not be called manually; rather, use the implicit layer</span>
+<span class="sd">        callable behaviour (like ``my_layer(inputs)``), which will apply this method</span>
+<span class="sd">        with some additional bookkeeping.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">input_shapes</span><span class="p">)</span>
+
+        <span class="c1"># we initialize these here, rather than in ``__init__``, so that we can</span>
+        <span class="c1"># determine ``units`` automatically</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">RNN</span><span class="p">(</span>
+            <span class="n">LowpassCell</span><span class="p">(</span>
+                <span class="n">units</span><span class="o">=</span><span class="n">input_shapes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+                <span class="n">tau</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
+                <span class="n">dt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span>
+                <span class="n">apply_during_training</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">apply_during_training</span><span class="p">,</span>
+                <span class="n">level_initializer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">level_initializer</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">return_sequences</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">return_sequences</span><span class="p">,</span>
+            <span class="n">return_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">return_state</span><span class="p">,</span>
+            <span class="n">stateful</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stateful</span><span class="p">,</span>
+            <span class="n">unroll</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unroll</span><span class="p">,</span>
+            <span class="n">time_major</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">time_major</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">input_shapes</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Lowpass.call"><a class="viewcode-back" href="../../reference.html#keras_spiking.Lowpass.call">[docs]</a>    <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">constants</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply this layer to inputs.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This method should not be called manually; rather, use the implicit layer</span>
+<span class="sd">        callable behaviour (like ``my_layer(inputs)``), which will apply this method</span>
+<span class="sd">        with some additional bookkeeping.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="o">.</span><span class="n">call</span><span class="p">(</span>
+            <span class="n">inputs</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="n">training</span><span class="p">,</span> <span class="n">initial_state</span><span class="o">=</span><span class="n">initial_state</span><span class="p">,</span> <span class="n">constants</span><span class="o">=</span><span class="n">constants</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Lowpass.reset_states"><a class="viewcode-back" href="../../reference.html#keras_spiking.Lowpass.reset_states">[docs]</a>    <span class="k">def</span> <span class="nf">reset_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">states</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reset the internal state of the layer (only necessary if ``stateful=True``).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        states : `~numpy.ndarray`</span>
+<span class="sd">            Optional state array that can be used to override the values returned by</span>
+<span class="sd">            `.SpikingActivationCell.get_initial_state`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="o">.</span><span class="n">reset_states</span><span class="p">(</span><span class="n">states</span><span class="o">=</span><span class="n">states</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Lowpass.get_config"><a class="viewcode-back" href="../../reference.html#keras_spiking.Lowpass.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return config of layer (for serialization during model saving/loading).&quot;&quot;&quot;</span>
+
+        <span class="n">cfg</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+        <span class="n">cfg</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="nb">dict</span><span class="p">(</span>
+                <span class="n">tau</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tau</span><span class="p">,</span>
+                <span class="n">dt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span>
+                <span class="n">apply_during_training</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">apply_during_training</span><span class="p">,</span>
+                <span class="n">level_initializer</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">initializers</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">level_initializer</span>
+                <span class="p">),</span>
+                <span class="n">return_sequences</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">return_sequences</span><span class="p">,</span>
+                <span class="n">return_state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">return_state</span><span class="p">,</span>
+                <span class="n">stateful</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">stateful</span><span class="p">,</span>
+                <span class="n">unroll</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unroll</span><span class="p">,</span>
+                <span class="n">time_major</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">time_major</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cfg</span></div></div>
+</pre></div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div><footer class="text-light footer-main gradient-bottom">
+  <p class="small text-center mb-0">
+    <a class="no-hover-line" href="https://appliedbrainresearch.com">
+      <img
+        src="https://appliedbrainresearch.com/img/logo-blue-notext.svg"
+        height="48"
+      />
+    </a>
+    <a href="https://www.nengo.ai/">What is Nengo?</a>
+    <a href="https://www.nengo.ai/examples/">Examples</a>
+    <a href="https://www.nengo.ai/documentation/">Documentation</a>
+    <a href="https://www.nengo.ai/getting-started/">Getting started</a>
+    <a href="https://www.nengo.ai/privacy/">Privacy</a>
+  </p>
+  <p class="small text-center mb-0">&copy; Applied Brain Research</p>
+</footer>
+<script>
+  function switchVersion(select) {
+    var option = select.selectedOptions[0];
+    if (option.hasAttribute("value")) {
+      window.location = option.value;
+    }
+  }
+</script>
+
+<script>
+  var elements = document.querySelectorAll('.sidenav');
+  Stickyfill.add(elements);
+</script>
+<script>
+  ScrollReveal().reveal(".fade-in", {
+      scale: 0.85,
+      duration: 1000,
+      delay: 250,
+      interval: 50
+  });
+</script>
+<script>
+  $('a.toggle-sidenav').on('click', function(e) {
+    e.preventDefault();
+    if ( $(this).hasClass('active') ) {
+      $(this).removeClass('active');
+      $('.sidenav').removeClass('open');
+    } else {
+      $(this).addClass('active');
+      $('.sidenav').addClass('open');
+    }
+  });
+</script>
+<script>
+  var lists = document.querySelectorAll('.toctree ul');
+  lists.forEach((ul) => {
+      ul.classList.add("nav");
+  });
+  var links = document.querySelectorAll('.toctree a');
+  links.forEach((link) => {
+      link.classList.add("nav-link");
+  });
+  $("body").scrollspy({target: ".sidenav"});
+</script>
+  </body>
+</html>
