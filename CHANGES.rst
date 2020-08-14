@@ -18,7 +18,7 @@ Release history
    - Deprecated
    - Removed
 
-0.1.0 (unreleased)
-------------------
+0.1.0 (August 14, 2020)
+-----------------------
 
 Initial release
