@@ -21,6 +21,7 @@ setup_cfg:
       - tensorflow
 
 docs_conf_py:
+  nengo_logo: ""
   extensions:
     - nengo_sphinx_theme.ext.autoautosummary
   analytics_id: UA-41658423-2
