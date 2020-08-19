@@ -178,6 +178,16 @@ class SpikingActivation(tf.keras.layers.Layer):
     will have height ``-1/dt``. Multiple spikes per timestep are also possible, in
     which case the output will be ``n/dt`` (where ``n`` is the number of spikes).
 
+    When applying this layer to an input, make sure that the input has a time axis
+    (the ``time_major`` option controls whether it comes before or after the batch
+    axis). The spiking output will be computed along the time axis.
+    The number of simulation timesteps will depend on the length of that time axis.
+    The number of timesteps does not need to be the same during
+    training/evaluation/inference. In particular, it may be more efficient
+    to use one timestep during training and multiple timesteps during inference
+    (often with ``spiking_aware_training=False``, and ``apply_during_training=False``
+    on any `.Lowpass` layers).
+
     Notes
     -----
     This is equivalent to
@@ -473,6 +483,10 @@ class Lowpass(tf.keras.layers.Layer):
     The initial filter state and filter time constants are both trainable parameters.
     However, if ``apply_during_training=False`` then the parameters are not part
     of the training loop, and so will never be updated.
+
+    When applying this layer to an input, make sure that the input has a time axis
+    (the ``time_major`` option controls whether it comes before or after the batch
+    axis).
 
     Notes
     -----

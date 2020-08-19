@@ -233,12 +233,19 @@ def test_lowpass_tau(dt, allclose, rng):
 def test_lowpass_apply_during_training(allclose, rng):
     x = rng.randn(10, 100, 32)
 
+    # apply_during_training=False:
+    #   confirm `output == input` for training=True, but not training=False
     layer = layers.Lowpass(tau=0.1, apply_during_training=False, return_sequences=True)
     assert allclose(layer(x, training=True), x)
     assert not allclose(layer(x, training=False), x)
 
+    # apply_during_training=True:
+    #   confirm `output != input` for both values of `training`, and
+    #   output is equal for both values of `training`
     layer = layers.Lowpass(tau=0.1, apply_during_training=True, return_sequences=True)
     assert not allclose(layer(x, training=True), x)
+    assert not allclose(layer(x, training=False), x)
+    assert allclose(layer(x, training=True), layer(x, training=False))
 
 
 def test_lowpass_trainable(allclose):

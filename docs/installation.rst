@@ -33,6 +33,21 @@ Installing TensorFlow
 Use ``pip install tensorflow`` to install the latest version of TensorFlow. GPU support
 is included in this package as of version 2.1.0.
 
+Note that if you are using one of the non-standard TensorFlow packages (e.g.
+``tensorflow-gpu``, ``tensorflow-cpu``, or ``tf-nightly``), then
+``pip install keras-spiking`` will install the ``tensorflow`` package
+over top of your existing TensorFlow installation,
+which is probably not what you want.
+To avoid this, you can install with the ``--no-deps`` option:
+
+.. code-block:: bash
+
+  pip install --no-deps keras-spiking
+
+This will install only the Keras Spiking package, and you will need to manually ``pip``
+install any other requirements.
+This option can also be used with the developer installation method above.
+
 In order to use TensorFlow with GPU support you will need to install the appropriate
 Nvidia drivers and CUDA/cuDNN. The precise steps for accomplishing this will depend
 on your system. On Linux the correct Nvidia drivers (as of TensorFlow 2.2.0) can be
