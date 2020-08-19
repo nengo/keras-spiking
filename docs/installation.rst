@@ -1,9 +1,9 @@
 Installation
 ============
 
-Installing Keras Spiking
+Installing KerasSpiking
 ------------------------
-We recommend using ``pip`` to install Keras Spiking:
+We recommend using ``pip`` to install KerasSpiking:
 
 .. code-block:: bash
 
@@ -13,14 +13,14 @@ That's it!
 
 Requirements
 ------------
-Keras Spiking works with Python 3.6 or later.  ``pip`` will do its best to install
-all of Keras Spiking's requirements automatically.  However, if anything
+KerasSpiking works with Python 3.6 or later.  ``pip`` will do its best to install
+all of KerasSpiking's requirements automatically.  However, if anything
 goes wrong during this process you can install the requirements manually and
 then try to ``pip install keras-spiking`` again.
 
 Developer installation
 ----------------------
-If you want to modify Keras Spiking, or get the very latest updates, you will need to
+If you want to modify KerasSpiking, or get the very latest updates, you will need to
 perform a developer installation:
 
 .. code-block:: bash
@@ -44,7 +44,7 @@ To avoid this, you can install with the ``--no-deps`` option:
 
   pip install --no-deps keras-spiking
 
-This will install only the Keras Spiking package, and you will need to manually ``pip``
+This will install only the KerasSpiking package, and you will need to manually ``pip``
 install any other requirements.
 This option can also be used with the developer installation method above.
 

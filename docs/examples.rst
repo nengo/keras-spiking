@@ -2,7 +2,7 @@ Examples
 ========
 
 These examples can be found in the ``<keras-spiking>/docs/examples`` directory
-(where ``<keras-spiking>`` is the location of the Keras Spiking package).  The
+(where ``<keras-spiking>`` is the location of the KerasSpiking package).  The
 examples are Jupyter notebooks; if you would like to run them yourself, refer to
 the `Jupyter documentation <https://jupyter-notebook.readthedocs.io/en/latest/>`_.
 

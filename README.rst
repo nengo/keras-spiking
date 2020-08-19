@@ -10,11 +10,11 @@
   :target: https://codecov.io/gh/nengo/keras-spiking
   :alt: Test coverage
 
-*************
-Keras Spiking
-*************
+************
+KerasSpiking
+************
 
-Keras Spiking provides tools for incorporating spiking neuron activation functions
+KerasSpiking provides tools for incorporating spiking neuron activation functions
 directly within the Keras framework. The main feature is
 ``keras_spiking.SpikingActivation``, which can be used to transform
 any activation function into a spiking equivalent. For example, we can translate a
@@ -40,11 +40,11 @@ into the spiking equivalent:
     model = tf.keras.Model(inp, act)
 
 Models with SpikingActivation layers can be optimized and evaluated in the same way as
-any other Keras model. They will automatically take advantage of Keras Spiking's
+any other Keras model. They will automatically take advantage of KerasSpiking's
 "spiking aware training": using the spiking activations on the forward pass and the
 non-spiking (differentiable) activation function on the backwards pass.
 
-Keras Spiking also includes various tools to assist in the training of spiking models,
+KerasSpiking also includes various tools to assist in the training of spiking models,
 such as additional `regularizers
 <https://www.nengo.ai/keras-spiking/reference.html#module-keras_spiking.regularizers>`_
 and `filtering layers
@@ -61,6 +61,6 @@ Check out the `documentation <https://www.nengo.ai/keras-spiking/>`_ for
 
 - `Installation instructions
   <https://www.nengo.ai/keras-spiking/installation.html>`_
-- `More detailed example introducing the features of Keras Spiking
+- `More detailed example introducing the features of KerasSpiking
   <https://www.nengo.ai/keras-spiking/examples/spiking-fashion-mnist.html>`_
 - `API reference <https://www.nengo.ai/keras-spiking/reference.html>`_

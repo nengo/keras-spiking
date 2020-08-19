@@ -1,4 +1,4 @@
-project_name: Keras Spiking
+project_name: KerasSpiking
 pkg_name: keras_spiking
 repo_name: nengo/keras-spiking
 
