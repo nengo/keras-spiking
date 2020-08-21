@@ -44,6 +44,7 @@ ci_scripts:
     pip_install:
       - $TF_VERSION
       - $NUMPY_VERSION
+      - nengo
   - template: docs
     pip_install:
       - $TF_VERSION
