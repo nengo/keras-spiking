@@ -33,8 +33,7 @@ into the spiking equivalent:
 
     # add time dimension to inputs
     inp = tf.keras.Input((None, 5))
-    # use Keras' TimeDistributed wrapper to apply Dense over time
-    dense = tf.keras.layers.TimeDistributed(tf.keras.layers.Dense(10))(inp)
+    dense = tf.keras.layers.Dense(10)(inp)
     # replace Activation with SpikingActivation
     act = keras_spiking.SpikingActivation("relu")(dense)
     model = tf.keras.Model(inp, act)
