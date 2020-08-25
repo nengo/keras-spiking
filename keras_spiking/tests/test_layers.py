@@ -77,8 +77,8 @@ def test_spiking_aware_training(rng, allclose):
     with tf.GradientTape(persistent=True) as g:
         x = tf.constant(rng.uniform(-1, 1, size=(10, 20, 32)))
         g.watch(x)
-        y = layer(x, training=True)
-        y_sat = layer_sat(x, training=True)
+        y = layer(x, training=True)[:, -1]
+        y_sat = layer_sat(x, training=True)[:, -1]
         y_ground = tf.nn.relu(x)[:, -1]
 
     # forward pass is different
@@ -225,12 +225,12 @@ def test_lowpass_tau(dt, allclose, rng):
     # implementation
     layer = layers.Lowpass(tau=0.1, dt=dt)
 
-    x = rng.randn(10, 100, 32)
+    x = rng.randn(10, 100, 32).astype(np.float32)
     y = layer(x)
 
     y_nengo = nengo.Lowpass(0.1).filt(x, axis=1, dt=dt)
 
-    assert allclose(y, y_nengo[:, -1])
+    assert allclose(y, y_nengo, atol=1e-7)
 
 
 def test_lowpass_apply_during_training(allclose, rng):

@@ -208,8 +208,8 @@ class SpikingActivation(tf.keras.layers.Layer):
         If False, use the base activation function for the forward and
         backward pass during training.
     return_sequences : bool
-        Whether to return the last output in the output sequence (default), or the
-        full sequence.
+        Whether to return the full sequence of output spikes (default),
+        or just the spikes on the last timestep.
     return state : bool
         Whether to return the state in addition to the output.
     stateful : bool
@@ -239,7 +239,7 @@ class SpikingActivation(tf.keras.layers.Layer):
         dt=0.001,
         seed=None,
         spiking_aware_training=True,
-        return_sequences=False,
+        return_sequences=True,
         return_state=False,
         stateful=False,
         unroll=False,
@@ -508,8 +508,8 @@ class Lowpass(tf.keras.layers.Layer):
     level_initializer : str or ``tf.keras.initializers.Initializer``
         Initializer for filter state.
     return_sequences : bool
-        Whether to return the last output in the output sequence (default), or the
-        full sequence.
+        Whether to return the full sequence of filtered output (default),
+        or just the output on the last timestep.
     return state : bool
         Whether to return the state in addition to the output.
     stateful : bool
@@ -539,7 +539,7 @@ class Lowpass(tf.keras.layers.Layer):
         dt=0.001,
         apply_during_training=True,
         level_initializer="zeros",
-        return_sequences=False,
+        return_sequences=True,
         return_state=False,
         stateful=False,
         unroll=False,
