@@ -22,7 +22,7 @@ def test_activations(activation, rng, allclose):
     y = layers.SpikingActivation(
         activation, return_sequences=True, spiking_aware_training=False
     )(x, training=False)
-    assert not allclose(y, ground)
+    assert not allclose(y, ground, record_rmse=False, print_fail=0)
 
     # equivalent during inference, with large enough dt
     y = layers.SpikingActivation(
@@ -34,7 +34,7 @@ def test_activations(activation, rng, allclose):
     y = layers.SpikingActivation(
         activation, return_sequences=True, spiking_aware_training=True
     )(x, training=True)
-    assert not allclose(y, ground)
+    assert not allclose(y, ground, record_rmse=False, print_fail=0)
 
     # equivalent with large enough dt
     y = layers.SpikingActivation(
@@ -59,7 +59,7 @@ def test_seed(seed, allclose):
     # layers with different seeds produce different output
     y2 = layers.SpikingActivation(tf.nn.relu, return_sequences=True, seed=seed + 1)(x)
 
-    assert not allclose(y0, y2)
+    assert not allclose(y0, y2, record_rmse=False, print_fail=0)
 
     # the same layer called multiple times will produce the same output (if the seed
     # is set)
@@ -68,7 +68,7 @@ def test_seed(seed, allclose):
 
     # layer will produce different output each time if seed not set
     layer = layers.SpikingActivation(tf.nn.relu, return_sequences=True)
-    assert not allclose(layer(x), layer(x))
+    assert not allclose(layer(x), layer(x), record_rmse=False, print_fail=0)
 
 
 def test_spiking_aware_training(rng, allclose):
@@ -83,7 +83,7 @@ def test_spiking_aware_training(rng, allclose):
 
     # forward pass is different
     assert allclose(y, y_ground)
-    assert not allclose(y_sat, y_ground)
+    assert not allclose(y_sat, y_ground, record_rmse=False, print_fail=0)
 
     # gradients are the same
     assert allclose(g.gradient(y, x), g.gradient(y_ground, x))
@@ -240,14 +240,14 @@ def test_lowpass_apply_during_training(allclose, rng):
     #   confirm `output == input` for training=True, but not training=False
     layer = layers.Lowpass(tau=0.1, apply_during_training=False, return_sequences=True)
     assert allclose(layer(x, training=True), x)
-    assert not allclose(layer(x, training=False), x)
+    assert not allclose(layer(x, training=False), x, record_rmse=False, print_fail=0)
 
     # apply_during_training=True:
     #   confirm `output != input` for both values of `training`, and
     #   output is equal for both values of `training`
     layer = layers.Lowpass(tau=0.1, apply_during_training=True, return_sequences=True)
-    assert not allclose(layer(x, training=True), x)
-    assert not allclose(layer(x, training=False), x)
+    assert not allclose(layer(x, training=True), x, record_rmse=False, print_fail=0)
+    assert not allclose(layer(x, training=False), x, record_rmse=False, print_fail=0)
     assert allclose(layer(x, training=True), layer(x, training=False))
 
 
@@ -267,8 +267,8 @@ def test_lowpass_trainable(allclose):
     # trainable layer should learn to output 1
     ys = model.predict(np.zeros((1, 1, 1)))
     assert allclose(ys[0], 1)
-    assert not allclose(ys[1], 1)
-    assert not allclose(ys[2], 1)
+    assert not allclose(ys[1], 1, record_rmse=False, print_fail=0)
+    assert not allclose(ys[2], 1, record_rmse=False, print_fail=0)
 
     # for trainable layer, smoothing * initial_level should go to 1
     assert allclose(
