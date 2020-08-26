@@ -38,7 +38,10 @@ def test_activations(activation, rng, allclose):
 
     # equivalent with large enough dt
     y = layers.SpikingActivation(
-        activation, return_sequences=True, spiking_aware_training=True, dt=1e8,
+        activation,
+        return_sequences=True,
+        spiking_aware_training=True,
+        dt=1e8,
     )(x, training=True)
     assert allclose(y, ground)
 
