@@ -14,7 +14,7 @@
 KerasSpiking
 ************
 
-KerasSpiking provides tools for incorporating spiking neuron activation functions
+KerasSpiking provides tools for training and running spiking neural networks
 directly within the Keras framework. The main feature is
 ``keras_spiking.SpikingActivation``, which can be used to transform
 any activation function into a spiking equivalent. For example, we can translate a
