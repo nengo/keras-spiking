@@ -14,10 +14,11 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.mathjax",
     "sphinx.ext.todo",
-    "sphinx.ext.viewcode",
     "nbsphinx",
     "nengo_sphinx_theme",
     "nengo_sphinx_theme.ext.backoff",
+    "nengo_sphinx_theme.ext.sourcelinks",
+    "notfound.extension",
     "numpydoc",
     "nengo_sphinx_theme.ext.autoautosummary",
 ]
@@ -44,11 +45,15 @@ intersphinx_mapping = {
 # -- sphinx.ext.todo
 todo_include_todos = True
 
-# -- numpydoc config
-numpydoc_show_class_members = False
-
 # -- nbsphinx
 nbsphinx_timeout = -1
+
+# -- notfound.extension
+notfound_template = "404.html"
+notfound_urls_prefix = "/keras-spiking/"
+
+# -- numpydoc config
+numpydoc_show_class_members = False
 
 # -- nengo_sphinx_theme.ext.autoautosummary
 autoautosummary_change_modules = {
@@ -59,6 +64,10 @@ autoautosummary_change_modules = {
         "keras_spiking.layers.Lowpass",
     ],
 }
+
+# -- nengo_sphinx_theme.ext.sourcelinks
+sourcelinks_module = "keras_spiking"
+sourcelinks_url = "https://github.com/nengo/keras-spiking"
 
 # -- sphinx
 nitpicky = True
