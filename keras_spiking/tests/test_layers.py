@@ -192,11 +192,13 @@ def test_save_load(use_cell, allclose, tmpdir, seed):
         out = tf.keras.layers.RNN(
             layers.LowpassCell(tau=0.01, units=32), return_sequences=True
         )(out)
+        out = tf.keras.layers.RNN(
+            layers.AlphaCell(tau=0.01, units=32), return_sequences=True
+        )(out)
     else:
-        out = layers.SpikingActivation(tf.nn.relu, seed=seed, return_sequences=True)(
-            inp
-        )
-        out = layers.Lowpass(tau=0.01, return_sequences=True)(out)
+        out = layers.SpikingActivation(tf.nn.relu, seed=seed)(inp)
+        out = layers.Lowpass(tau=0.01)(out)
+        out = layers.Alpha(tau=0.01)(out)
 
     model = tf.keras.Model(inp, out)
 
@@ -207,9 +209,14 @@ def test_save_load(use_cell, allclose, tmpdir, seed):
         custom_objects={
             "SpikingActivationCell": layers.SpikingActivationCell,
             "LowpassCell": layers.LowpassCell,
+            "AlphaCell": layers.AlphaCell,
         }
         if use_cell
-        else {"SpikingActivation": layers.SpikingActivation, "Lowpass": layers.Lowpass},
+        else {
+            "SpikingActivation": layers.SpikingActivation,
+            "Lowpass": layers.Lowpass,
+            "Alpha": layers.Alpha,
+        },
     )
 
     assert allclose(
@@ -217,35 +224,46 @@ def test_save_load(use_cell, allclose, tmpdir, seed):
     )
 
 
-@pytest.mark.parametrize("dt", (0.001, 1))
-def test_lowpass_tau(dt, allclose, rng):
+@pytest.mark.parametrize("kind", ("lowpass", "alpha"))
+@pytest.mark.parametrize("dt", (0.001, 0.03))
+def test_lowpass_alpha_tau(kind, dt, allclose, rng):
+    """Verify that the keras-spiking filter matches the Nengo implementation"""
     nengo = pytest.importorskip("nengo")
 
-    # verify that the keras-spiking lowpass implementation matches the nengo lowpass
-    # implementation
-    layer = layers.Lowpass(tau=0.1, dt=dt)
+    units = 32
+    steps = 100
+    tau = 0.1
+    if kind == "lowpass":
+        layer = layers.Lowpass(tau=tau, dt=dt)
+        synapse = nengo.Lowpass(tau)
+    elif kind == "alpha":
+        layer = layers.Alpha(tau=tau, dt=dt)
+        synapse = nengo.Alpha(tau)
 
-    x = rng.randn(10, 100, 32).astype(np.float32)
+    x = rng.randn(10, steps, units).astype(np.float32)
     y = layer(x)
 
-    y_nengo = nengo.Lowpass(0.1).filt(x, axis=1, dt=dt)
+    x_nengo = np.moveaxis(x, 1, 0).reshape(steps, -1)
+    y_nengo = synapse.filt(x_nengo, axis=0, dt=dt)
+    y_nengo = np.moveaxis(y_nengo.reshape(steps, -1, units), 0, 1)
 
-    assert allclose(y, y_nengo, atol=1e-7)
+    assert allclose(y, y_nengo, atol=1e-6)
 
 
-def test_lowpass_apply_during_training(allclose, rng):
+@pytest.mark.parametrize("Layer", [layers.Lowpass, layers.Alpha])
+def test_filter_apply_during_training(Layer, allclose, rng):
     x = rng.randn(10, 100, 32)
 
     # apply_during_training=False:
     #   confirm `output == input` for training=True, but not training=False
-    layer = layers.Lowpass(tau=0.1, apply_during_training=False, return_sequences=True)
+    layer = Layer(tau=0.1, apply_during_training=False, return_sequences=True)
     assert allclose(layer(x, training=True), x)
     assert not allclose(layer(x, training=False), x, record_rmse=False, print_fail=0)
 
     # apply_during_training=True:
     #   confirm `output != input` for both values of `training`, and
     #   output is equal for both values of `training`
-    layer = layers.Lowpass(tau=0.1, apply_during_training=True, return_sequences=True)
+    layer = Layer(tau=0.1, apply_during_training=True, return_sequences=True)
     assert not allclose(layer(x, training=True), x, record_rmse=False, print_fail=0)
     assert not allclose(layer(x, training=False), x, record_rmse=False, print_fail=0)
     assert allclose(layer(x, training=True), layer(x, training=False))
@@ -289,10 +307,71 @@ def test_lowpass_trainable(allclose):
     )
 
 
-def test_lowpass_validation():
+def test_alpha_trainable(allclose):
+    n_train = 32 * 100
+    steps = 5
+    units = 2
+    tau0 = 0.001
+
+    inp = tf.keras.Input((None, units))
+    layer_trained = layers.Alpha(tau0, apply_during_training=True)
+    layer_skip = layers.Alpha(tau0, apply_during_training=False)
+    layer_untrained = layers.Alpha(tau0, apply_during_training=True, trainable=False)
+
+    model = tf.keras.Model(
+        inp, [layer_trained(inp), layer_skip(inp), layer_untrained(inp)]
+    )
+
+    # initial `initial_level` should be near 0
+    assert allclose(layer_trained.layer.cell.initial_level.numpy(), 0)
+
+    # train model
+    model.compile(
+        loss="mse", optimizer=tf.optimizers.SGD(0.5, momentum=0.9, nesterov=True)
+    )
+    model.fit(
+        np.zeros((n_train, steps, units)),
+        [np.ones((n_train, steps, units))] * 3,
+        epochs=10,
+        verbose=0,
+    )
+
+    # trainable layer should learn to output 1 at all timesteps given 0 at all timesteps
+    ys = model.predict(np.zeros((1, steps, units)))
+    assert allclose(ys[0], 1, atol=3e-2)
+    assert not allclose(ys[1], 1, atol=0.1, record_rmse=False, print_fail=0)
+    assert not allclose(ys[2], 1, atol=0.1, record_rmse=False, print_fail=0)
+
+    # learned `initial_level` should be near 1
+    assert allclose(layer_trained.layer.cell.initial_level.numpy(), 1, atol=3e-2)
+
+    # learned tau should be larger (tau trains slowly)
+    smoothing = layer_trained.layer.cell.smoothing
+    assert np.all(tf.nn.softplus(smoothing) > 3 * tau0)
+
+    # other layers should stay at initial value
+    assert allclose(layer_skip.layer.cell.initial_level.numpy(), 0)
+    assert allclose(layer_untrained.layer.cell.initial_level.numpy(), 0)
+    assert allclose(
+        layer_skip.layer.cell.smoothing.numpy(), layer_skip.layer.cell.smoothing_init
+    )
+    assert allclose(
+        layer_untrained.layer.cell.smoothing.numpy(),
+        layer_untrained.layer.cell.smoothing_init,
+    )
+
+
+def test_lowpass_alpha_validation():
     with pytest.raises(ValueError, match="tau must be a positive number"):
         layers.LowpassCell(tau=0, units=1)
 
     with pytest.raises(ValueError, match="tau must be a positive number"):
         # note: error won't be raised until layer is applied (when LowpassCell is built)
         layers.Lowpass(tau=0)(np.zeros((1, 1, 1)))
+
+    with pytest.raises(ValueError, match="tau must be a positive number"):
+        layers.AlphaCell(tau=0, units=1)
+
+    with pytest.raises(ValueError, match="tau must be a positive number"):
+        # note: error won't be raised until layer is applied (when AlphaCell is built)
+        layers.Alpha(tau=0)(np.zeros((1, 1, 1)))

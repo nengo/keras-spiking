@@ -21,6 +21,11 @@ Release history
 0.1.1 (unreleased)
 ------------------
 
+**Added**
+
+- Added the ``keras_spiking.Alpha`` filter, which provides second-order lowpass
+  filtering for better noise removal for spiking layers. (`#4`_)
+
 **Changed**
 
 - ``keras_spiking.SpikingActivation`` and ``keras_spiking.Lowpass`` now return sequences
@@ -30,6 +35,7 @@ Release history
   The spiking fashion-MNIST example has been updated accordingly. (`#3`_)
 
 .. _#3: https://github.com/nengo/keras-spiking/pull/3
+.. _#4: https://github.com/nengo/keras-spiking/pull/4
 
 0.1.0 (August 14, 2020)
 -----------------------

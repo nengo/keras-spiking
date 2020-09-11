@@ -181,7 +181,7 @@ class KerasSpikingLayer(tf.keras.layers.Layer):
         ----------
         states : `~numpy.ndarray`
             Optional state array that can be used to override the values returned by
-            `.SpikingActivationCell.get_initial_state`.
+            ``cell.get_initial_state``, where ``cell`` is returned by ``build_cell``.
         """
         self.layer.reset_states(states=states)
 
@@ -470,8 +470,7 @@ class SpikingActivation(KerasSpikingLayer):
 
 
 class LowpassCell(KerasSpikingCell):
-    """
-    RNN cell for a lowpass filter.
+    """RNN cell for a lowpass filter.
 
     The initial filter state and filter time constants are both trainable parameters.
     However, if ``apply_during_training=False`` then the parameters are not part
@@ -592,8 +591,14 @@ class LowpassCell(KerasSpikingCell):
 
 
 class Lowpass(KerasSpikingLayer):
-    """
-    Layer implementing a lowpass filter.
+    r"""Layer implementing a lowpass filter.
+
+    The impulse-response function (time domain) and transfer function are:
+
+    .. math::
+
+       h(t) &= (1 / \tau) \exp(-t / \tau) \\
+       H(s) &= \frac{1}{\tau s + 1}
 
     The initial filter state and filter time constants are both trainable parameters.
     However, if ``apply_during_training=False`` then the parameters are not part
@@ -678,6 +683,277 @@ class Lowpass(KerasSpikingLayer):
 
     def build_cell(self, input_shapes):
         return LowpassCell(
+            units=input_shapes[-1],
+            tau=self.tau,
+            dt=self.dt,
+            apply_during_training=self.apply_during_training,
+            level_initializer=self.level_initializer,
+        )
+
+    def get_config(self):
+        cfg = super().get_config()
+        cfg.update(
+            dict(
+                tau=self.tau,
+                apply_during_training=self.apply_during_training,
+                level_initializer=tf.keras.initializers.serialize(
+                    self.level_initializer
+                ),
+            )
+        )
+
+        return cfg
+
+
+class AlphaCell(KerasSpikingCell):
+    """RNN cell for an alpha filter.
+
+    The initial filter state and filter time constants are both trainable parameters.
+    However, if ``apply_during_training=False`` then the parameters are not part
+    of the training loop, and so will never be updated.
+
+    Notes
+    -----
+
+    This cell needs to be wrapped in a ``tf.keras.layers.RNN``, like
+
+    .. testcode::
+
+        my_layer = tf.keras.layers.RNN(keras_spiking.AlphaCell(units=10, tau=0.01))
+
+    Parameters
+    ----------
+    units : int
+        Dimensionality of layer.
+    tau : float
+        Time constant of filter (in seconds).
+    dt : float
+        Length of time (in seconds) represented by one time step.
+    apply_during_training : bool
+        If False, this layer will effectively be ignored during training (this
+        often makes sense in concert with the swappable training behaviour in, e.g.,
+        `.SpikingActivation`, since if the activations are not spiking during training
+        then we often don't need to filter them either).
+    level_initializer : str or ``tf.keras.initializers.Initializer``
+        Initializer for filter state.
+    kwargs : dict
+        Passed on to `tf.keras.layers.Layer
+        <https://www.tensorflow.org/api_docs/python/tf/keras/layers/Layer>`_.
+    """
+
+    def __init__(
+        self,
+        units,
+        tau,
+        *,
+        dt=0.001,
+        # TODO: better name for this parameter?
+        apply_during_training=True,
+        level_initializer="zeros",
+        **kwargs
+    ):
+        super().__init__(
+            output_size=units,
+            state_size=2 * units,
+            dt=dt,
+            always_use_inference=apply_during_training,
+            **kwargs,
+        )
+
+        if tau <= 0:
+            raise ValueError("tau must be a positive number")
+
+        self.units = units
+        self.tau = tau
+        self.apply_during_training = apply_during_training
+        self.level_initializer = tf.initializers.get(level_initializer)
+
+        # compute inverse softplus of tau, so that when we apply the softplus
+        # later we'll get the tau value specified
+        self.smoothing_init = np.log(np.expm1(tau))
+
+    def build(self, input_shapes):
+        """Build parameters associated with this layer."""
+
+        super().build(input_shapes)
+
+        self.initial_level = self.add_weight(
+            name="initial_level",
+            shape=(1, self.output_size),
+            initializer=self.level_initializer,
+            trainable=self.apply_during_training,
+        )
+
+        self.smoothing = self.add_weight(
+            name="level_smoothing",
+            shape=self.output_size,
+            initializer=tf.initializers.constant(
+                np.ones(self.output_size) * self.smoothing_init
+            ),
+            trainable=self.apply_during_training,
+        )
+
+    def get_initial_state(self, inputs=None, batch_size=None, dtype=None):
+        """Get initial filter state."""
+        return tf.concat(
+            [
+                tf.zeros((batch_size, self.output_size)),
+                tf.tile(self.initial_level, (batch_size, 1)),
+            ],
+            axis=1,
+        )
+
+    def call_inference(self, inputs, states):
+        tau = tf.nn.softplus(self.smoothing)
+        assert len(tau.shape) == 1
+
+        # --- apply zero-order-hold discretization to get discrete A and B matrices
+        #   This is derived by defining the system in state-space,
+        #      A = [[-2/tau, -1/tau**2], [1, 0]]   B = [[1/tau**2, 0]]
+        #   and taking the matrix exponential. In sympy:
+        #     AB = sy.Matrix([[-2/tau, -1/tau**2, 1/tau**2], [1, 0, 0], [0, 0, 0]])
+        #     dAB = sy.exp(dt * AB).simplify()
+        #     dA, dB = dAB[:2, :2], dAB[:2, 2:]
+        tau = tau[:, None, None]
+        dt_tau = self.dt / tau
+        dt_tau2 = dt_tau / tau
+        exp_dt_tau = tf.exp(-dt_tau)
+        A = exp_dt_tau * tf.concat(
+            [
+                tf.concat([1 - dt_tau, -dt_tau2], axis=2),
+                tf.concat([self.dt * tf.ones_like(tau), 1 + dt_tau], axis=2),
+            ],
+            axis=1,
+        )
+        B = tf.concat([exp_dt_tau * dt_tau2, 1 - exp_dt_tau * (1 + dt_tau)], axis=1)
+
+        # --- apply filtering
+        (x,) = states
+        assert len(x.shape) == 2
+        x = tf.reshape(x, (-1, 2, self.output_size))
+
+        # i = new state, j = old state, k = unit, m = example (in batch)
+        x = tf.einsum("kij,mjk->mik", A, x)
+        x += tf.einsum("kij,mk->mik", B, inputs)
+        y = x[:, 1]
+        x = tf.reshape(x, (-1, self.state_size))
+        return y, (x,)
+
+    def call_training(self, inputs, states):
+        return inputs, states
+
+    def get_config(self):
+        """Return config of layer (for serialization during model saving/loading)."""
+
+        cfg = super().get_config()
+        cfg.update(
+            dict(
+                units=self.units,
+                tau=self.tau,
+                dt=self.dt,
+                apply_during_training=self.apply_during_training,
+                level_initializer=tf.keras.initializers.serialize(
+                    self.level_initializer
+                ),
+            )
+        )
+
+        return cfg
+
+
+class Alpha(KerasSpikingLayer):
+    r"""Layer implementing an alpha filter.
+
+    The impulse-response function (time domain) and transfer function are:
+
+    .. math::
+
+       h(t) &= (t / \tau^2) \exp(-t / \tau) \\
+       H(s) &= \frac{1}{(\tau s + 1)^2}
+
+    The initial filter state and filter time constants are both trainable parameters.
+    However, if ``apply_during_training=False`` then the parameters are not part
+    of the training loop, and so will never be updated.
+
+    When applying this layer to an input, make sure that the input has a time axis
+    (the ``time_major`` option controls whether it comes before or after the batch
+    axis).
+
+    Notes
+    -----
+    This is equivalent to
+    ``tf.keras.layers.RNN(AlphaCell(...) ...)``, it just takes care of
+    the RNN construction automatically.
+
+    Parameters
+    ----------
+    tau : float
+        Time constant of filter (in seconds).
+    dt : float
+        Length of time (in seconds) represented by one time step.
+    apply_during_training : bool
+        If False, this layer will effectively be ignored during training (this
+        often makes sense in concert with the swappable training behaviour in, e.g.,
+        `.SpikingActivation`, since if the activations are not spiking during training
+        then we often don't need to filter them either).
+    level_initializer : str or ``tf.keras.initializers.Initializer``
+        Initializer for filter state.
+    return_sequences : bool
+        Whether to return the full sequence of filtered output (default),
+        or just the output on the last timestep.
+    return state : bool
+        Whether to return the state in addition to the output.
+    stateful : bool
+        If False (default), each time the layer is called it will begin from the same
+        initial conditions. If True, each call will resume from the terminal state of
+        the previous call (``my_layer.reset_states()`` can be called to reset the state
+        to initial conditions).
+    unroll : bool
+        If True, the network will be unrolled, else a symbolic loop will be used.
+        Unrolling can speed up computations, although it tends to be more
+        memory-intensive. Unrolling is only suitable for short sequences.
+    time_major : bool
+        The shape format of the input and output tensors. If True, the inputs and
+        outputs will be in shape ``(timesteps, batch, ...)``, whereas in the False case,
+        it will be ``(batch, timesteps, ...)``. Using ``time_major=True`` is a bit more
+        efficient because it avoids transposes at the beginning and end of the layer
+        calculation. However, most TensorFlow data is batch-major, so by default this
+        layer accepts input and emits output in batch-major form.
+    kwargs : dict
+        Passed on to `tf.keras.layers.Layer
+        <https://www.tensorflow.org/api_docs/python/tf/keras/layers/Layer>`_.
+    """
+
+    def __init__(
+        self,
+        tau,
+        *,
+        dt=0.001,
+        apply_during_training=True,
+        level_initializer="zeros",
+        return_sequences=True,
+        return_state=False,
+        stateful=False,
+        unroll=False,
+        time_major=False,
+        **kwargs
+    ):
+        super().__init__(
+            dt=dt,
+            return_sequences=return_sequences,
+            return_state=return_state,
+            stateful=stateful,
+            unroll=unroll,
+            time_major=time_major,
+            **kwargs,
+        )
+
+        self.tau = tau
+        self.apply_during_training = apply_during_training
+        self.level_initializer = tf.keras.initializers.get(level_initializer)
+
+    def build_cell(self, input_shapes):
+        return AlphaCell(
             units=input_shapes[-1],
             tau=self.tau,
             dt=self.dt,
