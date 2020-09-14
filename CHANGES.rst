@@ -25,6 +25,8 @@ Release history
 
 - Added the ``keras_spiking.Alpha`` filter, which provides second-order lowpass
   filtering for better noise removal for spiking layers. (`#4`_)
+- Added ``keras_spiking.callbacks.DtScheduler``, which can be used to update layer
+  ``dt`` parameters during training. (`#5`_)
 
 **Changed**
 
@@ -36,6 +38,7 @@ Release history
 
 .. _#3: https://github.com/nengo/keras-spiking/pull/3
 .. _#4: https://github.com/nengo/keras-spiking/pull/4
+.. _#5: https://github.com/nengo/keras-spiking/pull/5
 
 0.1.0 (August 14, 2020)
 -----------------------

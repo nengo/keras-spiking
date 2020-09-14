@@ -325,11 +325,26 @@ class SpikingActivationCell(KerasSpikingCell):
         voltage -= n_spikes
         spikes = n_spikes / self.dt
 
-        def grad(grad_spikes, grad_voltage):
+        def _get_grad(grad_spikes):
             return (
                 g.gradient(rates, inputs) * grad_spikes,
                 None,
             )
+
+        if isinstance(self.dt, tf.Variable):
+
+            def grad(grad_spikes, grad_voltage, variables=None):
+                return (
+                    _get_grad(grad_spikes),
+                    [] if variables is None else [None] * len(variables),
+                )
+
+        else:
+            # note: we need to define this separately, rather than just doing something
+            # like **kwargs, because tensorflow inspects the function signature and
+            # raises a warning if there's an unnecessary `variables=None`
+            def grad(grad_spikes, grad_voltage):
+                return _get_grad(grad_spikes)
 
         return (spikes, (voltage,)), grad
 
@@ -531,13 +546,6 @@ class LowpassCell(KerasSpikingCell):
         self.apply_during_training = apply_during_training
         self.level_initializer = tf.initializers.get(level_initializer)
 
-        # apply ZOH discretization
-        tau = np.exp(-dt / tau)
-
-        # compute inverse sigmoid of tau, so that when we apply the sigmoid
-        # later we'll get the tau value specified
-        self.smoothing_init = np.log(tau / (1 - tau))
-
     def build(self, input_shapes):
         """Build parameters associated with this layer."""
 
@@ -550,13 +558,12 @@ class LowpassCell(KerasSpikingCell):
             trainable=self.apply_during_training,
         )
 
-        self.smoothing = self.add_weight(
-            name="level_smoothing",
+        self.tau_var = self.add_weight(
+            name="tau_var",
             shape=(1, self.state_size),
-            initializer=tf.initializers.constant(
-                np.ones(self.state_size) * self.smoothing_init
-            ),
+            initializer=tf.initializers.constant(np.ones(self.state_size) * self.tau),
             trainable=self.apply_during_training,
+            constraint=tf.keras.constraints.NonNeg(),
         )
 
     def get_initial_state(self, inputs=None, batch_size=None, dtype=None):
@@ -564,8 +571,13 @@ class LowpassCell(KerasSpikingCell):
         return tf.tile(self.initial_level, (batch_size, 1))
 
     def call_inference(self, inputs, states):
-        smoothing = tf.nn.sigmoid(self.smoothing)
-        x = (1 - smoothing) * inputs + smoothing * states[0]
+        # apply ZOH discretization
+        tau = tf.exp(
+            -self.dt  # pylint: disable=invalid-unary-operand-type
+            / (self.tau_var + 1e-8)
+        )
+
+        x = (1 - tau) * inputs + tau * states[0]
         return x, (x,)
 
     def call_training(self, inputs, states):
@@ -768,10 +780,6 @@ class AlphaCell(KerasSpikingCell):
         self.apply_during_training = apply_during_training
         self.level_initializer = tf.initializers.get(level_initializer)
 
-        # compute inverse softplus of tau, so that when we apply the softplus
-        # later we'll get the tau value specified
-        self.smoothing_init = np.log(np.expm1(tau))
-
     def build(self, input_shapes):
         """Build parameters associated with this layer."""
 
@@ -784,13 +792,12 @@ class AlphaCell(KerasSpikingCell):
             trainable=self.apply_during_training,
         )
 
-        self.smoothing = self.add_weight(
-            name="level_smoothing",
+        self.tau_var = self.add_weight(
+            name="tau_var",
             shape=self.output_size,
-            initializer=tf.initializers.constant(
-                np.ones(self.output_size) * self.smoothing_init
-            ),
+            initializer=tf.initializers.constant(np.ones(self.output_size) * self.tau),
             trainable=self.apply_during_training,
+            constraint=tf.keras.constraints.NonNeg(),
         )
 
     def get_initial_state(self, inputs=None, batch_size=None, dtype=None):
@@ -804,9 +811,6 @@ class AlphaCell(KerasSpikingCell):
         )
 
     def call_inference(self, inputs, states):
-        tau = tf.nn.softplus(self.smoothing)
-        assert len(tau.shape) == 1
-
         # --- apply zero-order-hold discretization to get discrete A and B matrices
         #   This is derived by defining the system in state-space,
         #      A = [[-2/tau, -1/tau**2], [1, 0]]   B = [[1/tau**2, 0]]
@@ -814,7 +818,7 @@ class AlphaCell(KerasSpikingCell):
         #     AB = sy.Matrix([[-2/tau, -1/tau**2, 1/tau**2], [1, 0, 0], [0, 0, 0]])
         #     dAB = sy.exp(dt * AB).simplify()
         #     dA, dB = dAB[:2, :2], dAB[:2, 2:]
-        tau = tau[:, None, None]
+        tau = self.tau_var[:, None, None] + 1e-8
         dt_tau = self.dt / tau
         dt_tau2 = dt_tau / tau
         exp_dt_tau = tf.exp(-dt_tau)

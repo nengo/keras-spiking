@@ -298,12 +298,10 @@ def test_lowpass_trainable(allclose):
     # other layers should stay at initial value
     assert allclose(layer_skip.layer.cell.initial_level.numpy(), 0)
     assert allclose(layer_untrained.layer.cell.initial_level.numpy(), 0)
+    assert allclose(layer_skip.layer.cell.tau_var.numpy(), layer_skip.layer.cell.tau)
     assert allclose(
-        layer_skip.layer.cell.smoothing.numpy(), layer_skip.layer.cell.smoothing_init
-    )
-    assert allclose(
-        layer_untrained.layer.cell.smoothing.numpy(),
-        layer_untrained.layer.cell.smoothing_init,
+        layer_untrained.layer.cell.tau_var.numpy(),
+        layer_untrained.layer.cell.tau,
     )
 
 
@@ -346,18 +344,16 @@ def test_alpha_trainable(allclose):
     assert allclose(layer_trained.layer.cell.initial_level.numpy(), 1, atol=3e-2)
 
     # learned tau should be larger (tau trains slowly)
-    smoothing = layer_trained.layer.cell.smoothing
+    smoothing = layer_trained.layer.cell.tau_var
     assert np.all(tf.nn.softplus(smoothing) > 3 * tau0)
 
     # other layers should stay at initial value
     assert allclose(layer_skip.layer.cell.initial_level.numpy(), 0)
     assert allclose(layer_untrained.layer.cell.initial_level.numpy(), 0)
+    assert allclose(layer_skip.layer.cell.tau_var.numpy(), layer_skip.layer.cell.tau)
     assert allclose(
-        layer_skip.layer.cell.smoothing.numpy(), layer_skip.layer.cell.smoothing_init
-    )
-    assert allclose(
-        layer_untrained.layer.cell.smoothing.numpy(),
-        layer_untrained.layer.cell.smoothing_init,
+        layer_untrained.layer.cell.tau_var.numpy(),
+        layer_untrained.layer.cell.tau,
     )
 
 
@@ -375,3 +371,25 @@ def test_lowpass_alpha_validation():
     with pytest.raises(ValueError, match="tau must be a positive number"):
         # note: error won't be raised until layer is applied (when AlphaCell is built)
         layers.Alpha(tau=0)(np.zeros((1, 1, 1)))
+
+
+@pytest.mark.parametrize(
+    "Layer",
+    (
+        lambda dt: layers.SpikingActivation("relu", dt=dt, seed=0),
+        lambda dt: layers.Lowpass(0.1, dt=dt),
+        lambda dt: layers.Alpha(0.1, dt=dt),
+    ),
+)
+def test_dt_update(Layer, rng, allclose):
+    x = rng.rand(32, 100, 64)
+
+    dt = tf.Variable(0.01)
+
+    layer = Layer(dt=dt)
+
+    assert allclose(layer(x), Layer(dt=0.01)(x))
+
+    dt.assign(0.05)
+
+    assert allclose(layer(x), Layer(dt=0.05)(x))
