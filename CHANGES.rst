@@ -35,6 +35,8 @@ Release history
   number of timesteps as their inputs. This makes it easier to process create
   multi-layer spiking networks, where time is preserved throughout the network.
   The spiking fashion-MNIST example has been updated accordingly. (`#3`_)
+- Layers now support multi-dimensional inputs (e.g., output of ``Conv2D`` layers).
+  (`#5`_)
 
 .. _#3: https://github.com/nengo/keras-spiking/pull/3
 .. _#4: https://github.com/nengo/keras-spiking/pull/4

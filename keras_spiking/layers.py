@@ -16,10 +16,10 @@ class KerasSpikingCell(tf.keras.layers.Layer):
 
     Parameters
     ----------
-    output_size : int
-        Dimensionality of cell output.
-    state_size : int
-        Dimensionality of cell state.
+    size : int or tuple of int or ``tf.TensorShape``
+        Input/output shape of the layer (not including batch/time dimensions).
+    state_size : int or tuple of int or ``tf.TensorShape``
+        Shape of the cell state. If ``None``, use ``size``.
     dt : float
         Length of time (in seconds) represented by one time step.
     always_use_inference : bool
@@ -31,19 +31,19 @@ class KerasSpikingCell(tf.keras.layers.Layer):
     """
 
     def __init__(
-        self,
-        output_size,
-        state_size=None,
-        dt=0.001,
-        always_use_inference=True,
-        **kwargs
+        self, size, state_size=None, dt=0.001, always_use_inference=True, **kwargs
     ):
         super().__init__(**kwargs)
+
         self.dt = dt
         self.always_use_inference = always_use_inference
+        self.size = tf.TensorShape(size)
 
-        self.output_size = output_size
-        self.state_size = self.output_size if state_size is None else state_size
+        # "output_size" and "state_size" have special meaning in `tf.keras.layers.RNN`
+        self.output_size = self.size
+        self.state_size = (
+            self.size if state_size is None else tf.TensorShape(state_size)
+        )
 
     def call(self, inputs, states, training=None):
         """
@@ -146,7 +146,7 @@ class KerasSpikingLayer(tf.keras.layers.Layer):
         super().build(input_shapes)
 
         # we initialize these here, rather than in ``__init__``, so that we can
-        # determine ``units`` automatically
+        # determine ``cell.shape`` automatically
         cell = self.build_cell(input_shapes)
         self.layer = tf.keras.layers.RNN(
             cell,
@@ -225,13 +225,13 @@ class SpikingActivationCell(KerasSpikingCell):
     .. testcode::
 
         my_layer = tf.keras.layers.RNN(
-            keras_spiking.SpikingActivationCell(units=10, activation=tf.nn.relu)
+            keras_spiking.SpikingActivationCell(size=10, activation=tf.nn.relu)
         )
 
     Parameters
     ----------
-    units : int
-        Dimensionality of layer.
+    size : int or tuple of int or ``tf.TensorShape``
+        Input/output shape of the layer (not including batch/time dimensions).
     activation : callable
         Activation function to be converted to spiking equivalent.
     dt : float
@@ -250,7 +250,7 @@ class SpikingActivationCell(KerasSpikingCell):
 
     def __init__(
         self,
-        units,
+        size,
         activation,
         *,
         dt=0.001,
@@ -259,12 +259,12 @@ class SpikingActivationCell(KerasSpikingCell):
         **kwargs
     ):
         super().__init__(
-            output_size=units,
+            size=size,
             dt=dt,
             always_use_inference=spiking_aware_training,
             **kwargs,
         )
-        self.units = units
+
         self.activation = tf.keras.activations.get(activation)
         self.seed = seed
         self.spiking_aware_training = spiking_aware_training
@@ -287,7 +287,7 @@ class SpikingActivationCell(KerasSpikingCell):
 
         # TODO: we could make the initial voltages trainable
         return tf.random.stateless_uniform(
-            (batch_size, self.output_size), seed=(seed, seed), dtype=dtype
+            [batch_size] + self.size.as_list(), seed=(seed, seed), dtype=dtype
         )
 
     def call_training(self, inputs, states):
@@ -354,7 +354,7 @@ class SpikingActivationCell(KerasSpikingCell):
         cfg = super().get_config()
         cfg.update(
             dict(
-                units=self.units,
+                size=self.size,
                 activation=tf.keras.activations.serialize(self.activation),
                 dt=self.dt,
                 seed=self.seed,
@@ -464,7 +464,7 @@ class SpikingActivation(KerasSpikingLayer):
 
     def build_cell(self, input_shapes):
         return SpikingActivationCell(
-            units=input_shapes[-1],
+            size=input_shapes[2:],
             activation=self.activation,
             dt=self.dt,
             seed=self.seed,
@@ -498,12 +498,14 @@ class LowpassCell(KerasSpikingCell):
 
     .. testcode::
 
-        my_layer = tf.keras.layers.RNN(keras_spiking.LowpassCell(units=10, tau=0.01))
+        my_layer = tf.keras.layers.RNN(
+            keras_spiking.LowpassCell(size=10, tau=0.01)
+        )
 
     Parameters
     ----------
-    units : int
-        Dimensionality of layer.
+    size : int or tuple of int or ``tf.TensorShape``
+        Input/output shape of the layer (not including batch/time dimensions).
     tau : float
         Time constant of filter (in seconds).
     dt : float
@@ -522,7 +524,7 @@ class LowpassCell(KerasSpikingCell):
 
     def __init__(
         self,
-        units,
+        size,
         tau,
         *,
         dt=0.001,
@@ -532,7 +534,7 @@ class LowpassCell(KerasSpikingCell):
         **kwargs
     ):
         super().__init__(
-            output_size=units,
+            size=size,
             dt=dt,
             always_use_inference=apply_during_training,
             **kwargs,
@@ -541,7 +543,6 @@ class LowpassCell(KerasSpikingCell):
         if tau <= 0:
             raise ValueError("tau must be a positive number")
 
-        self.units = units
         self.tau = tau
         self.apply_during_training = apply_during_training
         self.level_initializer = tf.initializers.get(level_initializer)
@@ -553,14 +554,14 @@ class LowpassCell(KerasSpikingCell):
 
         self.initial_level = self.add_weight(
             name="initial_level",
-            shape=(1, self.output_size),
+            shape=[1] + self.size.as_list(),
             initializer=self.level_initializer,
             trainable=self.apply_during_training,
         )
 
         self.tau_var = self.add_weight(
             name="tau_var",
-            shape=(1, self.state_size),
+            shape=[1] + self.state_size.as_list(),
             initializer=tf.initializers.constant(np.ones(self.state_size) * self.tau),
             trainable=self.apply_during_training,
             constraint=tf.keras.constraints.NonNeg(),
@@ -568,7 +569,7 @@ class LowpassCell(KerasSpikingCell):
 
     def get_initial_state(self, inputs=None, batch_size=None, dtype=None):
         """Get initial filter state."""
-        return tf.tile(self.initial_level, (batch_size, 1))
+        return tf.tile(self.initial_level, (batch_size,) + (1,) * self.size.rank)
 
     def call_inference(self, inputs, states):
         # apply ZOH discretization
@@ -589,7 +590,7 @@ class LowpassCell(KerasSpikingCell):
         cfg = super().get_config()
         cfg.update(
             dict(
-                units=self.units,
+                size=self.size,
                 tau=self.tau,
                 dt=self.dt,
                 apply_during_training=self.apply_during_training,
@@ -695,7 +696,7 @@ class Lowpass(KerasSpikingLayer):
 
     def build_cell(self, input_shapes):
         return LowpassCell(
-            units=input_shapes[-1],
+            size=input_shapes[2:],
             tau=self.tau,
             dt=self.dt,
             apply_during_training=self.apply_during_training,
@@ -731,12 +732,12 @@ class AlphaCell(KerasSpikingCell):
 
     .. testcode::
 
-        my_layer = tf.keras.layers.RNN(keras_spiking.AlphaCell(units=10, tau=0.01))
+        my_layer = tf.keras.layers.RNN(keras_spiking.AlphaCell(size=10, tau=0.01))
 
     Parameters
     ----------
-    units : int
-        Dimensionality of layer.
+    size : int or tuple of int or ``tf.TensorShape``
+        Input/output shape of the layer (not including batch/time dimensions).
     tau : float
         Time constant of filter (in seconds).
     dt : float
@@ -755,7 +756,7 @@ class AlphaCell(KerasSpikingCell):
 
     def __init__(
         self,
-        units,
+        size,
         tau,
         *,
         dt=0.001,
@@ -765,8 +766,8 @@ class AlphaCell(KerasSpikingCell):
         **kwargs
     ):
         super().__init__(
-            output_size=units,
-            state_size=2 * units,
+            size=size,
+            state_size=(2, np.prod(tf.nest.flatten(size))),
             dt=dt,
             always_use_inference=apply_during_training,
             **kwargs,
@@ -775,7 +776,7 @@ class AlphaCell(KerasSpikingCell):
         if tau <= 0:
             raise ValueError("tau must be a positive number")
 
-        self.units = units
+        self.flat_size = np.prod(self.size)
         self.tau = tau
         self.apply_during_training = apply_during_training
         self.level_initializer = tf.initializers.get(level_initializer)
@@ -787,15 +788,15 @@ class AlphaCell(KerasSpikingCell):
 
         self.initial_level = self.add_weight(
             name="initial_level",
-            shape=(1, self.output_size),
+            shape=(self.flat_size,),
             initializer=self.level_initializer,
             trainable=self.apply_during_training,
         )
 
         self.tau_var = self.add_weight(
             name="tau_var",
-            shape=self.output_size,
-            initializer=tf.initializers.constant(np.ones(self.output_size) * self.tau),
+            shape=(self.flat_size,),
+            initializer=tf.initializers.constant(np.ones(self.flat_size) * self.tau),
             trainable=self.apply_during_training,
             constraint=tf.keras.constraints.NonNeg(),
         )
@@ -804,13 +805,16 @@ class AlphaCell(KerasSpikingCell):
         """Get initial filter state."""
         return tf.concat(
             [
-                tf.zeros((batch_size, self.output_size)),
-                tf.tile(self.initial_level, (batch_size, 1)),
+                tf.zeros((batch_size, 1, self.flat_size)),
+                tf.tile(self.initial_level[None, None, :], (batch_size, 1, 1)),
             ],
             axis=1,
         )
 
     def call_inference(self, inputs, states):
+        # flatten inputs
+        inputs = tf.reshape(inputs, (-1, self.flat_size))
+
         # --- apply zero-order-hold discretization to get discrete A and B matrices
         #   This is derived by defining the system in state-space,
         #      A = [[-2/tau, -1/tau**2], [1, 0]]   B = [[1/tau**2, 0]]
@@ -833,14 +837,16 @@ class AlphaCell(KerasSpikingCell):
 
         # --- apply filtering
         (x,) = states
-        assert len(x.shape) == 2
-        x = tf.reshape(x, (-1, 2, self.output_size))
+        assert len(x.shape) == 3
 
         # i = new state, j = old state, k = unit, m = example (in batch)
         x = tf.einsum("kij,mjk->mik", A, x)
         x += tf.einsum("kij,mk->mik", B, inputs)
         y = x[:, 1]
-        x = tf.reshape(x, (-1, self.state_size))
+
+        # undo flattening on outputs
+        y = tf.reshape(y, [-1] + self.output_size.as_list())
+
         return y, (x,)
 
     def call_training(self, inputs, states):
@@ -852,7 +858,7 @@ class AlphaCell(KerasSpikingCell):
         cfg = super().get_config()
         cfg.update(
             dict(
-                units=self.units,
+                size=self.size,
                 tau=self.tau,
                 dt=self.dt,
                 apply_during_training=self.apply_during_training,
@@ -958,7 +964,7 @@ class Alpha(KerasSpikingLayer):
 
     def build_cell(self, input_shapes):
         return AlphaCell(
-            units=input_shapes[-1],
+            size=input_shapes[2:],
             tau=self.tau,
             dt=self.dt,
             apply_during_training=self.apply_during_training,

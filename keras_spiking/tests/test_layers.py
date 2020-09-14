@@ -186,14 +186,14 @@ def test_save_load(use_cell, allclose, tmpdir, seed):
     inp = tf.keras.Input((None, 32))
     if use_cell:
         out = tf.keras.layers.RNN(
-            layers.SpikingActivationCell(units=32, activation=tf.nn.relu, seed=seed),
+            layers.SpikingActivationCell(size=32, activation=tf.nn.relu, seed=seed),
             return_sequences=True,
         )(inp)
         out = tf.keras.layers.RNN(
-            layers.LowpassCell(tau=0.01, units=32), return_sequences=True
+            layers.LowpassCell(tau=0.01, size=32), return_sequences=True
         )(out)
         out = tf.keras.layers.RNN(
-            layers.AlphaCell(tau=0.01, units=32), return_sequences=True
+            layers.AlphaCell(tau=0.01, size=32), return_sequences=True
         )(out)
     else:
         out = layers.SpikingActivation(tf.nn.relu, seed=seed)(inp)
@@ -359,14 +359,14 @@ def test_alpha_trainable(allclose):
 
 def test_lowpass_alpha_validation():
     with pytest.raises(ValueError, match="tau must be a positive number"):
-        layers.LowpassCell(tau=0, units=1)
+        layers.LowpassCell(tau=0, size=1)
 
     with pytest.raises(ValueError, match="tau must be a positive number"):
         # note: error won't be raised until layer is applied (when LowpassCell is built)
         layers.Lowpass(tau=0)(np.zeros((1, 1, 1)))
 
     with pytest.raises(ValueError, match="tau must be a positive number"):
-        layers.AlphaCell(tau=0, units=1)
+        layers.AlphaCell(tau=0, size=1)
 
     with pytest.raises(ValueError, match="tau must be a positive number"):
         # note: error won't be raised until layer is applied (when AlphaCell is built)
@@ -393,3 +393,33 @@ def test_dt_update(Layer, rng, allclose):
     dt.assign(0.05)
 
     assert allclose(layer(x), Layer(dt=0.05)(x))
+
+
+@pytest.mark.parametrize("layer", ("spikingactivation", "lowpass", "alpha"))
+def test_multid_input(layer, rng, seed, allclose):
+    x = rng.rand(32, 10, 1, 2, 3)
+
+    if layer == "spikingactivation":
+        y0 = layers.SpikingActivation("relu", seed=seed, dt=1)(
+            np.reshape(x, (32, 10, -1))
+        )
+        y1 = layers.SpikingActivation("relu", seed=seed, dt=1)(x)
+        y2 = tf.keras.layers.RNN(
+            layers.SpikingActivationCell(y1.shape[2:], "relu", seed=seed, dt=1),
+            return_sequences=True,
+        )(x)
+    elif layer == "lowpass":
+        y0 = layers.Lowpass(0.1, dt=1)(np.reshape(x, (32, 10, -1)))
+        y1 = layers.Lowpass(0.1, dt=1)(x)
+        y2 = tf.keras.layers.RNN(
+            layers.LowpassCell(y1.shape[2:], 0.1, dt=1), return_sequences=True
+        )(x)
+    elif layer == "alpha":
+        y0 = layers.Alpha(0.1, dt=1)(np.reshape(x, (32, 10, -1)))
+        y1 = layers.Alpha(0.1, dt=1)(x)
+        y2 = tf.keras.layers.RNN(
+            layers.AlphaCell(y1.shape[2:], 0.1, dt=1), return_sequences=True
+        )(x)
+
+    assert allclose(np.reshape(y0, x.shape), y1)
+    assert allclose(y1, y2)
