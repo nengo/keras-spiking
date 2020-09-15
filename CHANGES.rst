@@ -27,6 +27,8 @@ Release history
   filtering for better noise removal for spiking layers. (`#4`_)
 - Added ``keras_spiking.callbacks.DtScheduler``, which can be used to update layer
   ``dt`` parameters during training. (`#5`_)
+- Added ``keras_spiking.default.dt``, which can be used to set the default ``dt``
+  for all layers that don't directly specify ``dt``. (`#5`_)
 
 **Changed**
 

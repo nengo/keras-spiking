@@ -6,6 +6,8 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.python.framework import smart_cond
 
+from keras_spiking import config
+
 
 class KerasSpikingCell(tf.keras.layers.Layer):
     """
@@ -21,7 +23,9 @@ class KerasSpikingCell(tf.keras.layers.Layer):
     state_size : int or tuple of int or ``tf.TensorShape``
         Shape of the cell state. If ``None``, use ``size``.
     dt : float
-        Length of time (in seconds) represented by one time step.
+        Length of time (in seconds) represented by one time step. If None, uses
+        `keras_spiking.default.dt <keras_spiking.config.DefaultManager>`
+        (which is 0.001 seconds by default).
     always_use_inference : bool
         If True, this layer will use its `.call_inference` behaviour during training,
         rather than `.call_training`.
@@ -31,11 +35,11 @@ class KerasSpikingCell(tf.keras.layers.Layer):
     """
 
     def __init__(
-        self, size, state_size=None, dt=0.001, always_use_inference=True, **kwargs
+        self, size, state_size=None, dt=None, always_use_inference=True, **kwargs
     ):
         super().__init__(**kwargs)
 
-        self.dt = dt
+        self.dt = config.default.dt if dt is None else dt
         self.always_use_inference = always_use_inference
         self.size = tf.TensorShape(size)
 
@@ -81,7 +85,9 @@ class KerasSpikingLayer(tf.keras.layers.Layer):
     Parameters
     ----------
     dt : float
-        Length of time (in seconds) represented by one time step.
+        Length of time (in seconds) represented by one time step. If None, uses
+        `keras_spiking.default.dt <keras_spiking.config.DefaultManager>`
+        (which is 0.001 seconds by default).
     return_sequences : bool
         Whether to return the full sequence of output values (default),
         or just the values on the last timestep.
@@ -110,7 +116,7 @@ class KerasSpikingLayer(tf.keras.layers.Layer):
 
     def __init__(
         self,
-        dt=0.001,
+        dt=None,
         return_sequences=True,
         return_state=False,
         stateful=False,
@@ -120,7 +126,7 @@ class KerasSpikingLayer(tf.keras.layers.Layer):
     ):
         super().__init__(**kwargs)
 
-        self.dt = dt
+        self.dt = config.default.dt if dt is None else dt
         self.return_sequences = return_sequences
         self.return_state = return_state
         self.stateful = stateful
@@ -235,7 +241,9 @@ class SpikingActivationCell(KerasSpikingCell):
     activation : callable
         Activation function to be converted to spiking equivalent.
     dt : float
-        Length of time (in seconds) represented by one time step.
+        Length of time (in seconds) represented by one time step. If None, uses
+        `keras_spiking.default.dt <keras_spiking.config.DefaultManager>`
+        (which is 0.001 seconds by default).
     seed : int
         Seed for random state initialization.
     spiking_aware_training : bool
@@ -253,7 +261,7 @@ class SpikingActivationCell(KerasSpikingCell):
         size,
         activation,
         *,
-        dt=0.001,
+        dt=None,
         seed=None,
         spiking_aware_training=True,
         **kwargs
@@ -400,7 +408,9 @@ class SpikingActivation(KerasSpikingLayer):
     activation : callable
         Activation function to be converted to spiking equivalent.
     dt : float
-        Length of time (in seconds) represented by one time step.
+        Length of time (in seconds) represented by one time step. If None, uses
+        `keras_spiking.default.dt <keras_spiking.config.DefaultManager>`
+        (which is 0.001 seconds by default).
     seed : int
         Seed for random state initialization.
     spiking_aware_training : bool
@@ -509,7 +519,9 @@ class LowpassCell(KerasSpikingCell):
     tau : float
         Time constant of filter (in seconds).
     dt : float
-        Length of time (in seconds) represented by one time step.
+        Length of time (in seconds) represented by one time step. If None, uses
+        `keras_spiking.default.dt <keras_spiking.config.DefaultManager>`
+        (which is 0.001 seconds by default).
     apply_during_training : bool
         If False, this layer will effectively be ignored during training (this
         often makes sense in concert with the swappable training behaviour in, e.g.,
@@ -527,7 +539,7 @@ class LowpassCell(KerasSpikingCell):
         size,
         tau,
         *,
-        dt=0.001,
+        dt=None,
         # TODO: better name for this parameter?
         apply_during_training=True,
         level_initializer="zeros",
@@ -632,7 +644,9 @@ class Lowpass(KerasSpikingLayer):
     tau : float
         Time constant of filter (in seconds).
     dt : float
-        Length of time (in seconds) represented by one time step.
+        Length of time (in seconds) represented by one time step. If None, uses
+        `keras_spiking.default.dt <keras_spiking.config.DefaultManager>`
+        (which is 0.001 seconds by default).
     apply_during_training : bool
         If False, this layer will effectively be ignored during training (this
         often makes sense in concert with the swappable training behaviour in, e.g.,
@@ -741,7 +755,9 @@ class AlphaCell(KerasSpikingCell):
     tau : float
         Time constant of filter (in seconds).
     dt : float
-        Length of time (in seconds) represented by one time step.
+        Length of time (in seconds) represented by one time step. If None, uses
+        `keras_spiking.default.dt <keras_spiking.config.DefaultManager>`
+        (which is 0.001 seconds by default).
     apply_during_training : bool
         If False, this layer will effectively be ignored during training (this
         often makes sense in concert with the swappable training behaviour in, e.g.,
@@ -759,7 +775,7 @@ class AlphaCell(KerasSpikingCell):
         size,
         tau,
         *,
-        dt=0.001,
+        dt=None,
         # TODO: better name for this parameter?
         apply_during_training=True,
         level_initializer="zeros",
@@ -900,7 +916,9 @@ class Alpha(KerasSpikingLayer):
     tau : float
         Time constant of filter (in seconds).
     dt : float
-        Length of time (in seconds) represented by one time step.
+        Length of time (in seconds) represented by one time step. If None, uses
+        `keras_spiking.default.dt <keras_spiking.config.DefaultManager>`
+        (which is 0.001 seconds by default).
     apply_during_training : bool
         If False, this layer will effectively be ignored during training (this
         often makes sense in concert with the swappable training behaviour in, e.g.,

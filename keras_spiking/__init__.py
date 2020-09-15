@@ -5,6 +5,7 @@ __license__ = "Free for non-commercial use; see LICENSE.rst"
 from keras_spiking.version import version as __version__
 
 from keras_spiking import callbacks, layers, regularizers
+from keras_spiking.config import default
 from keras_spiking.layers import (
     Alpha,
     AlphaCell,

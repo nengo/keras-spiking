@@ -24,3 +24,11 @@ Callbacks
 
     .. autoautosummary:: keras_spiking.callbacks
         :nosignatures:
+
+Configuration
+-------------
+
+.. automodule:: keras_spiking.config
+
+    .. autoautosummary:: keras_spiking.config
+        :nosignatures:
