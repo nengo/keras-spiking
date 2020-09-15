@@ -47,6 +47,7 @@ ci_scripts:
       - $TF_VERSION
       - $NUMPY_VERSION
       - nengo
+      - tensorflow-probability
   - template: docs
     pip_install:
       - $TF_VERSION
@@ -112,6 +113,8 @@ setup_py:
   install_req:
     - numpy>=1.16.0
     - tensorflow>=2.1.0
+  optional_req:
+    - tensorflow-probability>=0.11.0
   docs_req:
     - jupyter>=1.0.0
     - matplotlib>=2.0.0

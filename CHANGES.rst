@@ -29,6 +29,13 @@ Release history
   ``dt`` parameters during training. (`#5`_)
 - Added ``keras_spiking.default.dt``, which can be used to set the default ``dt``
   for all layers that don't directly specify ``dt``. (`#5`_)
+- Added ``keras_spiking.regularizers.RangedRegularizer``, which can be used to apply
+  some other regularizer (e.g. ``tf.keras.regularizers.L2``) with respect to some
+  non-zero target point, or a range of acceptable values. This functionality has also
+  been added to ``keras_spiking.regularizers.L1L2/L1/L2`` (so they can now be applied
+  with respect to a single reference point or a range). (`#6`_)
+- Added ``keras_spiking.regularizers.Percentile`` which computes a percentile across a
+  number of examples, and regularize that statistic. (`#6`_)
 
 **Changed**
 
@@ -43,6 +50,7 @@ Release history
 .. _#3: https://github.com/nengo/keras-spiking/pull/3
 .. _#4: https://github.com/nengo/keras-spiking/pull/4
 .. _#5: https://github.com/nengo/keras-spiking/pull/5
+.. _#6: https://github.com/nengo/keras-spiking/pull/6
 
 0.1.0 (August 14, 2020)
 -----------------------

@@ -14,4 +14,3 @@ from keras_spiking.layers import (
     SpikingActivation,
     SpikingActivationCell,
 )
-from keras_spiking.regularizers import L1, L2, L1L2

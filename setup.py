@@ -41,7 +41,9 @@ docs_req = [
     "numpydoc>=0.6.0",
     "sphinx>=3.0.0",
 ]
-optional_req = []
+optional_req = [
+    "tensorflow-probability>=0.11.0",
+]
 tests_req = [
     "pylint>=1.9.2",
     "pytest>=3.6.0",
