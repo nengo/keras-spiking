@@ -269,83 +269,41 @@ def test_filter_apply_during_training(Layer, allclose, rng):
     assert allclose(layer(x, training=True), layer(x, training=False))
 
 
-def test_lowpass_trainable(allclose):
+@pytest.mark.parametrize("Layer", (layers.Lowpass, layers.Alpha))
+def test_filter_trainable(Layer, allclose):
+    tau = 0.1
+    n_steps = 10
+    tolerance = 1e-3 if Layer is layers.Lowpass else 3e-2
+
+    inputs = np.ones((1, n_steps, 1)) * 0.5
+    # we'll train the layers to match the output of this lowpass filter (with
+    # a different tau/initial level)
+    target_layer = Layer(
+        tau=tau / 2, level_initializer=tf.initializers.constant(tf.ones((1, 1)) * 0.1)
+    )
+    targets = target_layer(inputs).numpy()
+
     inp = tf.keras.Input((None, 1))
-    layer_trained = layers.Lowpass(0.01, apply_during_training=True)
-    layer_skip = layers.Lowpass(0.01, apply_during_training=False)
-    layer_untrained = layers.Lowpass(0.01, apply_during_training=True, trainable=False)
+    layer_trained = Layer(tau, apply_during_training=True)
+    layer_skip = Layer(tau, apply_during_training=False)
+    layer_untrained = Layer(tau, apply_during_training=True, trainable=False)
 
     model = tf.keras.Model(
         inp, [layer_trained(inp), layer_skip(inp), layer_untrained(inp)]
     )
 
-    model.compile(loss="mse", optimizer=tf.optimizers.SGD(0.5))
-    model.fit(np.zeros((1, 1, 1)), [np.ones((1, 1, 1))] * 3, epochs=10, verbose=0)
+    model.compile(loss="mse", optimizer=tf.optimizers.Adam(0.01))
+    model.fit(inputs, [targets] * 3, epochs=150, verbose=0)
 
-    # trainable layer should learn to output 1
-    ys = model.predict(np.zeros((1, 1, 1)))
-    assert allclose(ys[0], 1)
-    assert not allclose(ys[1], 1, record_rmse=False, print_fail=0)
-    assert not allclose(ys[2], 1, record_rmse=False, print_fail=0)
+    # trainable layer should learn to output target
+    ys = model.predict(inputs)
+    assert allclose(ys[0], targets, atol=tolerance)
+    assert not allclose(ys[1], targets, record_rmse=False, print_fail=0, atol=tolerance)
+    assert not allclose(ys[2], targets, record_rmse=False, print_fail=0, atol=tolerance)
 
-    # for trainable layer, smoothing * initial_level should go to 1
-    assert allclose(
-        tf.nn.sigmoid(layer_trained.layer.cell.smoothing)
-        * layer_trained.layer.cell.initial_level,
-        1,
-    )
-
-    # other layers should stay at initial value
-    assert allclose(layer_skip.layer.cell.initial_level.numpy(), 0)
-    assert allclose(layer_untrained.layer.cell.initial_level.numpy(), 0)
-    assert allclose(layer_skip.layer.cell.tau_var.numpy(), layer_skip.layer.cell.tau)
-    assert allclose(
-        layer_untrained.layer.cell.tau_var.numpy(),
-        layer_untrained.layer.cell.tau,
-    )
-
-
-def test_alpha_trainable(allclose):
-    n_train = 32 * 100
-    steps = 5
-    units = 2
-    tau0 = 0.001
-
-    inp = tf.keras.Input((None, units))
-    layer_trained = layers.Alpha(tau0, apply_during_training=True)
-    layer_skip = layers.Alpha(tau0, apply_during_training=False)
-    layer_untrained = layers.Alpha(tau0, apply_during_training=True, trainable=False)
-
-    model = tf.keras.Model(
-        inp, [layer_trained(inp), layer_skip(inp), layer_untrained(inp)]
-    )
-
-    # initial `initial_level` should be near 0
-    assert allclose(layer_trained.layer.cell.initial_level.numpy(), 0)
-
-    # train model
-    model.compile(
-        loss="mse", optimizer=tf.optimizers.SGD(0.5, momentum=0.9, nesterov=True)
-    )
-    model.fit(
-        np.zeros((n_train, steps, units)),
-        [np.ones((n_train, steps, units))] * 3,
-        epochs=10,
-        verbose=0,
-    )
-
-    # trainable layer should learn to output 1 at all timesteps given 0 at all timesteps
-    ys = model.predict(np.zeros((1, steps, units)))
-    assert allclose(ys[0], 1, atol=3e-2)
-    assert not allclose(ys[1], 1, atol=0.1, record_rmse=False, print_fail=0)
-    assert not allclose(ys[2], 1, atol=0.1, record_rmse=False, print_fail=0)
-
-    # learned `initial_level` should be near 1
-    assert allclose(layer_trained.layer.cell.initial_level.numpy(), 1, atol=3e-2)
-
-    # learned tau should be larger (tau trains slowly)
-    smoothing = layer_trained.layer.cell.tau_var
-    assert np.all(tf.nn.softplus(smoothing) > 3 * tau0)
+    # for trainable layer, parameters should match the target layer
+    for w0, w1 in zip(layer_trained.weights, target_layer.weights):
+        assert allclose(w0.numpy(), w1.numpy(), atol=tolerance)
 
     # other layers should stay at initial value
     assert allclose(layer_skip.layer.cell.initial_level.numpy(), 0)
