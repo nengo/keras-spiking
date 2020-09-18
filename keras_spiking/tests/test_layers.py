@@ -8,7 +8,7 @@ from keras_spiking import layers
 
 @pytest.mark.parametrize("activation", (tf.nn.relu, tf.nn.tanh, "relu"))
 def test_activations(activation, rng, allclose):
-    x = rng.randn(32, 10, 2)
+    x = rng.randn(32, 10, 2).astype(np.float32)
 
     ground = tf.keras.activations.get(activation)(x)
 
@@ -47,7 +47,7 @@ def test_activations(activation, rng, allclose):
 
 
 def test_seed(seed, allclose):
-    x = np.ones((2, 100, 10)) * 100
+    x = np.ones((2, 100, 10), dtype=np.float32) * 100
 
     # layers with the same seed produce the same output
     y0 = layers.SpikingActivation(tf.nn.relu, return_sequences=True, seed=seed)(x)
@@ -75,7 +75,7 @@ def test_spiking_aware_training(rng, allclose):
     layer = layers.SpikingActivation(tf.nn.relu, spiking_aware_training=False)
     layer_sat = layers.SpikingActivation(tf.nn.relu, spiking_aware_training=True)
     with tf.GradientTape(persistent=True) as g:
-        x = tf.constant(rng.uniform(-1, 1, size=(10, 20, 32)))
+        x = tf.constant(rng.uniform(-1, 1, size=(10, 20, 32)).astype(np.float32))
         g.watch(x)
         y = layer(x, training=True)[:, -1]
         y_sat = layer_sat(x, training=True)[:, -1]
@@ -128,7 +128,7 @@ def test_stateful(Layer, allclose, rng):
     layer = Layer(stateful=False, return_state=True, return_sequences=True)
     layer_stateful = Layer(stateful=True, return_state=True, return_sequences=True)
 
-    x = rng.uniform(size=(32, 100, 32))
+    x = rng.uniform(size=(32, 100, 32)).astype(np.float32)
     # note: need to set initial state to zero due to bug in TF, see
     # https://github.com/tensorflow/tensorflow/issues/42193
     _, s = layer(x, initial_state=[tf.zeros((32, 32))])
@@ -160,7 +160,7 @@ def test_unroll(Layer, allclose, rng):
     layer = Layer(return_sequences=True)
     layer_unroll = Layer(return_sequences=True, unroll=True)
 
-    x = rng.uniform(size=(32, 100, 32))
+    x = rng.uniform(size=(32, 100, 32)).astype(np.float32)
     assert allclose(layer(x), layer_unroll(x))
 
 
@@ -175,7 +175,7 @@ def test_time_major(Layer, allclose, rng):
     layer = Layer(return_sequences=True)
     layer_time_major = Layer(return_sequences=True, time_major=True)
 
-    x = rng.uniform(size=(32, 100, 32))
+    x = rng.uniform(size=(32, 100, 32)).astype(np.float32)
     assert allclose(
         layer(x), np.transpose(layer_time_major(np.transpose(x, (1, 0, 2))), (1, 0, 2))
     )
@@ -252,7 +252,7 @@ def test_lowpass_alpha_tau(kind, dt, allclose, rng):
 
 @pytest.mark.parametrize("Layer", [layers.Lowpass, layers.Alpha])
 def test_filter_apply_during_training(Layer, allclose, rng):
-    x = rng.randn(10, 100, 32)
+    x = rng.randn(10, 100, 32).astype(np.float32)
 
     # apply_during_training=False:
     #   confirm `output == input` for training=True, but not training=False
@@ -275,7 +275,7 @@ def test_filter_trainable(Layer, allclose):
     n_steps = 10
     tolerance = 1e-3 if Layer is layers.Lowpass else 3e-2
 
-    inputs = np.ones((1, n_steps, 1)) * 0.5
+    inputs = np.ones((1, n_steps, 1), dtype=np.float32) * 0.5
     # we'll train the layers to match the output of this lowpass filter (with
     # a different tau/initial level)
     target_layer = Layer(
@@ -321,14 +321,14 @@ def test_lowpass_alpha_validation():
 
     with pytest.raises(ValueError, match="tau must be a positive number"):
         # note: error won't be raised until layer is applied (when LowpassCell is built)
-        layers.Lowpass(tau=0)(np.zeros((1, 1, 1)))
+        layers.Lowpass(tau=0)(np.zeros((1, 1, 1), dtype=np.float32))
 
     with pytest.raises(ValueError, match="tau must be a positive number"):
         layers.AlphaCell(tau=0, size=1)
 
     with pytest.raises(ValueError, match="tau must be a positive number"):
         # note: error won't be raised until layer is applied (when AlphaCell is built)
-        layers.Alpha(tau=0)(np.zeros((1, 1, 1)))
+        layers.Alpha(tau=0)(np.zeros((1, 1, 1), dtype=np.float32))
 
 
 @pytest.mark.parametrize(
@@ -340,7 +340,7 @@ def test_lowpass_alpha_validation():
     ),
 )
 def test_dt_update(Layer, rng, allclose):
-    x = rng.rand(32, 100, 64)
+    x = rng.rand(32, 100, 64).astype(np.float32)
 
     dt = tf.Variable(0.01)
 
@@ -355,7 +355,7 @@ def test_dt_update(Layer, rng, allclose):
 
 @pytest.mark.parametrize("layer", ("spikingactivation", "lowpass", "alpha"))
 def test_multid_input(layer, rng, seed, allclose):
-    x = rng.rand(32, 10, 1, 2, 3)
+    x = rng.rand(32, 10, 1, 2, 3).astype(np.float32)
 
     if layer == "spikingactivation":
         y0 = layers.SpikingActivation("relu", seed=seed, dt=1)(
