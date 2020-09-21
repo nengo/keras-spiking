@@ -64,6 +64,7 @@ autoautosummary_change_modules = {
         "keras_spiking.layers.Lowpass",
         "keras_spiking.layers.AlphaCell",
         "keras_spiking.layers.Alpha",
+        "keras_spiking.model_energy.ModelEnergy",
     ],
 }
 

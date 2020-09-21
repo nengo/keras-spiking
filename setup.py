@@ -31,6 +31,7 @@ version = runpy.run_path(str(root / "keras_spiking" / "version.py"))["version"]
 
 install_req = [
     "numpy>=1.16.0",
+    "packaging>=20.0",
     "tensorflow>=2.1.0",
 ]
 docs_req = [

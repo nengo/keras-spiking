@@ -41,6 +41,7 @@ docs_conf_py:
       - keras_spiking.layers.Lowpass
       - keras_spiking.layers.AlphaCell
       - keras_spiking.layers.Alpha
+      - keras_spiking.model_energy.ModelEnergy
 
 ci_scripts:
   - template: static
@@ -123,6 +124,7 @@ setup_py:
   include_package_data: True
   install_req:
     - numpy>=1.16.0
+    - packaging>=20.0
     - tensorflow>=2.1.0
   optional_req:
     - tensorflow-probability>=0.11.0

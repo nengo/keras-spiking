@@ -32,3 +32,11 @@ Configuration
 
     .. autoautosummary:: keras_spiking.config
         :nosignatures:
+
+Energy estimation
+-----------------
+
+.. automodule:: keras_spiking.model_energy
+
+    .. autoautosummary:: keras_spiking.model_energy
+        :nosignatures:

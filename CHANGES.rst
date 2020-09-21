@@ -38,6 +38,7 @@ Release history
   with respect to a single reference point or a range). (`#6`_)
 - Added ``keras_spiking.regularizers.Percentile`` which computes a percentile across a
   number of examples, and regularize that statistic. (`#6`_)
+- Added ``keras_spiking.ModelEnergy`` to estimate energy usage for Keras Models. (`#7`_)
 
 **Changed**
 
@@ -58,6 +59,7 @@ Release history
 .. _#4: https://github.com/nengo/keras-spiking/pull/4
 .. _#5: https://github.com/nengo/keras-spiking/pull/5
 .. _#6: https://github.com/nengo/keras-spiking/pull/6
+.. _#7: https://github.com/nengo/keras-spiking/pull/7
 .. _#12: https://github.com/nengo/keras-spiking/pull/12
 
 0.1.0 (August 14, 2020)
