@@ -78,7 +78,7 @@ def test_errors(monkeypatch):
     (
         (
             regularizers.RangedRegularizer,
-            dict(target=(3, 4), regularizer=tf.keras.regularizers.L1(0.1)),
+            dict(target=(3, 4), regularizer=tf.keras.regularizers.L1L2(l1=0.1)),
         ),
         (regularizers.L1, dict(l1=0.1, target=5)),
         (regularizers.L2, dict(l2=0.1, target=5)),

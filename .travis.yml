@@ -24,7 +24,7 @@ env:
     - BRANCH_NAME="${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH}"
     - PIP_USE_FEATURE="2020-resolver"
     - NUMPY_VERSION="numpy>=1.16.0"
-    - TF_VERSION="tensorflow-cpu"
+    - TF_VERSION="tensorflow"
 
 jobs:
   include:
@@ -37,19 +37,19 @@ jobs:
       SCRIPT="test"
   -
     env:
-      TF_VERSION="tensorflow-cpu==2.1.0"
+      TF_VERSION="tensorflow==2.1.0"
       NUMPY_VERSION="numpy==1.16.0"
       SCRIPT="test"
     python: 3.6
   -
     env:
-      TF_VERSION="tensorflow-gpu"
+      TF_VERSION="tensorflow"
       GPU_NUM="0"
       SCRIPT="remote-docs"
     stage: advanced
   -
     env:
-      TF_VERSION="tensorflow-gpu"
+      TF_VERSION="tensorflow"
       GPU_NUM="0"
       SCRIPT="remote-examples"
   - stage: deploy

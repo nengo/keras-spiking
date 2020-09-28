@@ -339,7 +339,7 @@ class SpikingActivationCell(KerasSpikingCell):
                 None,
             )
 
-        if isinstance(self.dt, tf.Variable):
+        if isinstance(self.dt, tf.Variable) or isinstance(states[0], tf.Variable):
 
             def grad(grad_spikes, grad_voltage, variables=None):
                 return (

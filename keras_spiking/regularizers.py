@@ -10,7 +10,7 @@ try:
     import tensorflow_probability as tfp
 
     HAS_TFP = True
-except ImportError:
+except ImportError:  # pragma: no cover
     HAS_TFP = False
 
 
@@ -34,7 +34,7 @@ class RangedRegularizer(tf.keras.regularizers.Regularizer):
         ``target``.
     """
 
-    def __init__(self, target=0, regularizer=tf.keras.regularizers.L2(0.01)):
+    def __init__(self, target=0, regularizer=tf.keras.regularizers.L1L2(l2=0.01)):
         super().__init__()
 
         self.regularizer = regularizer

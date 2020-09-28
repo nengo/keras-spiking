@@ -279,7 +279,7 @@ def test_filter_trainable(Layer, allclose):
     # we'll train the layers to match the output of this lowpass filter (with
     # a different tau/initial level)
     target_layer = Layer(
-        tau=tau / 2, level_initializer=tf.initializers.constant(tf.ones((1, 1)) * 0.1)
+        tau=tau / 2, level_initializer=tf.initializers.constant(np.ones((1, 1)) * 0.1)
     )
     targets = target_layer(inputs).numpy()
 

@@ -72,24 +72,24 @@ travis_yml:
   python: 3.8
   global_vars:
     NUMPY_VERSION: numpy>=1.16.0
-    TF_VERSION: tensorflow-cpu
+    TF_VERSION: tensorflow
   jobs:
     - stage: basic
       script: static
     - script: test
     - script: test
       env:
-        TF_VERSION: tensorflow-cpu==2.1.0
+        TF_VERSION: tensorflow==2.1.0
         NUMPY_VERSION: numpy==1.16.0
       python: 3.6
     - stage: advanced
       script: remote-docs
       env:
-        TF_VERSION: tensorflow-gpu
+        TF_VERSION: tensorflow
         GPU_NUM: 0
     - script: remote-examples
       env:
-        TF_VERSION: tensorflow-gpu
+        TF_VERSION: tensorflow
         GPU_NUM: 0
   pypi_user: drasmuss
   deploy_dists:
