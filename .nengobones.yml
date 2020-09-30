@@ -132,6 +132,8 @@ setup_py:
     - jupyter>=1.0.0
     - matplotlib>=2.0.0
     - nbsphinx>=0.3.5
+    - nengo-dl>=3.4.0
+    - nengo-loihi>=1.0.0
     - nengo-sphinx-theme>=1.2.1
     - numpydoc>=0.6.0
     - sphinx>=3.0.0

@@ -15,3 +15,4 @@ install the necessary requirements.
 .. toctree::
 
     examples/spiking-fashion-mnist
+    examples/model-energy
