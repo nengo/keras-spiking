@@ -61,11 +61,25 @@ ci_scripts:
     output_name: remote-docs
     host: azure-docs
     travis_var_key: 2895d60e3414
+    azure_name: nengo-dl-docs
+    azure_group: nengo-ci
+    remote_vars:
+      NUMPY_VERSION: $NUMPY_VERSION
+      TF_VERSION: $TF_VERSION
+    remote_setup:
+      - conda install -y -c nvidia cudatoolkit=11.0 cudnn=8
   - template: remote-script
     remote_script: examples
     output_name: remote-examples
     host: azure-examples
     travis_var_key: 2895d60e3414
+    azure_name: nengo-dl-examples
+    azure_group: nengo-ci
+    remote_vars:
+      NUMPY_VERSION: $NUMPY_VERSION
+      TF_VERSION: $TF_VERSION
+    remote_setup:
+      - conda install -y -c nvidia cudatoolkit=11.0 cudnn=8
   - template: deploy
 
 travis_yml:
@@ -84,13 +98,7 @@ travis_yml:
       python: 3.6
     - stage: advanced
       script: remote-docs
-      env:
-        TF_VERSION: tensorflow
-        GPU_NUM: 0
     - script: remote-examples
-      env:
-        TF_VERSION: tensorflow
-        GPU_NUM: 0
   pypi_user: __token__
   deploy_dists:
     - sdist

@@ -43,14 +43,10 @@ jobs:
     python: 3.6
   -
     env:
-      TF_VERSION="tensorflow"
-      GPU_NUM="0"
       SCRIPT="remote-docs"
     stage: advanced
   -
     env:
-      TF_VERSION="tensorflow"
-      GPU_NUM="0"
       SCRIPT="remote-examples"
   - stage: deploy
     if: branch =~ ^release-candidate-* OR tag =~ ^v[0-9]*
