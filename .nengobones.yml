@@ -91,7 +91,7 @@ travis_yml:
       env:
         TF_VERSION: tensorflow
         GPU_NUM: 0
-  pypi_user: drasmuss
+  pypi_user: __token__
   deploy_dists:
     - sdist
     - bdist_wheel
