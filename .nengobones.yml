@@ -46,7 +46,7 @@ ci_scripts:
     pip_install:
       - $TF_VERSION
       - $NUMPY_VERSION
-      - nengo
+      - nengo[tests]
       - tensorflow-probability
   - template: docs
     pip_install:
