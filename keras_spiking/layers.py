@@ -122,7 +122,7 @@ class KerasSpikingLayer(tf.keras.layers.Layer):
         stateful=False,
         unroll=False,
         time_major=False,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(**kwargs)
 
@@ -264,7 +264,7 @@ class SpikingActivationCell(KerasSpikingCell):
         dt=None,
         seed=None,
         spiking_aware_training=True,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(
             size=size,
@@ -456,7 +456,7 @@ class SpikingActivation(KerasSpikingLayer):
         stateful=False,
         unroll=False,
         time_major=False,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(
             dt=dt,
@@ -543,7 +543,7 @@ class LowpassCell(KerasSpikingCell):
         # TODO: better name for this parameter?
         apply_during_training=True,
         level_initializer="zeros",
-        **kwargs
+        **kwargs,
     ):
         super().__init__(
             size=size,
@@ -692,7 +692,7 @@ class Lowpass(KerasSpikingLayer):
         stateful=False,
         unroll=False,
         time_major=False,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(
             dt=dt,
@@ -779,7 +779,7 @@ class AlphaCell(KerasSpikingCell):
         # TODO: better name for this parameter?
         apply_during_training=True,
         level_initializer="zeros",
-        **kwargs
+        **kwargs,
     ):
         super().__init__(
             size=size,
@@ -964,7 +964,7 @@ class Alpha(KerasSpikingLayer):
         stateful=False,
         unroll=False,
         time_major=False,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(
             dt=dt,
