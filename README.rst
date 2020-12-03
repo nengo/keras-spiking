@@ -2,9 +2,9 @@
   :target: https://pypi.org/project/keras-spiking
   :alt: Latest PyPI version
 
-.. image:: https://img.shields.io/travis/com/nengo/keras-spiking/master.svg
-  :target: https://travis-ci.com/nengo/keras-spiking
-  :alt: Travis-CI build status
+.. image:: https://img.shields.io/pypi/pyversions/keras-spiking.svg
+  :target: https://pypi.org/project/keras-spiking
+  :alt: Python versions
 
 .. image:: https://img.shields.io/codecov/c/github/nengo/keras-spiking/master.svg
   :target: https://codecov.io/gh/nengo/keras-spiking
