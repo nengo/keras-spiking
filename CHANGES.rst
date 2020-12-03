@@ -21,6 +21,8 @@ Release history
 0.1.1 (unreleased)
 ------------------
 
+*Compatible with TensorFlow 2.1.0 - 2.4.0*
+
 **Added**
 
 - Added the ``keras_spiking.Alpha`` filter, which provides second-order lowpass
@@ -60,5 +62,7 @@ Release history
 
 0.1.0 (August 14, 2020)
 -----------------------
+
+*Compatible with TensorFlow 2.1.0 - 2.3.0*
 
 Initial release
