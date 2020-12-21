@@ -1,6 +1,7 @@
 import numpy as np
 import pytest
 import tensorflow as tf
+from packaging import version
 
 from keras_spiking import layers
 
@@ -128,19 +129,26 @@ def test_stateful(Layer, allclose, rng):
     layer_stateful = Layer(stateful=True, return_state=True, return_sequences=True)
 
     x = rng.uniform(size=(32, 100, 32)).astype(np.float32)
-    # note: need to set initial state to zero due to bug in TF, see
+
+    # note: need to set initial state to zero due to bug in TF<2.4, see
     # https://github.com/tensorflow/tensorflow/issues/42193
-    _, s = layer(x, initial_state=[tf.zeros((32, 32))])
+    initial_state = (
+        [tf.zeros((32, 32))]
+        if version.parse(tf.__version__) < version.parse("2.4.0")
+        else None
+    )
+
+    _, s = layer(x, initial_state=initial_state)
 
     # non-stateful layers start from the same state each time
-    assert allclose(s, layer(x, initial_state=[tf.zeros((32, 32))])[1])
+    assert allclose(s, layer(x, initial_state=initial_state)[1])
 
     # stateful layers persist state between calls
     states = [layer_stateful(x[:, i * 10 : (i + 1) * 10])[1] for i in range(10)]
     assert allclose(s, states[-1])
 
     # reset_states resets to initial conditions
-    layer_stateful.reset_states()
+    layer_stateful.reset_states(states=initial_state)
     assert allclose(layer_stateful(x[:, :10])[1], states[0])
 
     # can override initial state

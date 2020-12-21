@@ -189,6 +189,12 @@ class KerasSpikingLayer(tf.keras.layers.Layer):
             Optional state array that can be used to override the values returned by
             ``cell.get_initial_state``, where ``cell`` is returned by ``build_cell``.
         """
+        if states is None:
+            states = self.layer.cell.get_initial_state(
+                batch_size=self.layer.states[0].shape[0],
+                dtype=self.layer.states[0].dtype,
+            )
+
         self.layer.reset_states(states=states)
 
     def get_config(self):

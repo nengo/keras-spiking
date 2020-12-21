@@ -47,10 +47,16 @@ Release history
 - Layers now support multi-dimensional inputs (e.g., output of ``Conv2D`` layers).
   (`#5`_)
 
+**Fixed**
+
+- KerasSpiking layers' ``reset_state`` now resets to the value of ``get_initial_state``
+  (as documented in the docstring), rather than all zeros. (`#12`_)
+
 .. _#3: https://github.com/nengo/keras-spiking/pull/3
 .. _#4: https://github.com/nengo/keras-spiking/pull/4
 .. _#5: https://github.com/nengo/keras-spiking/pull/5
 .. _#6: https://github.com/nengo/keras-spiking/pull/6
+.. _#12: https://github.com/nengo/keras-spiking/pull/12
 
 0.1.0 (August 14, 2020)
 -----------------------
