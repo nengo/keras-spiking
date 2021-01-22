@@ -17,8 +17,13 @@ setup_cfg:
   pytest:
     xfail_strict: True
   pylint:
+    disable:
+      - no-value-for-parameter # https://github.com/tensorflow/tensorflow/issues/43038
     known_third_party:
       - tensorflow
+  codespell:
+    ignore_words:
+      - hist
 
 docs_conf_py:
   nengo_logo: ""
@@ -39,8 +44,6 @@ docs_conf_py:
 
 ci_scripts:
   - template: static
-    codespell_ignore_words:
-      - hist
   - template: test
     coverage: true
     pip_install:
