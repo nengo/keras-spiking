@@ -54,6 +54,8 @@ Release history
 
 - KerasSpiking layers' ``reset_state`` now resets to the value of ``get_initial_state``
   (as documented in the docstring), rather than all zeros. (`#12`_)
+- Fixed a bug with ``keras_spiking.Alpha`` on TensorFlow 2.1, where a symbolic tensor
+  in the initial state shape could not be converted to a Numpy array. (`#16`_)
 
 .. _#3: https://github.com/nengo/keras-spiking/pull/3
 .. _#4: https://github.com/nengo/keras-spiking/pull/4
@@ -61,6 +63,7 @@ Release history
 .. _#6: https://github.com/nengo/keras-spiking/pull/6
 .. _#7: https://github.com/nengo/keras-spiking/pull/7
 .. _#12: https://github.com/nengo/keras-spiking/pull/12
+.. _#16: https://github.com/nengo/keras-spiking/pull/16
 
 0.1.0 (August 14, 2020)
 -----------------------

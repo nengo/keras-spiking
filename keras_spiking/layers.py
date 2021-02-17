@@ -825,10 +825,12 @@ class AlphaCell(KerasSpikingCell):
 
     def get_initial_state(self, inputs=None, batch_size=None, dtype=None):
         """Get initial filter state."""
+        zeros_shape = tf.stack((batch_size, 1, self.flat_size))
+        tile_shape = tf.stack((batch_size, 1, 1))
         return tf.concat(
             [
-                tf.zeros((batch_size, 1, self.flat_size)),
-                tf.tile(self.initial_level[None, None, :], (batch_size, 1, 1)),
+                tf.zeros(zeros_shape),
+                tf.tile(self.initial_level[None, None, :], tile_shape),
             ],
             axis=1,
         )
