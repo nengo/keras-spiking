@@ -18,8 +18,8 @@ Release history
    - Deprecated
    - Removed
 
-0.1.1 (unreleased)
-------------------
+0.2.0 (February 18, 2021)
+-------------------------
 
 *Compatible with TensorFlow 2.1.0 - 2.4.0*
 
