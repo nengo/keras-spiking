@@ -6,8 +6,8 @@ a release version. Release versions are git tagged with the version.
 """
 
 name = "keras-spiking"
-version_info = (0, 2, 0)  # (major, minor, patch)
-dev = None  # set to None for releases
+version_info = (0, 2, 1)  # (major, minor, patch)
+dev = 0  # set to None for releases
 
 version = "{v}{dev}".format(
     v=".".join(str(v) for v in version_info),
