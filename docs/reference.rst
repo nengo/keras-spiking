@@ -17,6 +17,14 @@ Regularizers
     .. autoautosummary:: keras_spiking.regularizers
         :nosignatures:
 
+Constraints
+-----------
+
+.. automodule:: keras_spiking.constraints
+
+    .. autoautosummary:: keras_spiking.constraints
+        :nosignatures:
+
 Callbacks
 ---------
 

@@ -535,6 +535,11 @@ class LowpassCell(KerasSpikingCell):
         then we often don't need to filter them either).
     level_initializer : str or ``tf.keras.initializers.Initializer``
         Initializer for filter state.
+    initial_level_constraint : str or ``tf.keras.constraints.Constraint``
+        Constraint for ``initial_level``.
+    tau_var_constraint : str or ``tf.keras.constraints.Constraint``
+        Constraint for ``tau_var``. For example, `.Mean` with ``non_neg=True``
+        will share the same time constant across all of the lowpass filters.
     kwargs : dict
         Passed on to `tf.keras.layers.Layer
         <https://www.tensorflow.org/api_docs/python/tf/keras/layers/Layer>`_.
@@ -549,6 +554,8 @@ class LowpassCell(KerasSpikingCell):
         # TODO: better name for this parameter?
         apply_during_training=True,
         level_initializer="zeros",
+        initial_level_constraint=None,
+        tau_var_constraint="non_neg",
         **kwargs,
     ):
         super().__init__(
@@ -564,6 +571,10 @@ class LowpassCell(KerasSpikingCell):
         self.tau = tau
         self.apply_during_training = apply_during_training
         self.level_initializer = tf.initializers.get(level_initializer)
+        self.initial_level_constraint = tf.keras.constraints.get(
+            initial_level_constraint
+        )
+        self.tau_var_constraint = tf.keras.constraints.get(tau_var_constraint)
 
     def build(self, input_shapes):
         """Build parameters associated with this layer."""
@@ -575,6 +586,7 @@ class LowpassCell(KerasSpikingCell):
             shape=[1] + self.size.as_list(),
             initializer=self.level_initializer,
             trainable=self.apply_during_training,
+            constraint=self.initial_level_constraint,
         )
 
         self.tau_var = self.add_weight(
@@ -582,7 +594,7 @@ class LowpassCell(KerasSpikingCell):
             shape=[1] + self.state_size.as_list(),
             initializer=tf.initializers.constant(np.ones(self.state_size) * self.tau),
             trainable=self.apply_during_training,
-            constraint=tf.keras.constraints.NonNeg(),
+            constraint=self.tau_var_constraint,
         )
 
     def get_initial_state(self, inputs=None, batch_size=None, dtype=None):
@@ -614,6 +626,12 @@ class LowpassCell(KerasSpikingCell):
                 apply_during_training=self.apply_during_training,
                 level_initializer=tf.keras.initializers.serialize(
                     self.level_initializer
+                ),
+                initial_level_constraint=tf.keras.constraints.serialize(
+                    self.initial_level_constraint
+                ),
+                tau_var_constraint=tf.keras.constraints.serialize(
+                    self.tau_var_constraint
                 ),
             )
         )
@@ -660,6 +678,11 @@ class Lowpass(KerasSpikingLayer):
         then we often don't need to filter them either).
     level_initializer : str or ``tf.keras.initializers.Initializer``
         Initializer for filter state.
+    initial_level_constraint : str or ``tf.keras.constraints.Constraint``
+        Constraint for ``initial_level``.
+    tau_var_constraint : str or ``tf.keras.constraints.Constraint``
+        Constraint for ``tau_var``. For example, `.Mean` with ``non_neg=True``
+        will share the same time constant across all of the lowpass filters.
     return_sequences : bool
         Whether to return the full sequence of filtered output (default),
         or just the output on the last timestep.
@@ -693,6 +716,8 @@ class Lowpass(KerasSpikingLayer):
         dt=None,
         apply_during_training=True,
         level_initializer="zeros",
+        initial_level_constraint=None,
+        tau_var_constraint="non_neg",
         return_sequences=True,
         return_state=False,
         stateful=False,
@@ -713,6 +738,10 @@ class Lowpass(KerasSpikingLayer):
         self.tau = tau
         self.apply_during_training = apply_during_training
         self.level_initializer = tf.keras.initializers.get(level_initializer)
+        self.initial_level_constraint = tf.keras.constraints.get(
+            initial_level_constraint
+        )
+        self.tau_var_constraint = tf.keras.constraints.get(tau_var_constraint)
 
     def build_cell(self, input_shapes):
         return LowpassCell(
@@ -721,6 +750,8 @@ class Lowpass(KerasSpikingLayer):
             dt=self.dt,
             apply_during_training=self.apply_during_training,
             level_initializer=self.level_initializer,
+            initial_level_constraint=self.initial_level_constraint,
+            tau_var_constraint=self.tau_var_constraint,
         )
 
     def get_config(self):
@@ -731,6 +762,12 @@ class Lowpass(KerasSpikingLayer):
                 apply_during_training=self.apply_during_training,
                 level_initializer=tf.keras.initializers.serialize(
                     self.level_initializer
+                ),
+                initial_level_constraint=tf.keras.constraints.serialize(
+                    self.initial_level_constraint
+                ),
+                tau_var_constraint=tf.keras.constraints.serialize(
+                    self.tau_var_constraint
                 ),
             )
         )
@@ -771,6 +808,11 @@ class AlphaCell(KerasSpikingCell):
         then we often don't need to filter them either).
     level_initializer : str or ``tf.keras.initializers.Initializer``
         Initializer for filter state.
+    initial_level_constraint : str or ``tf.keras.constraints.Constraint``
+        Constraint for ``initial_level``.
+    tau_var_constraint : str or ``tf.keras.constraints.Constraint``
+        Constraint for ``tau_var``. For example, `.Mean` with ``non_neg=True``
+        will share the same time constant across all of the lowpass filters.
     kwargs : dict
         Passed on to `tf.keras.layers.Layer
         <https://www.tensorflow.org/api_docs/python/tf/keras/layers/Layer>`_.
@@ -785,6 +827,8 @@ class AlphaCell(KerasSpikingCell):
         # TODO: better name for this parameter?
         apply_during_training=True,
         level_initializer="zeros",
+        initial_level_constraint=None,
+        tau_var_constraint="non_neg",
         **kwargs,
     ):
         super().__init__(
@@ -802,6 +846,10 @@ class AlphaCell(KerasSpikingCell):
         self.tau = tau
         self.apply_during_training = apply_during_training
         self.level_initializer = tf.initializers.get(level_initializer)
+        self.initial_level_constraint = tf.keras.constraints.get(
+            initial_level_constraint
+        )
+        self.tau_var_constraint = tf.keras.constraints.get(tau_var_constraint)
 
     def build(self, input_shapes):
         """Build parameters associated with this layer."""
@@ -813,6 +861,7 @@ class AlphaCell(KerasSpikingCell):
             shape=(self.flat_size,),
             initializer=self.level_initializer,
             trainable=self.apply_during_training,
+            constraint=self.initial_level_constraint,
         )
 
         self.tau_var = self.add_weight(
@@ -820,7 +869,7 @@ class AlphaCell(KerasSpikingCell):
             shape=(self.flat_size,),
             initializer=tf.initializers.constant(np.ones(self.flat_size) * self.tau),
             trainable=self.apply_during_training,
-            constraint=tf.keras.constraints.NonNeg(),
+            constraint=self.tau_var_constraint,
         )
 
     def get_initial_state(self, inputs=None, batch_size=None, dtype=None):
@@ -889,6 +938,12 @@ class AlphaCell(KerasSpikingCell):
                 level_initializer=tf.keras.initializers.serialize(
                     self.level_initializer
                 ),
+                initial_level_constraint=tf.keras.constraints.serialize(
+                    self.initial_level_constraint
+                ),
+                tau_var_constraint=tf.keras.constraints.serialize(
+                    self.tau_var_constraint
+                ),
             )
         )
 
@@ -934,6 +989,11 @@ class Alpha(KerasSpikingLayer):
         then we often don't need to filter them either).
     level_initializer : str or ``tf.keras.initializers.Initializer``
         Initializer for filter state.
+    initial_level_constraint : str or ``tf.keras.constraints.Constraint``
+        Constraint for ``initial_level``.
+    tau_var_constraint : str or ``tf.keras.constraints.Constraint``
+        Constraint for ``tau_var``. For example, `.Mean` with ``non_neg=True``
+        will share the same time constant across all of the lowpass filters.
     return_sequences : bool
         Whether to return the full sequence of filtered output (default),
         or just the output on the last timestep.
@@ -967,6 +1027,8 @@ class Alpha(KerasSpikingLayer):
         dt=None,
         apply_during_training=True,
         level_initializer="zeros",
+        initial_level_constraint=None,
+        tau_var_constraint="non_neg",
         return_sequences=True,
         return_state=False,
         stateful=False,
@@ -987,6 +1049,10 @@ class Alpha(KerasSpikingLayer):
         self.tau = tau
         self.apply_during_training = apply_during_training
         self.level_initializer = tf.keras.initializers.get(level_initializer)
+        self.initial_level_constraint = tf.keras.constraints.get(
+            initial_level_constraint
+        )
+        self.tau_var_constraint = tf.keras.constraints.get(tau_var_constraint)
 
     def build_cell(self, input_shapes):
         return AlphaCell(
@@ -995,6 +1061,8 @@ class Alpha(KerasSpikingLayer):
             dt=self.dt,
             apply_during_training=self.apply_during_training,
             level_initializer=self.level_initializer,
+            initial_level_constraint=self.initial_level_constraint,
+            tau_var_constraint=self.tau_var_constraint,
         )
 
     def get_config(self):
@@ -1005,6 +1073,12 @@ class Alpha(KerasSpikingLayer):
                 apply_during_training=self.apply_during_training,
                 level_initializer=tf.keras.initializers.serialize(
                     self.level_initializer
+                ),
+                initial_level_constraint=tf.keras.constraints.serialize(
+                    self.initial_level_constraint
+                ),
+                tau_var_constraint=tf.keras.constraints.serialize(
+                    self.tau_var_constraint
                 ),
             )
         )

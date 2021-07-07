@@ -23,12 +23,19 @@ Release history
 
 *Compatible with TensorFlow 2.1.0 - 2.5.0*
 
+**Added**
+
+- ``LowpassCell``, ``Lowpass``, ``AlphaCell``, and ``Alpha`` layers now accept both
+  ``initial_level_constraint`` and ``tau_var_constraint`` to customize how their
+  respective parameters are constrained during training. (`#21`_)
+
 **Fixed**
 
 - ``SpikingActivation``, ``Lowpass``, and ``Alpha`` layers will now correctly use
   ``keras_spiking.default.dt``. (`#20`_)
 
 .. _#20: https://github.com/nengo/keras-spiking/pull/20
+.. _#21: https://github.com/nengo/keras-spiking/pull/21
 
 0.2.0 (February 18, 2021)
 -------------------------

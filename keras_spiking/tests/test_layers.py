@@ -3,7 +3,7 @@ import pytest
 import tensorflow as tf
 from packaging import version
 
-from keras_spiking import layers
+from keras_spiking import constraints, layers
 
 
 @pytest.mark.parametrize("activation", (tf.nn.relu, tf.nn.tanh, "relu"))
@@ -388,3 +388,52 @@ def test_multid_input(layer, rng, seed, allclose):
 
     assert allclose(np.reshape(y0, x.shape), y1)
     assert allclose(y1, y2)
+
+
+@pytest.mark.parametrize(
+    "layer_cls", [layers.LowpassCell, layers.Lowpass, layers.AlphaCell, layers.Alpha]
+)
+def test_filter_constraints(layer_cls, rng):
+    n_features = 3
+    initial_tau = 0.1
+    x = rng.rand(32, 100, n_features).astype(np.float32)
+
+    inp = tf.keras.Input((None, n_features))
+    kwargs = dict(
+        size=n_features,
+        tau=initial_tau,
+        tau_var_constraint=constraints.Mean(non_neg=True),
+        initial_level_constraint=tf.keras.constraints.UnitNorm(axis=-1),
+    )
+    if issubclass(layer_cls, layers.KerasSpikingCell):
+        layer = tf.keras.layers.RNN(layer_cls(**kwargs), return_sequences=True)
+    elif issubclass(layer_cls, layers.KerasSpikingLayer):
+        kwargs.pop("size")  # automatically determined in build method
+        layer = layer_cls(**kwargs, return_sequences=True)
+    else:
+        assert False
+    x0 = layer(inp)
+
+    model = tf.keras.Model(inp, x0)
+    model.compile(loss="mse", optimizer=tf.optimizers.SGD(0.1))
+
+    model.fit(x, x, epochs=1, verbose=0)
+
+    tau_var_weights = model.layers[1].weights[1]
+    if layer_cls in (layers.Lowpass, layers.LowpassCell):
+        assert tau_var_weights.shape == (1, n_features)
+    elif layer_cls in (layers.Alpha, layers.AlphaCell):
+        assert tau_var_weights.shape == (n_features,)
+    else:
+        assert False
+    learned_tau = np.unique(tau_var_weights.numpy())
+    assert len(learned_tau) == 1
+
+    assert 0.01 < learned_tau.item() < 0.9 * initial_tau
+
+    initial_level_weights = model.layers[1].weights[0]
+    if layer_cls in (layers.Lowpass, layers.LowpassCell):
+        assert initial_level_weights.shape == (1, n_features)
+    elif layer_cls in (layers.Alpha, layers.AlphaCell):
+        assert initial_level_weights.shape == (n_features,)
+    assert np.allclose(np.linalg.norm(initial_level_weights.numpy()), 1)
