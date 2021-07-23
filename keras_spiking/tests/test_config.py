@@ -13,9 +13,9 @@ def reset_defaults():
 @pytest.mark.parametrize(
     "Layer",
     (
-        (lambda **kwargs: layers.Lowpass(tau=0.01, **kwargs)),
+        (lambda **kwargs: layers.Lowpass(tau_initializer=0.01, **kwargs)),
         (lambda **kwargs: layers.SpikingActivation("relu", **kwargs)),
-        (lambda **kwargs: layers.Alpha(tau=0.01, **kwargs)),
+        (lambda **kwargs: layers.Alpha(tau_initializer=0.01, **kwargs)),
     ),
 )
 def test_dt(Layer, reset_defaults):

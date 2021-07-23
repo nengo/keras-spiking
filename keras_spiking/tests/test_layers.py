@@ -197,15 +197,15 @@ def test_save_load(use_cell, allclose, tmpdir, seed):
             return_sequences=True,
         )(inp)
         out = tf.keras.layers.RNN(
-            layers.LowpassCell(tau=0.01, size=32), return_sequences=True
+            layers.LowpassCell(tau_initializer=0.01, size=32), return_sequences=True
         )(out)
         out = tf.keras.layers.RNN(
-            layers.AlphaCell(tau=0.01, size=32), return_sequences=True
+            layers.AlphaCell(tau_initializer=0.01, size=32), return_sequences=True
         )(out)
     else:
         out = layers.SpikingActivation(tf.nn.relu, seed=seed)(inp)
-        out = layers.Lowpass(tau=0.01)(out)
-        out = layers.Alpha(tau=0.01)(out)
+        out = layers.Lowpass(tau_initializer=0.01)(out)
+        out = layers.Alpha(tau_initializer=0.01)(out)
 
     model = tf.keras.Model(inp, out)
 
@@ -241,10 +241,10 @@ def test_lowpass_alpha_tau(kind, dt, allclose, rng):
     steps = 100
     tau = 0.1
     if kind == "lowpass":
-        layer = layers.Lowpass(tau=tau, dt=dt)
+        layer = layers.Lowpass(tau_initializer=tau, dt=dt)
         synapse = nengo.Lowpass(tau)
     elif kind == "alpha":
-        layer = layers.Alpha(tau=tau, dt=dt)
+        layer = layers.Alpha(tau_initializer=tau, dt=dt)
         synapse = nengo.Alpha(tau)
 
     x = rng.randn(10, steps, units).astype(np.float32)
@@ -263,14 +263,18 @@ def test_filter_apply_during_training(Layer, allclose, rng):
 
     # apply_during_training=False:
     #   confirm `output == input` for training=True, but not training=False
-    layer = Layer(tau=0.1, apply_during_training=False, return_sequences=True)
+    layer = Layer(
+        tau_initializer=0.1, apply_during_training=False, return_sequences=True
+    )
     assert allclose(layer(x, training=True), x)
     assert not allclose(layer(x, training=False), x, record_rmse=False, print_fail=0)
 
     # apply_during_training=True:
     #   confirm `output != input` for both values of `training`, and
     #   output is equal for both values of `training`
-    layer = Layer(tau=0.1, apply_during_training=True, return_sequences=True)
+    layer = Layer(
+        tau_initializer=0.1, apply_during_training=True, return_sequences=True
+    )
     assert not allclose(layer(x, training=True), x, record_rmse=False, print_fail=0)
     assert not allclose(layer(x, training=False), x, record_rmse=False, print_fail=0)
     assert allclose(layer(x, training=True), layer(x, training=False))
@@ -286,7 +290,8 @@ def test_filter_trainable(Layer, allclose):
     # we'll train the layers to match the output of this lowpass filter (with
     # a different tau/initial level)
     target_layer = Layer(
-        tau=tau / 2, level_initializer=tf.initializers.constant(np.ones((1, 1)) * 0.1)
+        tau_initializer=tau / 2,
+        level_initializer=tf.initializers.constant(0.1),
     )
     targets = target_layer(inputs).numpy()
 
@@ -315,11 +320,8 @@ def test_filter_trainable(Layer, allclose):
     # other layers should stay at initial value
     assert allclose(layer_skip.layer.cell.initial_level.numpy(), 0)
     assert allclose(layer_untrained.layer.cell.initial_level.numpy(), 0)
-    assert allclose(layer_skip.layer.cell.tau_var.numpy(), layer_skip.layer.cell.tau)
-    assert allclose(
-        layer_untrained.layer.cell.tau_var.numpy(),
-        layer_untrained.layer.cell.tau,
-    )
+    assert allclose(layer_skip.layer.cell.tau.numpy(), tau)
+    assert allclose(layer_untrained.layer.cell.tau.numpy(), tau)
 
 
 @pytest.mark.parametrize(
@@ -385,8 +387,8 @@ def test_filter_constraints(layer_cls, rng):
     inp = tf.keras.Input((None, n_features))
     kwargs = dict(
         size=n_features,
-        tau=initial_tau,
-        tau_var_constraint=constraints.Mean(),
+        tau_initializer=initial_tau,
+        tau_constraint=constraints.Mean(),
         initial_level_constraint=tf.keras.constraints.UnitNorm(axis=-1),
     )
     if issubclass(layer_cls, layers.KerasSpikingCell):
@@ -403,14 +405,14 @@ def test_filter_constraints(layer_cls, rng):
 
     model.fit(x, x, epochs=1, verbose=0)
 
-    tau_var_weights = model.layers[1].weights[1]
+    tau_weights = model.layers[1].weights[1]
     if layer_cls in (layers.Lowpass, layers.LowpassCell):
-        assert tau_var_weights.shape == (1, n_features)
+        assert tau_weights.shape == (1, n_features)
     elif layer_cls in (layers.Alpha, layers.AlphaCell):
-        assert tau_var_weights.shape == (n_features,)
+        assert tau_weights.shape == (n_features,)
     else:
         assert False
-    learned_tau = np.unique(tau_var_weights.numpy())
+    learned_tau = np.unique(tau_weights.numpy())
     assert len(learned_tau) == 1
 
     assert 0.1 * initial_tau < learned_tau.item() < 0.9 * initial_tau

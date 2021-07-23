@@ -18,7 +18,7 @@ Release history
    - Deprecated
    - Removed
 
-0.2.1 (unreleased)
+0.3.0 (unreleased)
 ------------------
 
 *Compatible with TensorFlow 2.1.0 - 2.5.0*
@@ -26,7 +26,7 @@ Release history
 **Added**
 
 - ``LowpassCell``, ``Lowpass``, ``AlphaCell``, and ``Alpha`` layers now accept both
-  ``initial_level_constraint`` and ``tau_var_constraint`` to customize how their
+  ``initial_level_constraint`` and ``tau_constraint`` to customize how their
   respective parameters are constrained during training. (`#21`_)
 
 **Changed**
@@ -34,6 +34,9 @@ Release history
 - The ``tau`` time constants for ``LowpassCell``, ``Lowpass``, ``AlphaCell``, and
   ``Alpha`` are now always clipped to be positive in the forward pass rather than
   constraining the underlying trainable weights in between gradient updates. (`#21`_)
+- Renamed the ``Lowpass/Alpha`` ``tau`` parameter to ``tau_initializer``, and it now
+  accepts ``tf.keras.initializers.Initializer`` objects (in addition to floats, as
+  before).  Renamed the ``tau_var`` weight attribute to ``tau``. (`#21`_)
 
 **Fixed**
 
