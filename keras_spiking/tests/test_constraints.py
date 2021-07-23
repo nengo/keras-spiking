@@ -11,7 +11,7 @@ def simple_dense_model(n_features, n_units, axis=0):
     dense = tf.keras.layers.Dense(
         units=n_units,
         kernel_constraint=Mean(axis=axis),
-        bias_constraint=Mean(non_neg=True),
+        bias_constraint=Mean(),
     )(inp)
     out = tf.keras.layers.Dense(n_features)(dense)
     return tf.keras.Model(inp, out)
@@ -43,7 +43,6 @@ def test_mean_constraint(axis, rng):
 
     learned_bias = np.unique(bias_weights)
     assert len(learned_bias) == 1
-    assert (learned_bias >= 0).all()
 
 
 def test_save_load_mean_constraint(tmp_path):

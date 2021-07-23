@@ -538,8 +538,9 @@ class LowpassCell(KerasSpikingCell):
     initial_level_constraint : str or ``tf.keras.constraints.Constraint``
         Constraint for ``initial_level``.
     tau_var_constraint : str or ``tf.keras.constraints.Constraint``
-        Constraint for ``tau_var``. For example, `.Mean` with ``non_neg=True``
-        will share the same time constant across all of the lowpass filters.
+        Constraint for ``tau_var``. For example, `.Mean` will share the same
+        time constant across all of the lowpass filters. The time constant is always
+        clipped to be positive in the forward pass for numerical stability.
     kwargs : dict
         Passed on to `tf.keras.layers.Layer
         <https://www.tensorflow.org/api_docs/python/tf/keras/layers/Layer>`_.
@@ -555,7 +556,7 @@ class LowpassCell(KerasSpikingCell):
         apply_during_training=True,
         level_initializer="zeros",
         initial_level_constraint=None,
-        tau_var_constraint="non_neg",
+        tau_var_constraint=None,
         **kwargs,
     ):
         super().__init__(
@@ -564,9 +565,6 @@ class LowpassCell(KerasSpikingCell):
             always_use_inference=apply_during_training,
             **kwargs,
         )
-
-        if tau <= 0:
-            raise ValueError("tau must be a positive number")
 
         self.tau = tau
         self.apply_during_training = apply_during_training
@@ -605,7 +603,7 @@ class LowpassCell(KerasSpikingCell):
         # apply ZOH discretization
         tau = tf.exp(
             -self.dt  # pylint: disable=invalid-unary-operand-type
-            / (self.tau_var + 1e-8)
+            / tf.maximum(self.tau_var, 1e-8)
         )
 
         x = (1 - tau) * inputs + tau * states[0]
@@ -681,8 +679,9 @@ class Lowpass(KerasSpikingLayer):
     initial_level_constraint : str or ``tf.keras.constraints.Constraint``
         Constraint for ``initial_level``.
     tau_var_constraint : str or ``tf.keras.constraints.Constraint``
-        Constraint for ``tau_var``. For example, `.Mean` with ``non_neg=True``
-        will share the same time constant across all of the lowpass filters.
+        Constraint for ``tau_var``. For example, `.Mean` will share the same
+        time constant across all of the lowpass filters. The time constant is always
+        clipped to be positive in the forward pass for numerical stability.
     return_sequences : bool
         Whether to return the full sequence of filtered output (default),
         or just the output on the last timestep.
@@ -717,7 +716,7 @@ class Lowpass(KerasSpikingLayer):
         apply_during_training=True,
         level_initializer="zeros",
         initial_level_constraint=None,
-        tau_var_constraint="non_neg",
+        tau_var_constraint=None,
         return_sequences=True,
         return_state=False,
         stateful=False,
@@ -811,8 +810,9 @@ class AlphaCell(KerasSpikingCell):
     initial_level_constraint : str or ``tf.keras.constraints.Constraint``
         Constraint for ``initial_level``.
     tau_var_constraint : str or ``tf.keras.constraints.Constraint``
-        Constraint for ``tau_var``. For example, `.Mean` with ``non_neg=True``
-        will share the same time constant across all of the lowpass filters.
+        Constraint for ``tau_var``. For example, `.Mean` will share the same
+        time constant across all of the lowpass filters. The time constant is always
+        clipped to be positive in the forward pass for numerical stability.
     kwargs : dict
         Passed on to `tf.keras.layers.Layer
         <https://www.tensorflow.org/api_docs/python/tf/keras/layers/Layer>`_.
@@ -828,7 +828,7 @@ class AlphaCell(KerasSpikingCell):
         apply_during_training=True,
         level_initializer="zeros",
         initial_level_constraint=None,
-        tau_var_constraint="non_neg",
+        tau_var_constraint=None,
         **kwargs,
     ):
         super().__init__(
@@ -838,9 +838,6 @@ class AlphaCell(KerasSpikingCell):
             always_use_inference=apply_during_training,
             **kwargs,
         )
-
-        if tau <= 0:
-            raise ValueError("tau must be a positive number")
 
         self.flat_size = np.prod(self.size)
         self.tau = tau
@@ -895,7 +892,7 @@ class AlphaCell(KerasSpikingCell):
         #     AB = sy.Matrix([[-2/tau, -1/tau**2, 1/tau**2], [1, 0, 0], [0, 0, 0]])
         #     dAB = sy.exp(dt * AB).simplify()
         #     dA, dB = dAB[:2, :2], dAB[:2, 2:]
-        tau = self.tau_var[:, None, None] + 1e-8
+        tau = tf.maximum(self.tau_var[:, None, None], 1e-8)
         dt_tau = self.dt / tau
         dt_tau2 = dt_tau / tau
         exp_dt_tau = tf.exp(-dt_tau)
@@ -992,8 +989,9 @@ class Alpha(KerasSpikingLayer):
     initial_level_constraint : str or ``tf.keras.constraints.Constraint``
         Constraint for ``initial_level``.
     tau_var_constraint : str or ``tf.keras.constraints.Constraint``
-        Constraint for ``tau_var``. For example, `.Mean` with ``non_neg=True``
-        will share the same time constant across all of the lowpass filters.
+        Constraint for ``tau_var``. For example, `.Mean` will share the same
+        time constant across all of the lowpass filters. The time constant is always
+        clipped to be positive in the forward pass for numerical stability.
     return_sequences : bool
         Whether to return the full sequence of filtered output (default),
         or just the output on the last timestep.
@@ -1028,7 +1026,7 @@ class Alpha(KerasSpikingLayer):
         apply_during_training=True,
         level_initializer="zeros",
         initial_level_constraint=None,
-        tau_var_constraint="non_neg",
+        tau_var_constraint=None,
         return_sequences=True,
         return_state=False,
         stateful=False,

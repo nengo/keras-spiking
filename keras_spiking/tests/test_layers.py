@@ -322,22 +322,6 @@ def test_filter_trainable(Layer, allclose):
     )
 
 
-def test_lowpass_alpha_validation():
-    with pytest.raises(ValueError, match="tau must be a positive number"):
-        layers.LowpassCell(tau=0, size=1)
-
-    with pytest.raises(ValueError, match="tau must be a positive number"):
-        # note: error won't be raised until layer is applied (when LowpassCell is built)
-        layers.Lowpass(tau=0)(np.zeros((1, 1, 1), dtype=np.float32))
-
-    with pytest.raises(ValueError, match="tau must be a positive number"):
-        layers.AlphaCell(tau=0, size=1)
-
-    with pytest.raises(ValueError, match="tau must be a positive number"):
-        # note: error won't be raised until layer is applied (when AlphaCell is built)
-        layers.Alpha(tau=0)(np.zeros((1, 1, 1), dtype=np.float32))
-
-
 @pytest.mark.parametrize(
     "Layer",
     (
@@ -402,7 +386,7 @@ def test_filter_constraints(layer_cls, rng):
     kwargs = dict(
         size=n_features,
         tau=initial_tau,
-        tau_var_constraint=constraints.Mean(non_neg=True),
+        tau_var_constraint=constraints.Mean(),
         initial_level_constraint=tf.keras.constraints.UnitNorm(axis=-1),
     )
     if issubclass(layer_cls, layers.KerasSpikingCell):
@@ -429,7 +413,7 @@ def test_filter_constraints(layer_cls, rng):
     learned_tau = np.unique(tau_var_weights.numpy())
     assert len(learned_tau) == 1
 
-    assert 0.01 < learned_tau.item() < 0.9 * initial_tau
+    assert 0.1 * initial_tau < learned_tau.item() < 0.9 * initial_tau
 
     initial_level_weights = model.layers[1].weights[0]
     if layer_cls in (layers.Lowpass, layers.LowpassCell):

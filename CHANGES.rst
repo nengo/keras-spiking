@@ -29,6 +29,12 @@ Release history
   ``initial_level_constraint`` and ``tau_var_constraint`` to customize how their
   respective parameters are constrained during training. (`#21`_)
 
+**Changed**
+
+- The ``tau`` time constants for ``LowpassCell``, ``Lowpass``, ``AlphaCell``, and
+  ``Alpha`` are now always clipped to be positive in the forward pass rather than
+  constraining the underlying trainable weights in between gradient updates. (`#21`_)
+
 **Fixed**
 
 - ``SpikingActivation``, ``Lowpass``, and ``Alpha`` layers will now correctly use
