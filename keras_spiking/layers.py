@@ -485,6 +485,7 @@ class SpikingActivation(KerasSpikingLayer):
             dt=self.dt,
             seed=self.seed,
             spiking_aware_training=self.spiking_aware_training,
+            dtype=self.dtype,
         )
 
     def get_config(self):
@@ -760,6 +761,7 @@ class Lowpass(KerasSpikingLayer):
             level_initializer=self.level_initializer,
             initial_level_constraint=self.initial_level_constraint,
             tau_constraint=self.tau_constraint,
+            dtype=self.dtype,
         )
 
     def get_config(self):
@@ -1075,6 +1077,7 @@ class Alpha(KerasSpikingLayer):
             level_initializer=self.level_initializer,
             initial_level_constraint=self.initial_level_constraint,
             tau_constraint=self.tau_constraint,
+            dtype=self.dtype,
         )
 
     def get_config(self):
