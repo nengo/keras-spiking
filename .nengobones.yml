@@ -160,3 +160,9 @@ setup_py:
 pyproject_toml: {}
 
 pre_commit_config_yaml: {}
+
+version_py:
+  major: 0
+  minor: 3
+  patch: 0
+  release: false
