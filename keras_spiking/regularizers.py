@@ -43,7 +43,7 @@ class RangedRegularizer(tf.keras.regularizers.Regularizer):
             if len(target) != 2:
                 raise ValueError(
                     "Target ranges should be specified as a tuple with two elements "
-                    "`(min, max)` (got %d elements)" % len(target)
+                    f"`(min, max)` (got {len(target)} elements)"
                 )
             self.minimum, self.maximum = target
         else:

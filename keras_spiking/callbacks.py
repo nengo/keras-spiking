@@ -83,7 +83,7 @@ class DtScheduler(tf.keras.callbacks.Callback):
 
         self.curr_epoch = epoch
         if self.verbose:
-            print("DtScheduler epoch=%d dt=%.4f" % (epoch, self.dt.numpy()))
+            print(f"DtScheduler epoch={epoch} dt={self.dt.numpy():.4f}")
 
     def on_train_batch_begin(self, batch, logs=None):
         """Update ``dt`` variable based on the current training step."""

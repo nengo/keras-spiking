@@ -231,8 +231,8 @@ class ModelEnergy:
                 if node is None:
                     if len(layer.inbound_nodes) == 0:
                         raise ValueError(
-                            "Layer %s has never been applied to any inputs, so its "
-                            "stats are undefined" % layer.name
+                            f"Layer {layer.name} has never been applied to any inputs, "
+                            "so its stats are undefined"
                         )
                     node = layer.inbound_nodes[0]
 
@@ -240,13 +240,13 @@ class ModelEnergy:
                 for key in stats:
                     if key not in valid_stats:
                         raise ValueError(
-                            "%s stat calculator returned an invalid stat '%s'; must be "
-                            "one of %s" % (layer_cls.__name__, key, valid_stats)
+                            f"{layer_cls.__name__} stat calculator returned an invalid "
+                            f"stat '{key}'; must be one of {valid_stats}"
                         )
                 return stats
 
         raise ValueError(
-            "Cannot compute stats for layer of type %r" % type(layer).__name__
+            f"Cannot compute stats for layer of type '{type(layer).__name__}'"
         )
 
     @classmethod
@@ -299,7 +299,7 @@ class ModelEnergy:
         def register_class(stats_fn):
             if layer_class in cls.layer_stats_computers:
                 warnings.warn(
-                    "Layer %r already registered. Overwriting." % layer_class.__name__
+                    f"Layer '{layer_class.__name__}' already registered. Overwriting."
                 )
             cls.layer_stats_computers[layer_class] = stats_fn
             return stats_fn
@@ -323,7 +323,7 @@ class ModelEnergy:
             synaptic updates for incoming spikes, rather than on every timestep.
         """
         if device_name in cls.devices:
-            warnings.warn("Device %r already registered. Overwriting." % (device_name,))
+            warnings.warn(f"Device '{device_name}' already registered. Overwriting.")
         cls.devices[device_name] = dict(
             energy_per_synop=energy_per_synop,
             energy_per_neuron=energy_per_neuron,
@@ -426,7 +426,7 @@ class ModelEnergy:
         # get device stats
         device = str(device).lower()
         if device not in self.devices:
-            raise ValueError("Energy specs unknown for device %r" % (device,))
+            raise ValueError(f"Energy specs unknown for device '{device}'")
         device_stats = self.devices[device]
 
         if device_stats["spiking"] and self.example_data is None:
@@ -615,15 +615,15 @@ class ModelEnergy:
             else:
                 raise NotImplementedError
 
-            return "%.2g" % (energy,)
+            return f"{energy:.2g}"
 
         col_value = dict(
-            name=lambda layer, _: "%s (%s)" % (layer.name, layer.__class__.__name__),
+            name=lambda layer, _: f"{layer.name} ({layer.__class__.__name__})",
             output_shape=layer_output_shape,
             params=lambda layer, _: str(layer.count_params()),
-            rate=lambda layer, _: "%.2g" % (self.layer_rates.get(layer, np.nan),),
-            connections=lambda layer, _: "%d" % self.layer_stats[layer]["connections"],
-            neurons=lambda layer, _: "%d" % self.layer_stats[layer]["neurons"],
+            rate=lambda layer, _: f"{self.layer_rates.get(layer, np.nan):.2g}",
+            connections=lambda layer, _: str(self.layer_stats[layer]["connections"]),
+            neurons=lambda layer, _: str(self.layer_stats[layer]["neurons"]),
             energy=layer_energy,
             synop_energy=partial(layer_energy, kind="synop_energy"),
             neuron_energy=partial(layer_energy, kind="neuron_energy"),
@@ -635,15 +635,15 @@ class ModelEnergy:
             rate=lambda _: "Rate [Hz]",
             connections=lambda _: "Conn #",
             neurons=lambda _: "Neuron #",
-            energy=lambda device: "J/inf (%s)" % device,
-            synop_energy=lambda device: "Synop J/inf (%s)" % device,
-            neuron_energy=lambda device: "Neuron J/inf (%s)" % device,
+            energy=lambda device: f"J/inf ({device})",
+            synop_energy=lambda device: f"Synop J/inf ({device})",
+            neuron_energy=lambda device: f"Neuron J/inf ({device})",
         )
 
         for c in columns:
             if c.split()[0] not in col_names:
                 raise ValueError(
-                    "Unknown column type '%s'; must be one of %s" % (c, list(col_names))
+                    f"Unknown column type '{c}'; must be one of {list(col_names)}"
                 )
 
         columns = [(col.split()[0], " ".join(col.split()[1:])) for col in columns]
@@ -697,8 +697,7 @@ class ModelEnergy:
                     device, dt=dt, timesteps_per_inference=timesteps_per_inference
                 )
                 line_strs.append(
-                    "Total energy per inference [Joules/inf] (%s): %0.2e"
-                    % (device, energy)
+                    f"Total energy per inference [Joules/inf] ({device}): {energy:0.2e}"
                 )
 
         if print_warnings and has_energy:
@@ -739,8 +738,8 @@ def _output_size(node):
         output_shape = output_shape[1:]
     if any(x is None for x in output_shape):
         raise ValueError(
-            "Cannot compute stats for '%s' layer because the output shape %s contains "
-            "undefined elements" % (compat.node_layer(node).name, output_shape)
+            f"Cannot compute stats for '{compat.node_layer(node).name}' layer because "
+            f"the output shape {output_shape} contains undefined elements"
         )
     return np.prod(output_shape)
 
@@ -772,9 +771,9 @@ def layer_stats(node, **_):
 
     if not isinstance(compat.node_layer(node), whitelist):
         warnings.warn(
-            "Cannot compute stats for layer of type %r."
+            "Cannot compute stats for layer of type "
+            f"'{type(compat.node_layer(node)).__name__}'."
             "Use `ModelEnergy.register_layer` to register this layer."
-            % (type(compat.node_layer(node)).__name__,)
         )
     return {}
 
