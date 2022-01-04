@@ -90,7 +90,7 @@ user_agent = "keras_spiking"
 
 project = "KerasSpiking"
 authors = "Applied Brain Research"
-copyright = "2020-2021 Applied Brain Research"
+copyright = "2020-2022 Applied Brain Research"
 version = ".".join(keras_spiking.__version__.split(".")[:2])  # Short X.Y version
 release = keras_spiking.__version__  # Full version, with tags
 
