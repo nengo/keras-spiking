@@ -11,7 +11,6 @@ if version.parse(tf.__version__) < version.parse("2.3.0"):
         """Return the layer associated with this node."""
         return node.outbound_layer
 
-
 else:
 
     def node_layer(node):
