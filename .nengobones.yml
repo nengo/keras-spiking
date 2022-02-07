@@ -4,6 +4,7 @@ repo_name: nengo/keras-spiking
 
 description: Spiking neuron integration for Keras
 copyright_start: 2020
+license: abr-free
 
 license_rst: {}
 
