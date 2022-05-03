@@ -57,6 +57,7 @@ ci_scripts:
     pip_install:
       - $TF_VERSION
       - $NUMPY_VERSION
+      - git+https://github.com/nengo/nengo-sphinx-theme@pin-jinja#egg=nengo-sphinx-theme
   - template: examples
     pip_install:
       - $TF_VERSION
