@@ -1,6 +1,4 @@
-"""
-Utilities to ease cross-compatibility between different versions of dependencies.
-"""
+"""Utilities to ease cross-compatibility between different versions of dependencies."""
 
 import tensorflow as tf
 from packaging import version

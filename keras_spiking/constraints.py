@@ -1,12 +1,11 @@
-"""
-Custom constraints for weight tensors in Keras models.
-"""
+"""Custom constraints for weight tensors in Keras models."""
 
 import tensorflow as tf
 
 
 class Mean(tf.keras.constraints.Constraint):
-    """Constrains weight tensors to be their mean.
+    """
+    Constrains weight tensors to be their mean.
 
     Parameters
     ----------

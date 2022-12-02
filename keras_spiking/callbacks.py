@@ -1,6 +1,4 @@
-"""
-Callbacks for use with KerasSpiking models.
-"""
+"""Callbacks for use with KerasSpiking models."""
 
 import tensorflow as tf
 

@@ -1,6 +1,4 @@
-"""
-Estimate energy usage on various devices for Keras models.
-"""
+"""Estimate energy usage on various devices for Keras models."""
 
 import textwrap
 import warnings
@@ -35,7 +33,8 @@ from keras_spiking.layers import SpikingActivation
 
 
 class ModelEnergy:
-    """Compute statistics and device energy estimates for a Keras model.
+    """
+    Compute statistics and device energy estimates for a Keras model.
 
     Computes the following statistics on each layer:
 
@@ -165,7 +164,7 @@ class ModelEnergy:
        https://ieeexplore.ieee.org/abstract/document/7054508
     .. [2] Davies, Mike, et al. "Loihi: A neuromorphic manycore processor with on-chip
        learning." IEEE Micro 38.1 (2018): 82-99.
-       https://www.researchgate.net/publication/322548911_Loihi_A_Neuromorphic_Manycore_Processor_with_On-Chip_Learning
+       https://redwood.berkeley.edu/wp-content/uploads/2021/08/Davies2018.pdf
     .. [3] Höppner, Sebastian, et al. "Dynamic power management for neuromorphic
        many-core systems." IEEE Transactions on Circuits and Systems I: Regular Papers
        66.8 (2019): 2973-2986. https://arxiv.org/abs/1903.08941
@@ -177,7 +176,7 @@ class ModelEnergy:
         "cpu": dict(spiking=False, energy_per_synop=8.6e-9, energy_per_neuron=8.6e-9),
         "gpu": dict(spiking=False, energy_per_synop=0.3e-9, energy_per_neuron=0.3e-9),
         "arm": dict(spiking=False, energy_per_synop=0.9e-9, energy_per_neuron=0.9e-9),
-        # https://www.researchgate.net/publication/322548911_Loihi_A_Neuromorphic_Manycore_Processor_with_On-Chip_Learning
+        # https://redwood.berkeley.edu/wp-content/uploads/2021/08/Davies2018.pdf
         "loihi": dict(
             spiking=True,
             energy_per_synop=(23.6 + 3.5) * 1e-12,
@@ -206,7 +205,8 @@ class ModelEnergy:
 
     @classmethod
     def compute_layer_stats(cls, layer, node=None):
-        """Compute statistics for a given layer.
+        """
+        Compute statistics for a given layer.
 
         Examples
         --------
@@ -251,7 +251,8 @@ class ModelEnergy:
 
     @classmethod
     def register_layer(cls, layer_class):
-        """Decorator to register a statistic calculator for a layer.
+        """
+        Decorator to register a statistic calculator for a layer.
 
         The input to the decorated function is a node from a layer for which we want
         to compute statistics.
@@ -308,7 +309,8 @@ class ModelEnergy:
 
     @classmethod
     def register_device(cls, device_name, energy_per_synop, energy_per_neuron, spiking):
-        """Register a new device type for estimating energy consumption.
+        """
+        Register a new device type for estimating energy consumption.
 
         Parameters
         ----------
@@ -390,7 +392,8 @@ class ModelEnergy:
         timesteps_per_inference=1,
         dt=None,
     ):
-        """Estimate the energy used by one layer.
+        """
+        Estimate the energy used by one layer.
 
         Parameters
         ----------
@@ -463,7 +466,8 @@ class ModelEnergy:
         return synop_energy, neuron_energy
 
     def total_energy(self, device, timesteps_per_inference=1, dt=None):
-        """Estimate the energy usage for a whole model.
+        """
+        Estimate the energy usage for a whole model.
 
         Parameters
         ----------
@@ -513,7 +517,8 @@ class ModelEnergy:
         line_length=98,
         print_warnings=True,
     ):
-        """Print a per-layer summary of computation statistics and energy estimates.
+        """
+        Print a per-layer summary of computation statistics and energy estimates.
 
         Parameters
         ----------
@@ -582,7 +587,8 @@ class ModelEnergy:
         line_length=98,
         print_warnings=True,
     ):
-        """Returns a per-layer summary of computation statistics and energy estimates.
+        """
+        Returns a per-layer summary of computation statistics and energy estimates.
 
         The same as `.summary`, except returns the summary as a string, rather than
         printing it.
@@ -825,7 +831,8 @@ def spikingactivation_stats(node):
 
 @ModelEnergy.register_layer(TimeDistributed)
 def timedistributed_stats(node):
-    """Compute ``TimeDistributed`` layer stats.
+    """
+    Compute ``TimeDistributed`` layer stats.
 
     Calls `.ModelEnergy.compute_layer_stats` on the wrapped layer.
     """

@@ -1,6 +1,4 @@
-"""
-Components for building spiking models in Keras.
-"""
+"""Components for building spiking models in Keras."""
 
 import numpy as np
 import tensorflow as tf
@@ -50,10 +48,8 @@ class KerasSpikingCell(tf.keras.layers.Layer):
         )
 
     def call(self, inputs, states, training=None):
-        """
-        Call function that defines a different forward pass during training
-        versus inference.
-        """
+        """Call function that defines a different forward pass during training versus
+        inference."""
 
         if training is None:
             training = tf.keras.backend.learning_phase()
@@ -134,11 +130,11 @@ class KerasSpikingLayer(tf.keras.layers.Layer):
         self.time_major = time_major
         self.layer = None
 
-    def build_cell(self, input_shapes):
+    def build_cell(self, input_shape):
         """Create and return the RNN cell."""
         raise NotImplementedError("Subclass must implement `build_cell`")
 
-    def build(self, input_shapes):
+    def build(self, input_shape):
         """
         Builds the RNN/cell layers contained within this layer.
 
@@ -149,11 +145,11 @@ class KerasSpikingLayer(tf.keras.layers.Layer):
         with some additional bookkeeping.
         """
 
-        super().build(input_shapes)
+        super().build(input_shape)
 
         # we initialize these here, rather than in ``__init__``, so that we can
         # determine ``cell.shape`` automatically
-        cell = self.build_cell(input_shapes)
+        cell = self.build_cell(input_shape)
         self.layer = tf.keras.layers.RNN(
             cell,
             return_sequences=self.return_sequences,
@@ -163,7 +159,7 @@ class KerasSpikingLayer(tf.keras.layers.Layer):
             time_major=self.time_major,
         )
 
-        self.layer.build(input_shapes)
+        self.layer.build(input_shape)
 
     def call(self, inputs, training=None, initial_state=None, constants=None):
         """
@@ -478,9 +474,9 @@ class SpikingActivation(KerasSpikingLayer):
         self.seed = seed
         self.spiking_aware_training = spiking_aware_training
 
-    def build_cell(self, input_shapes):
+    def build_cell(self, input_shape):
         return SpikingActivationCell(
-            size=input_shapes[2:],
+            size=input_shape[2:],
             activation=self.activation,
             dt=self.dt,
             seed=self.seed,
@@ -501,7 +497,8 @@ class SpikingActivation(KerasSpikingLayer):
 
 
 class LowpassCell(KerasSpikingCell):
-    """RNN cell for a lowpass filter.
+    """
+    RNN cell for a lowpass filter.
 
     The initial filter state and filter time constants are both trainable parameters.
     However, if ``apply_during_training=False`` then the parameters are not part
@@ -579,10 +576,10 @@ class LowpassCell(KerasSpikingCell):
         )
         self.tau_constraint = tf.keras.constraints.get(tau_constraint)
 
-    def build(self, input_shapes):
+    def build(self, input_shape):
         """Build parameters associated with this layer."""
 
-        super().build(input_shapes)
+        super().build(input_shape)
 
         self.initial_level = self.add_weight(
             name="initial_level",
@@ -641,7 +638,8 @@ class LowpassCell(KerasSpikingCell):
 
 
 class Lowpass(KerasSpikingLayer):
-    r"""Layer implementing a lowpass filter.
+    r"""
+    Layer implementing a lowpass filter.
 
     The impulse-response function (time domain) and transfer function are:
 
@@ -751,9 +749,9 @@ class Lowpass(KerasSpikingLayer):
         )
         self.tau_constraint = tf.keras.constraints.get(tau_constraint)
 
-    def build_cell(self, input_shapes):
+    def build_cell(self, input_shape):
         return LowpassCell(
-            size=input_shapes[2:],
+            size=input_shape[2:],
             tau_initializer=self.tau_initializer,
             dt=self.dt,
             apply_during_training=self.apply_during_training,
@@ -782,7 +780,8 @@ class Lowpass(KerasSpikingLayer):
 
 
 class AlphaCell(KerasSpikingCell):
-    """RNN cell for an alpha filter.
+    """
+    RNN cell for an alpha filter.
 
     The initial filter state and filter time constants are both trainable parameters.
     However, if ``apply_during_training=False`` then the parameters are not part
@@ -862,10 +861,10 @@ class AlphaCell(KerasSpikingCell):
         )
         self.tau_constraint = tf.keras.constraints.get(tau_constraint)
 
-    def build(self, input_shapes):
+    def build(self, input_shape):
         """Build parameters associated with this layer."""
 
-        super().build(input_shapes)
+        super().build(input_shape)
 
         self.initial_level = self.add_weight(
             name="initial_level",
@@ -960,7 +959,8 @@ class AlphaCell(KerasSpikingCell):
 
 
 class Alpha(KerasSpikingLayer):
-    r"""Layer implementing an alpha filter.
+    r"""
+    Layer implementing an alpha filter.
 
     The impulse-response function (time domain) and transfer function are:
 
@@ -1066,9 +1066,9 @@ class Alpha(KerasSpikingLayer):
         )
         self.tau_constraint = tf.keras.constraints.get(tau_constraint)
 
-    def build_cell(self, input_shapes):
+    def build_cell(self, input_shape):
         return AlphaCell(
-            size=input_shapes[2:],
+            size=input_shape[2:],
             tau_initializer=self.tau_initializer,
             dt=self.dt,
             apply_during_training=self.apply_during_training,

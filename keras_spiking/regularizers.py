@@ -1,6 +1,4 @@
-"""
-Regularization methods designed to work with spiking layers.
-"""
+"""Regularization methods designed to work with spiking layers."""
 
 import warnings
 
@@ -123,8 +121,8 @@ class L1L2(RangedRegularizer):
 
 class L1(L1L2):
     """
-    A version of ``tf.keras.regularizers.L1`` that allows the user to specify a
-    nonzero target output.
+    A version of ``tf.keras.regularizers.L1`` that allows the user to specify a nonzero
+    target output.
 
     Parameters
     ----------
@@ -144,8 +142,8 @@ class L1(L1L2):
 
 class L2(L1L2):
     """
-    A version of ``tf.keras.regularizers.L2`` that allows the user to specify a
-    nonzero target output.
+    A version of ``tf.keras.regularizers.L2`` that allows the user to specify a nonzero
+    target output.
 
     Parameters
     ----------

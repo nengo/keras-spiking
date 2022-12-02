@@ -1,9 +1,12 @@
-/.idea
-/keras_spiking.egg-info
 *.pyc
-/tmp
+/.ci/*.sh
+/.idea
+/bones-scripts
 /docs/_build
 /docs/examples/*
-!/docs/examples/*.ipynb
+/keras_spiking.egg-info
 /secret
-/.ci/*.sh
+/tmp
+
+# Exceptions, must be last
+!/docs/examples/*.ipynb

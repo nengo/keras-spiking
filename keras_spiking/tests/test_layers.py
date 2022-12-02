@@ -234,7 +234,7 @@ def test_save_load(use_cell, allclose, tmpdir, seed):
 @pytest.mark.parametrize("kind", ("lowpass", "alpha"))
 @pytest.mark.parametrize("dt", (0.001, 0.03))
 def test_lowpass_alpha_tau(kind, dt, allclose, rng):
-    """Verify that the keras-spiking filter matches the Nengo implementation"""
+    """Verify that the keras-spiking filter matches the Nengo implementation."""
     nengo = pytest.importorskip("nengo")
 
     units = 32

@@ -1,6 +1,4 @@
-"""
-Configuration options for KerasSpiking layers.
-"""
+"""Configuration options for KerasSpiking layers."""
 
 
 class DefaultManager:

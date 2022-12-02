@@ -32,16 +32,17 @@ version = runpy.run_path(str(root / "keras_spiking" / "version.py"))["version"]
 install_req = [
     "numpy>=1.16.0",
     "packaging>=20.0",
+    "protobuf<=3.20",
     "tensorflow>=2.1.0",
 ]
 docs_req = [
     "jupyter>=1.0.0",
-    "matplotlib>=2.0.0",
-    "nbsphinx>=0.3.5",
+    "matplotlib>=3.6.2",
+    "nbsphinx>=0.8.11",
     "nengo-dl>=3.4.0",
     "nengo-loihi>=1.0.0",
     "nengo-sphinx-theme>=1.2.1",
-    "numpydoc>=0.6.0",
+    "numpydoc>=1.4.0",
     "sphinx>=3.0.0",
 ]
 optional_req = [
