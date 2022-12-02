@@ -5,6 +5,7 @@ repo_name: nengo/keras-spiking
 description: Spiking neuron integration for Keras
 copyright_start: 2020
 license: abr-free
+main_branch: main
 
 license_rst: {}
 
@@ -30,7 +31,6 @@ docs_conf_py:
   nengo_logo: ""
   extensions:
     - nengo_sphinx_theme.ext.autoautosummary
-  tagmanager_id: GTM-KWCR2HN
   doctest_setup:
     - import numpy as np
     - import tensorflow as tf
@@ -50,78 +50,40 @@ ci_scripts:
     coverage: true
     pip_install:
       - $TF_VERSION
-      - $NUMPY_VERSION
       - nengo[tests]
       - tensorflow-probability
   - template: docs
     pip_install:
       - $TF_VERSION
-      - $NUMPY_VERSION
+    pre_commands:
+      - python -c "import tensorflow as tf; assert tf.test.is_gpu_available()"
   - template: examples
     pip_install:
       - $TF_VERSION
-      - $NUMPY_VERSION
+    pre_commands:
+      - python -c "import tensorflow as tf; assert tf.test.is_gpu_available()"
   - template: remote-script
     remote_script: docs
     output_name: remote-docs
     host: azure-docs
-    travis_var_key: 2895d60e3414
     azure_name: nengo-dl-docs
     azure_group: nengo-ci
     remote_vars:
-      NUMPY_VERSION: $NUMPY_VERSION
       TF_VERSION: $TF_VERSION
     remote_setup:
-      - conda install -y -c conda-forge cudatoolkit=11.3 cudnn=8.2
-      - export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$CONDA_PREFIX/lib
+      - micromamba install -y "$TF_VERSION"
   - template: remote-script
     remote_script: examples
     output_name: remote-examples
     host: azure-examples
-    travis_var_key: 2895d60e3414
     azure_name: nengo-dl-examples
     azure_group: nengo-ci
     remote_vars:
-      NUMPY_VERSION: $NUMPY_VERSION
       TF_VERSION: $TF_VERSION
     remote_setup:
-      - conda install -y -c conda-forge cudatoolkit=11.3 cudnn=8.2
-      - export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:\$CONDA_PREFIX/lib
+      - micromamba install -y "$TF_VERSION"
   - template: deploy
-
-travis_yml:
-  python: 3.8
-  global_vars:
-    NUMPY_VERSION: numpy>=1.16.0
-    TF_VERSION: tensorflow
-  jobs:
-    - stage: basic
-      script: static
-    - script: test
-    - script: test
-      env:
-        TF_VERSION: tensorflow==2.1.0
-        NUMPY_VERSION: numpy==1.16.0
-      python: 3.6
-    - stage: advanced
-      script: remote-docs
-    - script: remote-examples
-  pypi_user: __token__
-  deploy_dists:
-    - sdist
-    - bdist_wheel
-  slack_notifications: "W/koGuFtOoRb9HFEVJrwMtevuZ24v8gJXLfFLobV2oVY+oz04K5GlRIVhtk\
-    c8MwlJ+id/Haqa/eWvF2JZRg6GNfkHvX8QeGuB+LDNVg+pimYDA2di+itUEhEZsbJvOgajng7qvy9NV\
-    fU2EFht9f3sWFoxQNc7szCpnSEAUHlFjzTEAduunYkRnJyyLsw9ytgxHf6zz0S9jnTdfqLbHqv/yhgj\
-    ZkqXwLPJjkD4cKwVri63DzJSrZ1Tj8vSzJ31IWepCe/TIg5NXg1ml2ZKOWrnPGzWTy9RLmEw6H8v3jh\
-    z9tqCwNCpH8ieqqRhLrxcmvYatOWSkgDlaLyK9W+ipsgT/ACM7Bh2pXRpNYnCe5BUqwN362dBlOgZ2c\
-    /r7c6h1DfylEKwiD5VOqNNNYwBczq4klohK+o2tveXa1lN+wbPsxURpGQOsAgvvNmQbb0Cwhla7j6Q9\
-    agHOJGaK3GEIhdi10oH/wLpGFlMYY2eJ6RCZfKQHey/Gs+5Vs4WhRtzLlG03KOKyBcOzyPw/06NDmh5\
-    CNJPg6g95kxn4ZQXk1MxVndE5/M0A7idyGH1XOvJm7XF9928gOJ4cvXamBi1r3EqeM1tlVGdL+n2tzH\
-    m2+S+RplYpkNzeE7zmHIUqpKEJeO6JRMLQcKs4VASwKk8zXLJ+Ps3tRsMsTGAyQxepuUilM="
-
-codecov_yml:
-  abs_target: 100%
+    wheel: true
 
 setup_py:
   include_package_data: True
@@ -149,16 +111,16 @@ setup_py:
     - pytest-rng>=1.0.0
     - pytest-xdist>=1.16.0
   classifiers:
-      - "Development Status :: 3 - Alpha"
-      - "Intended Audience :: Science/Research"
-      - "Operating System :: Microsoft :: Windows"
-      - "Operating System :: POSIX :: Linux"
-      - "Programming Language :: Python"
-      - "Programming Language :: Python :: 3.6"
-      - "Programming Language :: Python :: 3.7"
-      - "Programming Language :: Python :: 3.8"
-      - "Topic :: Scientific/Engineering"
-      - "Topic :: Scientific/Engineering :: Artificial Intelligence"
+    - "Development Status :: 3 - Alpha"
+    - "Intended Audience :: Science/Research"
+    - "Operating System :: Microsoft :: Windows"
+    - "Operating System :: POSIX :: Linux"
+    - "Programming Language :: Python"
+    - "Programming Language :: Python :: 3.6"
+    - "Programming Language :: Python :: 3.7"
+    - "Programming Language :: Python :: 3.8"
+    - "Topic :: Scientific/Engineering"
+    - "Topic :: Scientific/Engineering :: Artificial Intelligence"
 
 pyproject_toml: {}
 

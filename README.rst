@@ -6,10 +6,6 @@
   :target: https://pypi.org/project/keras-spiking
   :alt: Python versions
 
-.. image:: https://img.shields.io/codecov/c/github/nengo/keras-spiking/master.svg
-  :target: https://codecov.io/gh/nengo/keras-spiking
-  :alt: Test coverage
-
 ************
 KerasSpiking
 ************
