@@ -26,7 +26,7 @@ from tensorflow.keras.layers import (
     TimeDistributed,
 )
 
-from keras_spiking import compat, config
+from keras_spiking import config
 from keras_spiking.layers import SpikingActivation
 
 # TODO: update docstring examples
@@ -342,9 +342,7 @@ class ModelEnergy:
             for node in nodes:
                 assert node not in self.node_stats
 
-                self.node_stats[node] = self.compute_layer_stats(
-                    compat.node_layer(node), node=node
-                )
+                self.node_stats[node] = self.compute_layer_stats(node.layer, node=node)
 
         # add up stats for all nodes to get total stats for layer
         for layer in self.model.layers:
@@ -352,9 +350,9 @@ class ModelEnergy:
         for node, stats in self.node_stats.items():
             for key, val in stats.items():
                 if key in ("neurons", "connections"):
-                    self.layer_stats[compat.node_layer(node)][key] += val
+                    self.layer_stats[node.layer][key] += val
                 elif key == "spiking":
-                    self.layer_stats[compat.node_layer(node)][key] &= val
+                    self.layer_stats[node.layer][key] &= val
                 else:
                     raise NotImplementedError
 
@@ -744,7 +742,7 @@ def _output_size(node):
         output_shape = output_shape[1:]
     if any(x is None for x in output_shape):
         raise ValueError(
-            f"Cannot compute stats for '{compat.node_layer(node).name}' layer because "
+            f"Cannot compute stats for '{node.layer.name}' layer because "
             f"the output shape {output_shape} contains undefined elements"
         )
     return np.prod(output_shape)
@@ -775,10 +773,10 @@ def layer_stats(node, **_):
         Reshape,
     )
 
-    if not isinstance(compat.node_layer(node), whitelist):
+    if not isinstance(node.layer, whitelist):
         warnings.warn(
             "Cannot compute stats for layer of type "
-            f"'{type(compat.node_layer(node)).__name__}'."
+            f"'{type(node.layer).__name__}'."
             "Use `ModelEnergy.register_layer` to register this layer."
         )
     return {}
@@ -789,9 +787,7 @@ def layer_stats(node, **_):
 @ModelEnergy.register_layer(LeakyReLU)
 def act_stats(node):
     """Compute activation layer stats."""
-    return _act_stats(
-        getattr(compat.node_layer(node), "activation", "relu"), _output_size(node)
-    )
+    return _act_stats(getattr(node.layer, "activation", "relu"), _output_size(node))
 
 
 @ModelEnergy.register_layer(Conv1D)
@@ -800,11 +796,11 @@ def act_stats(node):
 def conv_stats(node):
     """Compute ``Conv1D``/``Conv2D``/``Conv3D`` layer stats."""
 
-    kernel_size = np.prod(compat.node_layer(node).kernel.shape[:-1])
+    kernel_size = np.prod(node.layer.kernel.shape[:-1])
     output_size = _output_size(node)
 
     result = {"connections": int(output_size * kernel_size)}
-    result.update(_act_stats(compat.node_layer(node).activation, output_size))
+    result.update(_act_stats(node.layer.activation, output_size))
     return result
 
 
@@ -814,10 +810,10 @@ def dense_stats(node):
 
     output_size = _output_size(node)
     spatial_size = output_size // node.output_shapes[-1]
-    kernel_size = np.prod(compat.node_layer(node).kernel.shape)
+    kernel_size = np.prod(node.layer.kernel.shape)
 
     result = {"connections": spatial_size * kernel_size}
-    result.update(_act_stats(compat.node_layer(node).activation, output_size))
+    result.update(_act_stats(node.layer.activation, output_size))
     return result
 
 
@@ -842,9 +838,9 @@ def timedistributed_stats(node):
     # input to generate a node we can compute stats for. note that the wrapper's input
     # has the extra time dimension, so we slice out just the first timestep
     # (it doesn't matter what the values are)
-    _ = compat.node_layer(node).layer(node.input_tensors[:, 0])
+    _ = node.layer.layer(node.input_tensors[:, 0])
 
     return ModelEnergy.compute_layer_stats(
-        layer=compat.node_layer(node).layer,
-        node=compat.node_layer(node).layer.inbound_nodes[-1],
+        layer=node.layer.layer,
+        node=node.layer.layer.inbound_nodes[-1],
     )

@@ -21,7 +21,7 @@ Release history
 0.3.1 (unreleased)
 ------------------
 
-*Compatible with TensorFlow 2.1 - 2.9*
+*Compatible with TensorFlow 2.3 - 2.11*
 
 0.3.0 (November 8, 2021)
 ------------------------
