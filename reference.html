@@ -1,0 +1,1782 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API reference &#8212; KerasSpiking 0.3.1.dev0 docs</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+<link rel="stylesheet" href="https://www.nengo.ai/css/bootstrap.css" type="text/css">
+<style>
+ body .title-bar,
+ body .documentation-source h1:after {
+   background-color: #a8acaf;
+ }
+</style>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/scrollreveal"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stickyfill/2.1.0/stickyfill.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+<!-- From basic/layout.html -->
+<script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+
+
+<script src="_static/underscore.js"></script>
+
+
+<script src="_static/doctools.js"></script>
+
+
+<script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+
+
+<script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+<script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-GT8XEDLTMJ"></script>
+        <script>
+         window.dataLayer = window.dataLayer || [];
+         function gtag(){dataLayer.push(arguments);}
+         gtag('js', new Date());
+         gtag('config', 'G-GT8XEDLTMJ');
+        </script>
+        <!-- End Google tag (gtag.js) -->
+        <!-- Matomo -->
+        <script>
+         var _paq = window._paq = window._paq || [];
+         _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
+         _paq.push(["setCookieDomain", "*.appliedbrainresearch.com"]);
+         _paq.push(["setDomains", ["*.appliedbrainresearch.com","*.edge.nengo.ai","*.forum.nengo.ai","*.labs.nengo.ai","*.nengo.ai"]]);
+         _paq.push(["enableCrossDomainLinking"]);
+         _paq.push(["setDoNotTrack", true]);
+         _paq.push(['trackPageView']);
+         _paq.push(['enableLinkTracking']);
+         (function() {
+           var u="https://appliedbrainresearch.matomo.cloud/";
+           _paq.push(['setTrackerUrl', u+'matomo.php']);
+           _paq.push(['setSiteId', '3']);
+           var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+           g.async=true; g.src='//cdn.matomo.cloud/appliedbrainresearch.matomo.cloud/matomo.js'; s.parentNode.insertBefore(g,s);
+         })();
+        </script>
+        <!-- End Matomo Code -->
+    
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Project information" href="project.html" />
+    <link rel="prev" title="Estimating model energy" href="examples/model-energy.html" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  </head><body class="bg-dark">
+
+<header class="fixed-top header-top shadow-sm">
+  <nav class="navbar navbar-expand-md navbar-light bg-white">
+    <a class="navbar-brand" href="https://www.nengo.ai/">
+      <img
+        src="https://www.nengo.ai/design/_images/general-full-light.svg"
+        alt="Nengo"
+        class="logo"
+      />
+    </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbar-collapse"
+      aria-controls="navbar-collapse"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar-collapse">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="https://www.nengo.ai/">What is Nengo?</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://www.nengo.ai/examples/">Examples</a>
+        </li>
+        <li class="nav-item dropdown active">
+          <a
+            class="nav-link dropdown-toggle"
+            id="navbar-dropdown-docs"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            href="#"
+            >Documentation</a
+          >
+          <div
+            class="dropdown-menu shadow-lg border-0"
+            aria-labelledby="navbar-dropdown-docs"
+          >
+            
+            <a class="dropdown-item" href="https://www.nengo.ai/nengo/">Nengo core</a>
+            <a class="dropdown-item" href="https://github.com/nengo/nengo-gui/">NengoGUI</a>
+            <a class="dropdown-item" href="https://www.nengo.ai/nengo-dl/">NengoDL</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="https://www.nengo.ai/nengo-spa/">NengoSPA</a>
+            <a class="dropdown-item" href="https://www.nengo.ai/nengo-extras/">NengoExtras</a>
+            <a class="dropdown-item" href="https://arvoelke.github.io/nengolib-docs/">Nengolib</a>
+            <a class="dropdown-item" href="https://www.nengo.ai/keras-spiking">KerasSpiking</a>
+            <a class="dropdown-item" href="https://www.nengo.ai/pytorch-spiking">PyTorchSpiking</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="https://www.nengo.ai/nengo-fpga/">NengoFPGA</a>
+            <a class="dropdown-item" href="https://www.nengo.ai/nengo-loihi/">NengoLoihi</a>
+            <a class="dropdown-item" href="https://labs.nengo.ai/nengo-ocl/">NengoOCL</a>
+            <a class="dropdown-item" href="https://github.com/project-rig/nengo_spinnaker">NengoSpiNNaker</a>
+            <a class="dropdown-item" href="https://github.com/nengo-labs/nengo-mpi">NengoMPI</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="https://www.nengo.ai/documentation/"
+              >All documentation</a
+            >
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            id="navbar-dropdown-community"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            href="#"
+            >Community</a
+          >
+          <div
+            class="dropdown-menu shadow-lg border-0"
+            aria-labelledby="navbar-dropdown-community"
+          >
+            <a class="dropdown-item" href="https://forum.nengo.ai">Forum</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="https://www.nengo.ai/people/"
+              >People</a
+            >
+            <a class="dropdown-item" href="https://www.nengo.ai/summer-school/"
+              >Summer school</a
+            >
+            <a class="dropdown-item" href="https://www.nengo.ai/contributing/"
+              >Contributing</a
+            >
+            <a class="dropdown-item" href="https://www.nengo.ai/publications/"
+              >Publications</a
+            >
+            <a class="dropdown-item" href="https://www.nengo.ai/videos/"
+              >Videos</a
+            >
+            <a class="dropdown-item" href="https://www.nengo.ai/conduct/"
+              >Code of conduct</a
+            >
+            <a class="dropdown-item" href="https://www.nengo.ai/caa/">CAA</a>
+          </div>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a
+            class="nav-link btn btn-success btn-sm text-white"
+            href="https://www.nengo.ai/getting-started/"
+          >Getting started</a
+        >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link btn btn-success btn-sm text-white"
+            href="https://www.nengo.ai/store/"
+          >Store</a
+        >
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>
+<div class="main-content gradient-top">
+  <div class="container-fluid">
+    <div class="row"><a class="toggle-sidenav d-block d-md-none" href="#"
+  ><i class="icon-close fa fa-fw fa-arrow-left"></i
+  ><i class="icon-open fa fa-fw fa-arrow-right"></i
+></a>
+<div role="complementary" class="sidenav col-4 col-xl-3 p-0 border-right">
+  <h3 class="pt-5 px-5">
+    <a href="index.html">
+      KerasSpiking
+    </a>
+  </h3>
+<form class="px-5 py-3 my-0 border-bottom" action="search.html" method="get">
+  <div class="form-group form-group-single">
+    <input type="text" name="q" class="form-control" placeholder="Search" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+    <button type="submit" class="btn btn-link">
+      <img src="https://www.nengo.ai/img/icon-search.svg" alt="Go" />
+    </button>
+  </div>
+</form><div class="p-5 toctree">
+  
+    <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-keras_spiking.layers">Layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-keras_spiking.regularizers">Regularizers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-keras_spiking.constraints">Constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-keras_spiking.callbacks">Callbacks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-keras_spiking.config">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-keras_spiking.model_energy">Energy estimation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="project.html">Project information</a></li>
+</ul>
+
+  
+  </div>
+  
+</div>
+      
+
+      <div class="col-12 col-md-8 col-xl-9">
+        <div class="container">
+          <div class="row">
+            <div class="col-10 offset-1 pb-5 documentation-source" role="main">
+              
+              
+  <div class="section" id="api-reference">
+<h1>API reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-keras_spiking.layers">
+<span id="layers"></span><h2>Layers<a class="headerlink" href="#module-keras_spiking.layers" title="Permalink to this headline">¶</a></h2>
+<p>Components for building spiking models in Keras.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#keras_spiking.layers.KerasSpikingCell" title="keras_spiking.layers.KerasSpikingCell"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.layers.KerasSpikingCell</span></code></a></p></td>
+<td><p>Base class for RNN cells in KerasSpiking.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#keras_spiking.layers.KerasSpikingLayer" title="keras_spiking.layers.KerasSpikingLayer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.layers.KerasSpikingLayer</span></code></a></p></td>
+<td><p>Base class for KerasSpiking layers.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#keras_spiking.SpikingActivationCell" title="keras_spiking.SpikingActivationCell"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.SpikingActivationCell</span></code></a></p></td>
+<td><p>RNN cell for converting an arbitrary activation function to a spiking equivalent.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#keras_spiking.SpikingActivation" title="keras_spiking.SpikingActivation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.SpikingActivation</span></code></a></p></td>
+<td><p>Layer for converting an arbitrary activation function to a spiking equivalent.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#keras_spiking.LowpassCell" title="keras_spiking.LowpassCell"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.LowpassCell</span></code></a></p></td>
+<td><p>RNN cell for a lowpass filter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#keras_spiking.Lowpass" title="keras_spiking.Lowpass"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.Lowpass</span></code></a></p></td>
+<td><p>Layer implementing a lowpass filter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#keras_spiking.AlphaCell" title="keras_spiking.AlphaCell"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.AlphaCell</span></code></a></p></td>
+<td><p>RNN cell for an alpha filter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#keras_spiking.Alpha" title="keras_spiking.Alpha"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.Alpha</span></code></a></p></td>
+<td><p>Layer implementing an alpha filter.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt id="keras_spiking.layers.KerasSpikingCell">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">keras_spiking.layers.</span></code><code class="sig-name descname"><span class="pre">KerasSpikingCell</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L10-L71"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.layers.KerasSpikingCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for RNN cells in KerasSpiking.</p>
+<p>The important feature of this class is that it allows cells to define a different
+implementation to be used in training versus inference.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>size</strong><span class="classifier">int or tuple of int or <code class="docutils literal notranslate"><span class="pre">tf.TensorShape</span></code></span></dt><dd><p>Input/output shape of the layer (not including batch/time dimensions).</p>
+</dd>
+<dt><strong>state_size</strong><span class="classifier">int or tuple of int or <code class="docutils literal notranslate"><span class="pre">tf.TensorShape</span></code></span></dt><dd><p>Shape of the cell state. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, use <code class="docutils literal notranslate"><span class="pre">size</span></code>.</p>
+</dd>
+<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>Length of time (in seconds) represented by one time step. If None, uses
+<a class="reference internal" href="#keras_spiking.config.DefaultManager" title="keras_spiking.config.DefaultManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.default.dt</span></code></a>
+(which is 0.001 seconds by default).</p>
+</dd>
+<dt><strong>always_use_inference</strong><span class="classifier">bool</span></dt><dd><p>If True, this layer will use its <a class="reference internal" href="#keras_spiking.layers.KerasSpikingCell.call_inference" title="keras_spiking.layers.KerasSpikingCell.call_inference"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call_inference</span></code></a> behaviour during training,
+rather than <a class="reference internal" href="#keras_spiking.layers.KerasSpikingCell.call_training" title="keras_spiking.layers.KerasSpikingCell.call_training"><code class="xref py py-obj docutils literal notranslate"><span class="pre">call_training</span></code></a>.</p>
+</dd>
+<dt><strong>kwargs</strong><span class="classifier">dict</span></dt><dd><p>Passed on to <a class="reference external" href="https://www.tensorflow.org/api_docs/python/tf/keras/layers/Layer">tf.keras.layers.Layer</a>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="keras_spiking.layers.KerasSpikingCell.call">
+<code class="sig-name descname"><span class="pre">call</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L50-L61"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.layers.KerasSpikingCell.call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Call function that defines a different forward pass during training versus
+inference.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.layers.KerasSpikingCell.call_training">
+<code class="sig-name descname"><span class="pre">call_training</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L63-L66"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.layers.KerasSpikingCell.call_training" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute layer output when training and <code class="docutils literal notranslate"><span class="pre">always_use_inference=False</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.layers.KerasSpikingCell.call_inference">
+<code class="sig-name descname"><span class="pre">call_inference</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L68-L71"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.layers.KerasSpikingCell.call_inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute layer output when testing or <code class="docutils literal notranslate"><span class="pre">always_use_inference=True</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="keras_spiking.layers.KerasSpikingLayer">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">keras_spiking.layers.</span></code><code class="sig-name descname"><span class="pre">KerasSpikingLayer</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L74-L211"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.layers.KerasSpikingLayer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for KerasSpiking layers.</p>
+<p>The main role of this class is to wrap a KerasSpikingCell in a
+<code class="docutils literal notranslate"><span class="pre">tf.keras.layers.RNN</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>Length of time (in seconds) represented by one time step. If None, uses
+<a class="reference internal" href="#keras_spiking.config.DefaultManager" title="keras_spiking.config.DefaultManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.default.dt</span></code></a>
+(which is 0.001 seconds by default).</p>
+</dd>
+<dt><strong>return_sequences</strong><span class="classifier">bool</span></dt><dd><p>Whether to return the full sequence of output values (default),
+or just the values on the last timestep.</p>
+</dd>
+<dt><strong>return state</strong><span class="classifier">bool</span></dt><dd><p>Whether to return the state in addition to the output.</p>
+</dd>
+<dt><strong>stateful</strong><span class="classifier">bool</span></dt><dd><p>If False (default), each time the layer is called it will begin from the same
+initial conditions. If True, each call will resume from the terminal state of
+the previous call (<code class="docutils literal notranslate"><span class="pre">my_layer.reset_states()</span></code> can be called to reset the state
+to initial conditions).</p>
+</dd>
+<dt><strong>unroll</strong><span class="classifier">bool</span></dt><dd><p>If True, the network will be unrolled, else a symbolic loop will be used.
+Unrolling can speed up computations, although it tends to be more
+memory-intensive. Unrolling is only suitable for short sequences.</p>
+</dd>
+<dt><strong>time_major</strong><span class="classifier">bool</span></dt><dd><p>The shape format of the input and output tensors. If True, the inputs and
+outputs will be in shape <code class="docutils literal notranslate"><span class="pre">(timesteps,</span> <span class="pre">batch,</span> <span class="pre">...)</span></code>, whereas in the False case,
+it will be <code class="docutils literal notranslate"><span class="pre">(batch,</span> <span class="pre">timesteps,</span> <span class="pre">...)</span></code>. Using <code class="docutils literal notranslate"><span class="pre">time_major=True</span></code> is a bit more
+efficient because it avoids transposes at the beginning and end of the layer
+calculation. However, most TensorFlow data is batch-major, so by default this
+layer accepts input and emits output in batch-major form.</p>
+</dd>
+<dt><strong>kwargs</strong><span class="classifier">dict</span></dt><dd><p>Passed on to <a class="reference external" href="https://www.tensorflow.org/api_docs/python/tf/keras/layers/Layer">tf.keras.layers.Layer</a>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="keras_spiking.layers.KerasSpikingLayer.build_cell">
+<code class="sig-name descname"><span class="pre">build_cell</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L133-L135"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.layers.KerasSpikingLayer.build_cell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create and return the RNN cell.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.layers.KerasSpikingLayer.build">
+<code class="sig-name descname"><span class="pre">build</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L137-L162"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.layers.KerasSpikingLayer.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds the RNN/cell layers contained within this layer.</p>
+<p class="rubric">Notes</p>
+<p>This method should not be called manually; rather, use the implicit layer
+callable behaviour (like <code class="docutils literal notranslate"><span class="pre">my_layer(inputs)</span></code>), which will apply this method
+with some additional bookkeeping.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.layers.KerasSpikingLayer.call">
+<code class="sig-name descname"><span class="pre">call</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constants</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L164-L176"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.layers.KerasSpikingLayer.call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply this layer to inputs.</p>
+<p class="rubric">Notes</p>
+<p>This method should not be called manually; rather, use the implicit layer
+callable behaviour (like <code class="docutils literal notranslate"><span class="pre">my_layer(inputs)</span></code>), which will apply this method
+with some additional bookkeeping.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.layers.KerasSpikingLayer.reset_states">
+<code class="sig-name descname"><span class="pre">reset_states</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">states</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L178-L194"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.layers.KerasSpikingLayer.reset_states" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset the internal state of the layer (only necessary if <code class="docutils literal notranslate"><span class="pre">stateful=True</span></code>).</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>states</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ndarray</span></code></a></span></dt><dd><p>Optional state array that can be used to override the values returned by
+<code class="docutils literal notranslate"><span class="pre">cell.get_initial_state</span></code>, where <code class="docutils literal notranslate"><span class="pre">cell</span></code> is returned by <code class="docutils literal notranslate"><span class="pre">build_cell</span></code>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.layers.KerasSpikingLayer.get_config">
+<code class="sig-name descname"><span class="pre">get_config</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L196-L211"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.layers.KerasSpikingLayer.get_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return config of layer (for serialization during model saving/loading).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="keras_spiking.SpikingActivationCell">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">keras_spiking.</span></code><code class="sig-name descname"><span class="pre">SpikingActivationCell</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L214-L375"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.SpikingActivationCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>RNN cell for converting an arbitrary activation function to a spiking equivalent.</p>
+<p>Neurons will spike at a rate proportional to the output of the base activation
+function. For example, if the activation function is outputting a value of 10, then
+the wrapped SpikingActivationCell will output spikes at a rate of 10Hz (i.e., 10
+spikes per 1 simulated second, where 1 simulated second is equivalent to <code class="docutils literal notranslate"><span class="pre">1/dt</span></code>
+time steps). Each spike will have height <code class="docutils literal notranslate"><span class="pre">1/dt</span></code> (so that the integral of the
+spiking output will be the same as the integral of the base activation output).
+Note that if the base activation is outputting a negative value then the spikes
+will have height <code class="docutils literal notranslate"><span class="pre">-1/dt</span></code>. Multiple spikes per timestep are also possible, in
+which case the output will be <code class="docutils literal notranslate"><span class="pre">n/dt</span></code> (where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the number of spikes).</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>size</strong><span class="classifier">int or tuple of int or <code class="docutils literal notranslate"><span class="pre">tf.TensorShape</span></code></span></dt><dd><p>Input/output shape of the layer (not including batch/time dimensions).</p>
+</dd>
+<dt><strong>activation</strong><span class="classifier">callable</span></dt><dd><p>Activation function to be converted to spiking equivalent.</p>
+</dd>
+<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>Length of time (in seconds) represented by one time step. If None, uses
+<a class="reference internal" href="#keras_spiking.config.DefaultManager" title="keras_spiking.config.DefaultManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.default.dt</span></code></a>
+(which is 0.001 seconds by default).</p>
+</dd>
+<dt><strong>seed</strong><span class="classifier">int</span></dt><dd><p>Seed for random state initialization.</p>
+</dd>
+<dt><strong>spiking_aware_training</strong><span class="classifier">bool</span></dt><dd><p>If True (default), use the spiking activation function
+for the forward pass and the base activation function for the backward pass.
+If False, use the base activation function for the forward and
+backward pass during training.</p>
+</dd>
+<dt><strong>kwargs</strong><span class="classifier">dict</span></dt><dd><p>Passed on to <a class="reference external" href="https://www.tensorflow.org/api_docs/python/tf/keras/layers/Layer">tf.keras.layers.Layer</a>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This cell needs to be wrapped in a <code class="docutils literal notranslate"><span class="pre">tf.keras.layers.RNN</span></code>, like</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_layer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">RNN</span><span class="p">(</span>
+    <span class="n">keras_spiking</span><span class="o">.</span><span class="n">SpikingActivationCell</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="keras_spiking.SpikingActivationCell.get_initial_state">
+<code class="sig-name descname"><span class="pre">get_initial_state</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L282-L301"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.SpikingActivationCell.get_initial_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up initial spiking state.</p>
+<p>Initial state is chosen from a uniform distribution, seeded based on the seed
+passed on construction (if one was given).</p>
+<p>Note: state will be initialized automatically, user does not need to call this
+themselves.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.SpikingActivationCell.call_training">
+<code class="sig-name descname"><span class="pre">call_training</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L303-L304"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.SpikingActivationCell.call_training" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute layer output when training and <code class="docutils literal notranslate"><span class="pre">always_use_inference=False</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.SpikingActivationCell.call_inference">
+<code class="sig-name descname"><span class="pre">call_inference</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#keras_spiking.SpikingActivationCell.call_inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute spiking output, with custom gradient for spiking aware training.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>inputs</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">tf.Tensor</span></code></span></dt><dd><p>Input to the activation function.</p>
+</dd>
+<dt><strong>voltage</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">tf.Tensor</span></code></span></dt><dd><p>Spiking voltage state.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl>
+<dt><strong>spikes</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">tf.Tensor</span></code></span></dt><dd><p>Output spike values (0 or <code class="docutils literal notranslate"><span class="pre">n/dt</span></code> for each element in <code class="docutils literal notranslate"><span class="pre">inputs</span></code>, where
+<code class="docutils literal notranslate"><span class="pre">n</span></code> is the number of spikes).</p>
+</dd>
+<dt><strong>voltage</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">tf.Tensor</span></code></span></dt><dd><p>Updated voltage state.</p>
+</dd>
+<dt><strong>grad</strong><span class="classifier">callable</span></dt><dd><p>Custom gradient function for spiking aware training.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.SpikingActivationCell.get_config">
+<code class="sig-name descname"><span class="pre">get_config</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L361-L375"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.SpikingActivationCell.get_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return config of layer (for serialization during model saving/loading).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="keras_spiking.SpikingActivation">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">keras_spiking.</span></code><code class="sig-name descname"><span class="pre">SpikingActivation</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L378-L496"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.SpikingActivation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Layer for converting an arbitrary activation function to a spiking equivalent.</p>
+<p>Neurons will spike at a rate proportional to the output of the base activation
+function. For example, if the activation function is outputting a value of 10, then
+the wrapped SpikingActivationCell will output spikes at a rate of 10Hz (i.e., 10
+spikes per 1 simulated second, where 1 simulated second is equivalent to <code class="docutils literal notranslate"><span class="pre">1/dt</span></code>
+time steps). Each spike will have height <code class="docutils literal notranslate"><span class="pre">1/dt</span></code> (so that the integral of the
+spiking output will be the same as the integral of the base activation output).
+Note that if the base activation is outputting a negative value then the spikes
+will have height <code class="docutils literal notranslate"><span class="pre">-1/dt</span></code>. Multiple spikes per timestep are also possible, in
+which case the output will be <code class="docutils literal notranslate"><span class="pre">n/dt</span></code> (where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the number of spikes).</p>
+<p>When applying this layer to an input, make sure that the input has a time axis
+(the <code class="docutils literal notranslate"><span class="pre">time_major</span></code> option controls whether it comes before or after the batch
+axis). The spiking output will be computed along the time axis.
+The number of simulation timesteps will depend on the length of that time axis.
+The number of timesteps does not need to be the same during
+training/evaluation/inference. In particular, it may be more efficient
+to use one timestep during training and multiple timesteps during inference
+(often with <code class="docutils literal notranslate"><span class="pre">spiking_aware_training=False</span></code>, and <code class="docutils literal notranslate"><span class="pre">apply_during_training=False</span></code>
+on any <a class="reference internal" href="#keras_spiking.Lowpass" title="keras_spiking.Lowpass"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Lowpass</span></code></a> layers).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>activation</strong><span class="classifier">callable</span></dt><dd><p>Activation function to be converted to spiking equivalent.</p>
+</dd>
+<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>Length of time (in seconds) represented by one time step. If None, uses
+<a class="reference internal" href="#keras_spiking.config.DefaultManager" title="keras_spiking.config.DefaultManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.default.dt</span></code></a>
+(which is 0.001 seconds by default).</p>
+</dd>
+<dt><strong>seed</strong><span class="classifier">int</span></dt><dd><p>Seed for random state initialization.</p>
+</dd>
+<dt><strong>spiking_aware_training</strong><span class="classifier">bool</span></dt><dd><p>If True (default), use the spiking activation function
+for the forward pass and the base activation function for the backward pass.
+If False, use the base activation function for the forward and
+backward pass during training.</p>
+</dd>
+<dt><strong>return_sequences</strong><span class="classifier">bool</span></dt><dd><p>Whether to return the full sequence of output spikes (default),
+or just the spikes on the last timestep.</p>
+</dd>
+<dt><strong>return state</strong><span class="classifier">bool</span></dt><dd><p>Whether to return the state in addition to the output.</p>
+</dd>
+<dt><strong>stateful</strong><span class="classifier">bool</span></dt><dd><p>If False (default), each time the layer is called it will begin from the same
+initial conditions. If True, each call will resume from the terminal state of
+the previous call (<code class="docutils literal notranslate"><span class="pre">my_layer.reset_states()</span></code> can be called to reset the state
+to initial conditions).</p>
+</dd>
+<dt><strong>unroll</strong><span class="classifier">bool</span></dt><dd><p>If True, the network will be unrolled, else a symbolic loop will be used.
+Unrolling can speed up computations, although it tends to be more
+memory-intensive. Unrolling is only suitable for short sequences.</p>
+</dd>
+<dt><strong>time_major</strong><span class="classifier">bool</span></dt><dd><p>The shape format of the input and output tensors. If True, the inputs and
+outputs will be in shape <code class="docutils literal notranslate"><span class="pre">(timesteps,</span> <span class="pre">batch,</span> <span class="pre">...)</span></code>, whereas in the False case,
+it will be <code class="docutils literal notranslate"><span class="pre">(batch,</span> <span class="pre">timesteps,</span> <span class="pre">...)</span></code>. Using <code class="docutils literal notranslate"><span class="pre">time_major=True</span></code> is a bit more
+efficient because it avoids transposes at the beginning and end of the layer
+calculation. However, most TensorFlow data is batch-major, so by default this
+layer accepts input and emits output in batch-major form.</p>
+</dd>
+<dt><strong>kwargs</strong><span class="classifier">dict</span></dt><dd><p>Passed on to <a class="reference external" href="https://www.tensorflow.org/api_docs/python/tf/keras/layers/Layer">tf.keras.layers.Layer</a>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This is equivalent to
+<code class="docutils literal notranslate"><span class="pre">tf.keras.layers.RNN(SpikingActivationCell(...)</span> <span class="pre">...)</span></code>, it just takes care of
+the RNN construction automatically.</p>
+<dl class="py method">
+<dt id="keras_spiking.SpikingActivation.build_cell">
+<code class="sig-name descname"><span class="pre">build_cell</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L477-L484"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.SpikingActivation.build_cell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create and return the RNN cell.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.SpikingActivation.get_config">
+<code class="sig-name descname"><span class="pre">get_config</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L486-L496"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.SpikingActivation.get_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return config of layer (for serialization during model saving/loading).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="keras_spiking.LowpassCell">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">keras_spiking.</span></code><code class="sig-name descname"><span class="pre">LowpassCell</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L499-L639"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.LowpassCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>RNN cell for a lowpass filter.</p>
+<p>The initial filter state and filter time constants are both trainable parameters.
+However, if <code class="docutils literal notranslate"><span class="pre">apply_during_training=False</span></code> then the parameters are not part
+of the training loop, and so will never be updated.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>size</strong><span class="classifier">int or tuple of int or <code class="docutils literal notranslate"><span class="pre">tf.TensorShape</span></code></span></dt><dd><p>Input/output shape of the layer (not including batch/time dimensions).</p>
+</dd>
+<dt><strong>tau_initializer</strong><span class="classifier">float or str or <code class="docutils literal notranslate"><span class="pre">tf.keras.initializers.Initializer</span></code></span></dt><dd><p>Initial value of time constant of filter (in seconds). Passing a float will
+initialize it to that value, or any standard Keras initializer can
+be used.</p>
+</dd>
+<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>Length of time (in seconds) represented by one time step. If None, uses
+<a class="reference internal" href="#keras_spiking.config.DefaultManager" title="keras_spiking.config.DefaultManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.default.dt</span></code></a>
+(which is 0.001 seconds by default).</p>
+</dd>
+<dt><strong>apply_during_training</strong><span class="classifier">bool</span></dt><dd><p>If False, this layer will effectively be ignored during training (this
+often makes sense in concert with the swappable training behaviour in, e.g.,
+<a class="reference internal" href="#keras_spiking.SpikingActivation" title="keras_spiking.SpikingActivation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpikingActivation</span></code></a>, since if the activations are not spiking during training
+then we often don’t need to filter them either).</p>
+</dd>
+<dt><strong>level_initializer</strong><span class="classifier">str or <code class="docutils literal notranslate"><span class="pre">tf.keras.initializers.Initializer</span></code></span></dt><dd><p>Initializer for filter state.</p>
+</dd>
+<dt><strong>initial_level_constraint</strong><span class="classifier">str or <code class="docutils literal notranslate"><span class="pre">tf.keras.constraints.Constraint</span></code></span></dt><dd><p>Constraint for <code class="docutils literal notranslate"><span class="pre">initial_level</span></code>.</p>
+</dd>
+<dt><strong>tau_constraint</strong><span class="classifier">str or <code class="docutils literal notranslate"><span class="pre">tf.keras.constraints.Constraint</span></code></span></dt><dd><p>Constraint for <code class="docutils literal notranslate"><span class="pre">tau</span></code>. For example, <a class="reference internal" href="#keras_spiking.constraints.Mean" title="keras_spiking.constraints.Mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Mean</span></code></a> will share the same
+time constant across all of the lowpass filters. The time constant is always
+clipped to be positive in the forward pass for numerical stability.</p>
+</dd>
+<dt><strong>kwargs</strong><span class="classifier">dict</span></dt><dd><p>Passed on to <a class="reference external" href="https://www.tensorflow.org/api_docs/python/tf/keras/layers/Layer">tf.keras.layers.Layer</a>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This cell needs to be wrapped in a <code class="docutils literal notranslate"><span class="pre">tf.keras.layers.RNN</span></code>, like</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_layer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">RNN</span><span class="p">(</span>
+    <span class="n">keras_spiking</span><span class="o">.</span><span class="n">LowpassCell</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">tau_initializer</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="keras_spiking.LowpassCell.build">
+<code class="sig-name descname"><span class="pre">build</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L579-L598"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.LowpassCell.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build parameters associated with this layer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.LowpassCell.get_initial_state">
+<code class="sig-name descname"><span class="pre">get_initial_state</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L600-L602"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.LowpassCell.get_initial_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get initial filter state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.LowpassCell.call_inference">
+<code class="sig-name descname"><span class="pre">call_inference</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L604-L612"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.LowpassCell.call_inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute layer output when testing or <code class="docutils literal notranslate"><span class="pre">always_use_inference=True</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.LowpassCell.call_training">
+<code class="sig-name descname"><span class="pre">call_training</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L614-L615"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.LowpassCell.call_training" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute layer output when training and <code class="docutils literal notranslate"><span class="pre">always_use_inference=False</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.LowpassCell.get_config">
+<code class="sig-name descname"><span class="pre">get_config</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L617-L639"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.LowpassCell.get_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return config of layer (for serialization during model saving/loading).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="keras_spiking.Lowpass">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">keras_spiking.</span></code><code class="sig-name descname"><span class="pre">Lowpass</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L642-L783"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.Lowpass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Layer implementing a lowpass filter.</p>
+<p>The impulse-response function (time domain) and transfer function are:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}h(t) &amp;= (1 / \tau) \exp(-t / \tau) \\
+H(s) &amp;= \frac{1}{\tau s + 1}\end{split}\]</div>
+<p>The initial filter state and filter time constants are both trainable parameters.
+However, if <code class="docutils literal notranslate"><span class="pre">apply_during_training=False</span></code> then the parameters are not part
+of the training loop, and so will never be updated.</p>
+<p>When applying this layer to an input, make sure that the input has a time axis
+(the <code class="docutils literal notranslate"><span class="pre">time_major</span></code> option controls whether it comes before or after the batch
+axis).</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>tau_initializer</strong><span class="classifier">float or str or <code class="docutils literal notranslate"><span class="pre">tf.keras.initializers.Initializer</span></code></span></dt><dd><p>Initial value of time constant of filter (in seconds). Passing a float will
+initialize it to that value, or any standard Keras initializer can
+be used.</p>
+</dd>
+<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>Length of time (in seconds) represented by one time step. If None, uses
+<a class="reference internal" href="#keras_spiking.config.DefaultManager" title="keras_spiking.config.DefaultManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.default.dt</span></code></a>
+(which is 0.001 seconds by default).</p>
+</dd>
+<dt><strong>apply_during_training</strong><span class="classifier">bool</span></dt><dd><p>If False, this layer will effectively be ignored during training (this
+often makes sense in concert with the swappable training behaviour in, e.g.,
+<a class="reference internal" href="#keras_spiking.SpikingActivation" title="keras_spiking.SpikingActivation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpikingActivation</span></code></a>, since if the activations are not spiking during training
+then we often don’t need to filter them either).</p>
+</dd>
+<dt><strong>level_initializer</strong><span class="classifier">str or <code class="docutils literal notranslate"><span class="pre">tf.keras.initializers.Initializer</span></code></span></dt><dd><p>Initializer for filter state.</p>
+</dd>
+<dt><strong>initial_level_constraint</strong><span class="classifier">str or <code class="docutils literal notranslate"><span class="pre">tf.keras.constraints.Constraint</span></code></span></dt><dd><p>Constraint for <code class="docutils literal notranslate"><span class="pre">initial_level</span></code>.</p>
+</dd>
+<dt><strong>tau_constraint</strong><span class="classifier">str or <code class="docutils literal notranslate"><span class="pre">tf.keras.constraints.Constraint</span></code></span></dt><dd><p>Constraint for <code class="docutils literal notranslate"><span class="pre">tau</span></code>. For example, <a class="reference internal" href="#keras_spiking.constraints.Mean" title="keras_spiking.constraints.Mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Mean</span></code></a> will share the same
+time constant across all of the lowpass filters. The time constant is always
+clipped to be positive in the forward pass for numerical stability.</p>
+</dd>
+<dt><strong>return_sequences</strong><span class="classifier">bool</span></dt><dd><p>Whether to return the full sequence of filtered output (default),
+or just the output on the last timestep.</p>
+</dd>
+<dt><strong>return state</strong><span class="classifier">bool</span></dt><dd><p>Whether to return the state in addition to the output.</p>
+</dd>
+<dt><strong>stateful</strong><span class="classifier">bool</span></dt><dd><p>If False (default), each time the layer is called it will begin from the same
+initial conditions. If True, each call will resume from the terminal state of
+the previous call (<code class="docutils literal notranslate"><span class="pre">my_layer.reset_states()</span></code> can be called to reset the state
+to initial conditions).</p>
+</dd>
+<dt><strong>unroll</strong><span class="classifier">bool</span></dt><dd><p>If True, the network will be unrolled, else a symbolic loop will be used.
+Unrolling can speed up computations, although it tends to be more
+memory-intensive. Unrolling is only suitable for short sequences.</p>
+</dd>
+<dt><strong>time_major</strong><span class="classifier">bool</span></dt><dd><p>The shape format of the input and output tensors. If True, the inputs and
+outputs will be in shape <code class="docutils literal notranslate"><span class="pre">(timesteps,</span> <span class="pre">batch,</span> <span class="pre">...)</span></code>, whereas in the False case,
+it will be <code class="docutils literal notranslate"><span class="pre">(batch,</span> <span class="pre">timesteps,</span> <span class="pre">...)</span></code>. Using <code class="docutils literal notranslate"><span class="pre">time_major=True</span></code> is a bit more
+efficient because it avoids transposes at the beginning and end of the layer
+calculation. However, most TensorFlow data is batch-major, so by default this
+layer accepts input and emits output in batch-major form.</p>
+</dd>
+<dt><strong>kwargs</strong><span class="classifier">dict</span></dt><dd><p>Passed on to <a class="reference external" href="https://www.tensorflow.org/api_docs/python/tf/keras/layers/Layer">tf.keras.layers.Layer</a>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This is equivalent to
+<code class="docutils literal notranslate"><span class="pre">tf.keras.layers.RNN(LowpassCell(...)</span> <span class="pre">...)</span></code>, it just takes care of
+the RNN construction automatically.</p>
+<dl class="py method">
+<dt id="keras_spiking.Lowpass.build_cell">
+<code class="sig-name descname"><span class="pre">build_cell</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L754-L763"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.Lowpass.build_cell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create and return the RNN cell.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.Lowpass.get_config">
+<code class="sig-name descname"><span class="pre">get_config</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L765-L783"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.Lowpass.get_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return config of layer (for serialization during model saving/loading).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="keras_spiking.AlphaCell">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">keras_spiking.</span></code><code class="sig-name descname"><span class="pre">AlphaCell</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L786-L964"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.AlphaCell" title="Permalink to this definition">¶</a></dt>
+<dd><p>RNN cell for an alpha filter.</p>
+<p>The initial filter state and filter time constants are both trainable parameters.
+However, if <code class="docutils literal notranslate"><span class="pre">apply_during_training=False</span></code> then the parameters are not part
+of the training loop, and so will never be updated.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>size</strong><span class="classifier">int or tuple of int or <code class="docutils literal notranslate"><span class="pre">tf.TensorShape</span></code></span></dt><dd><p>Input/output shape of the layer (not including batch/time dimensions).</p>
+</dd>
+<dt><strong>tau_initializer</strong><span class="classifier">float or str or <code class="docutils literal notranslate"><span class="pre">tf.keras.initializers.Initializer</span></code></span></dt><dd><p>Initial value of time constant of filter (in seconds). Passing a float will
+initialize it to that value, or any standard Keras initializer can
+be used.</p>
+</dd>
+<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>Length of time (in seconds) represented by one time step. If None, uses
+<a class="reference internal" href="#keras_spiking.config.DefaultManager" title="keras_spiking.config.DefaultManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.default.dt</span></code></a>
+(which is 0.001 seconds by default).</p>
+</dd>
+<dt><strong>apply_during_training</strong><span class="classifier">bool</span></dt><dd><p>If False, this layer will effectively be ignored during training (this
+often makes sense in concert with the swappable training behaviour in, e.g.,
+<a class="reference internal" href="#keras_spiking.SpikingActivation" title="keras_spiking.SpikingActivation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpikingActivation</span></code></a>, since if the activations are not spiking during training
+then we often don’t need to filter them either).</p>
+</dd>
+<dt><strong>level_initializer</strong><span class="classifier">str or <code class="docutils literal notranslate"><span class="pre">tf.keras.initializers.Initializer</span></code></span></dt><dd><p>Initializer for filter state.</p>
+</dd>
+<dt><strong>initial_level_constraint</strong><span class="classifier">str or <code class="docutils literal notranslate"><span class="pre">tf.keras.constraints.Constraint</span></code></span></dt><dd><p>Constraint for <code class="docutils literal notranslate"><span class="pre">initial_level</span></code>.</p>
+</dd>
+<dt><strong>tau_constraint</strong><span class="classifier">str or <code class="docutils literal notranslate"><span class="pre">tf.keras.constraints.Constraint</span></code></span></dt><dd><p>Constraint for <code class="docutils literal notranslate"><span class="pre">tau</span></code>. For example, <a class="reference internal" href="#keras_spiking.constraints.Mean" title="keras_spiking.constraints.Mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Mean</span></code></a> will share the same
+time constant across all of the lowpass filters. The time constant is always
+clipped to be positive in the forward pass for numerical stability.</p>
+</dd>
+<dt><strong>kwargs</strong><span class="classifier">dict</span></dt><dd><p>Passed on to <a class="reference external" href="https://www.tensorflow.org/api_docs/python/tf/keras/layers/Layer">tf.keras.layers.Layer</a>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This cell needs to be wrapped in a <code class="docutils literal notranslate"><span class="pre">tf.keras.layers.RNN</span></code>, like</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">my_layer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">RNN</span><span class="p">(</span>
+    <span class="n">keras_spiking</span><span class="o">.</span><span class="n">AlphaCell</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">tau_initializer</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="keras_spiking.AlphaCell.build">
+<code class="sig-name descname"><span class="pre">build</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L868-L887"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.AlphaCell.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build parameters associated with this layer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.AlphaCell.get_initial_state">
+<code class="sig-name descname"><span class="pre">get_initial_state</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L889-L899"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.AlphaCell.get_initial_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get initial filter state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.AlphaCell.call_inference">
+<code class="sig-name descname"><span class="pre">call_inference</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L901-L937"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.AlphaCell.call_inference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute layer output when testing or <code class="docutils literal notranslate"><span class="pre">always_use_inference=True</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.AlphaCell.call_training">
+<code class="sig-name descname"><span class="pre">call_training</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">states</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L939-L940"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.AlphaCell.call_training" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute layer output when training and <code class="docutils literal notranslate"><span class="pre">always_use_inference=False</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.AlphaCell.get_config">
+<code class="sig-name descname"><span class="pre">get_config</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L942-L964"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.AlphaCell.get_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return config of layer (for serialization during model saving/loading).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="keras_spiking.Alpha">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">keras_spiking.</span></code><code class="sig-name descname"><span class="pre">Alpha</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L967-L1102"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.Alpha" title="Permalink to this definition">¶</a></dt>
+<dd><p>Layer implementing an alpha filter.</p>
+<p>The impulse-response function (time domain) and transfer function are:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}h(t) &amp;= (t / \tau^2) \exp(-t / \tau) \\
+H(s) &amp;= \frac{1}{(\tau s + 1)^2}\end{split}\]</div>
+<p>The initial filter state and filter time constants are both trainable parameters.
+However, if <code class="docutils literal notranslate"><span class="pre">apply_during_training=False</span></code> then the parameters are not part
+of the training loop, and so will never be updated.</p>
+<p>When applying this layer to an input, make sure that the input has a time axis
+(the <code class="docutils literal notranslate"><span class="pre">time_major</span></code> option controls whether it comes before or after the batch
+axis).</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>tau_initializer</strong><span class="classifier">float or str or <code class="docutils literal notranslate"><span class="pre">tf.keras.initializers.Initializer</span></code></span></dt><dd><p>Initial value of time constant of filter (in seconds). Passing a float will
+initialize it to that value, or any standard Keras initializer can
+be used.</p>
+</dd>
+<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>Length of time (in seconds) represented by one time step. If None, uses
+<a class="reference internal" href="#keras_spiking.config.DefaultManager" title="keras_spiking.config.DefaultManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.default.dt</span></code></a>
+(which is 0.001 seconds by default).</p>
+</dd>
+<dt><strong>apply_during_training</strong><span class="classifier">bool</span></dt><dd><p>If False, this layer will effectively be ignored during training (this
+often makes sense in concert with the swappable training behaviour in, e.g.,
+<a class="reference internal" href="#keras_spiking.SpikingActivation" title="keras_spiking.SpikingActivation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpikingActivation</span></code></a>, since if the activations are not spiking during training
+then we often don’t need to filter them either).</p>
+</dd>
+<dt><strong>level_initializer</strong><span class="classifier">str or <code class="docutils literal notranslate"><span class="pre">tf.keras.initializers.Initializer</span></code></span></dt><dd><p>Initializer for filter state.</p>
+</dd>
+<dt><strong>initial_level_constraint</strong><span class="classifier">str or <code class="docutils literal notranslate"><span class="pre">tf.keras.constraints.Constraint</span></code></span></dt><dd><p>Constraint for <code class="docutils literal notranslate"><span class="pre">initial_level</span></code>.</p>
+</dd>
+<dt><strong>tau_constraint</strong><span class="classifier">str or <code class="docutils literal notranslate"><span class="pre">tf.keras.constraints.Constraint</span></code></span></dt><dd><p>Constraint for <code class="docutils literal notranslate"><span class="pre">tau</span></code>. For example, <a class="reference internal" href="#keras_spiking.constraints.Mean" title="keras_spiking.constraints.Mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Mean</span></code></a> will share the same
+time constant across all of the lowpass filters. The time constant is always
+clipped to be positive in the forward pass for numerical stability.</p>
+</dd>
+<dt><strong>return_sequences</strong><span class="classifier">bool</span></dt><dd><p>Whether to return the full sequence of filtered output (default),
+or just the output on the last timestep.</p>
+</dd>
+<dt><strong>return state</strong><span class="classifier">bool</span></dt><dd><p>Whether to return the state in addition to the output.</p>
+</dd>
+<dt><strong>stateful</strong><span class="classifier">bool</span></dt><dd><p>If False (default), each time the layer is called it will begin from the same
+initial conditions. If True, each call will resume from the terminal state of
+the previous call (<code class="docutils literal notranslate"><span class="pre">my_layer.reset_states()</span></code> can be called to reset the state
+to initial conditions).</p>
+</dd>
+<dt><strong>unroll</strong><span class="classifier">bool</span></dt><dd><p>If True, the network will be unrolled, else a symbolic loop will be used.
+Unrolling can speed up computations, although it tends to be more
+memory-intensive. Unrolling is only suitable for short sequences.</p>
+</dd>
+<dt><strong>time_major</strong><span class="classifier">bool</span></dt><dd><p>The shape format of the input and output tensors. If True, the inputs and
+outputs will be in shape <code class="docutils literal notranslate"><span class="pre">(timesteps,</span> <span class="pre">batch,</span> <span class="pre">...)</span></code>, whereas in the False case,
+it will be <code class="docutils literal notranslate"><span class="pre">(batch,</span> <span class="pre">timesteps,</span> <span class="pre">...)</span></code>. Using <code class="docutils literal notranslate"><span class="pre">time_major=True</span></code> is a bit more
+efficient because it avoids transposes at the beginning and end of the layer
+calculation. However, most TensorFlow data is batch-major, so by default this
+layer accepts input and emits output in batch-major form.</p>
+</dd>
+<dt><strong>kwargs</strong><span class="classifier">dict</span></dt><dd><p>Passed on to <a class="reference external" href="https://www.tensorflow.org/api_docs/python/tf/keras/layers/Layer">tf.keras.layers.Layer</a>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This is equivalent to
+<code class="docutils literal notranslate"><span class="pre">tf.keras.layers.RNN(AlphaCell(...)</span> <span class="pre">...)</span></code>, it just takes care of
+the RNN construction automatically.</p>
+<dl class="py method">
+<dt id="keras_spiking.Alpha.build_cell">
+<code class="sig-name descname"><span class="pre">build_cell</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L1075-L1084"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.Alpha.build_cell" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create and return the RNN cell.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.Alpha.get_config">
+<code class="sig-name descname"><span class="pre">get_config</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/layers.py#L1086-L1102"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.Alpha.get_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return config of layer (for serialization during model saving/loading).</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-keras_spiking.regularizers">
+<span id="regularizers"></span><h2>Regularizers<a class="headerlink" href="#module-keras_spiking.regularizers" title="Permalink to this headline">¶</a></h2>
+<p>Regularization methods designed to work with spiking layers.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#keras_spiking.regularizers.RangedRegularizer" title="keras_spiking.regularizers.RangedRegularizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.regularizers.RangedRegularizer</span></code></a></p></td>
+<td><p>A regularizer that penalizes values that fall outside a range.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#keras_spiking.regularizers.L1L2" title="keras_spiking.regularizers.L1L2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.regularizers.L1L2</span></code></a></p></td>
+<td><p>A version of <code class="docutils literal notranslate"><span class="pre">tf.keras.regularizers.L1L2</span></code> that allows the user to specify a nonzero target output.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#keras_spiking.regularizers.L1" title="keras_spiking.regularizers.L1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.regularizers.L1</span></code></a></p></td>
+<td><p>A version of <code class="docutils literal notranslate"><span class="pre">tf.keras.regularizers.L1</span></code> that allows the user to specify a nonzero target output.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#keras_spiking.regularizers.L2" title="keras_spiking.regularizers.L2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.regularizers.L2</span></code></a></p></td>
+<td><p>A version of <code class="docutils literal notranslate"><span class="pre">tf.keras.regularizers.L2</span></code> that allows the user to specify a nonzero target output.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#keras_spiking.regularizers.Percentile" title="keras_spiking.regularizers.Percentile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.regularizers.Percentile</span></code></a></p></td>
+<td><p>A regularizer that penalizes a percentile of a tensor.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt id="keras_spiking.regularizers.RangedRegularizer">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">keras_spiking.regularizers.</span></code><code class="sig-name descname"><span class="pre">RangedRegularizer</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">target=0</span></em>, <em class="sig-param"><span class="pre">regularizer=&lt;keras.regularizers.L1L2</span> <span class="pre">object&gt;</span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/regularizers.py#L15-L76"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.regularizers.RangedRegularizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>A regularizer that penalizes values that fall outside a range.</p>
+<p>This allows regularized values to fall anywhere within the range, as opposed to
+standard regularizers that penalize any departure from some fixed point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>target</strong><span class="classifier">float or tuple</span></dt><dd><p>The value that we want the regularized outputs to be driven towards. Can be a
+float, in which case all outputs will be driven towards that value, or a tuple
+specifying a range <code class="docutils literal notranslate"><span class="pre">(min,</span> <span class="pre">max)</span></code>, in which case outputs outside that range
+will be driven towards that range (but outputs within the range will not be
+penalized).</p>
+</dd>
+<dt><strong>regularizer: ``tf.keras.regularizers.Regularizer``</strong></dt><dd><p>Regularization penalty that will be applied to the outputs with respect to
+<code class="docutils literal notranslate"><span class="pre">target</span></code>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="keras_spiking.regularizers.RangedRegularizer.get_config">
+<code class="sig-name descname"><span class="pre">get_config</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/regularizers.py#L63-L69"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.regularizers.RangedRegularizer.get_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return config (for serialization during model saving/loading).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.regularizers.RangedRegularizer.from_config">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">from_config</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/regularizers.py#L71-L76"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.regularizers.RangedRegularizer.from_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new instance from the serialized <code class="docutils literal notranslate"><span class="pre">config</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="keras_spiking.regularizers.L1L2">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">keras_spiking.regularizers.</span></code><code class="sig-name descname"><span class="pre">L1L2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">l1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/regularizers.py#L79-L119"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.regularizers.L1L2" title="Permalink to this definition">¶</a></dt>
+<dd><p>A version of <code class="docutils literal notranslate"><span class="pre">tf.keras.regularizers.L1L2</span></code> that allows the user to specify a
+nonzero target output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>l1</strong><span class="classifier">float</span></dt><dd><p>Weight on L1 regularization penalty.</p>
+</dd>
+<dt><strong>l2</strong><span class="classifier">float</span></dt><dd><p>Weight on L2 regularization penalty.</p>
+</dd>
+<dt><strong>target</strong><span class="classifier">float or tuple</span></dt><dd><p>The value that we want the regularized outputs to be driven towards. Can be a
+float, in which case all outputs will be driven towards that value, or a tuple
+specifying a range <code class="docutils literal notranslate"><span class="pre">(min,</span> <span class="pre">max)</span></code>, in which case outputs outside that range
+will be driven towards that range (but outputs within the range will not be
+penalized).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="keras_spiking.regularizers.L1L2.get_config">
+<code class="sig-name descname"><span class="pre">get_config</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/regularizers.py#L107-L113"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.regularizers.L1L2.get_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return config (for serialization during model saving/loading).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.regularizers.L1L2.from_config">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">from_config</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/regularizers.py#L115-L119"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.regularizers.L1L2.from_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new instance from the serialized <code class="docutils literal notranslate"><span class="pre">config</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="keras_spiking.regularizers.L1">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">keras_spiking.regularizers.</span></code><code class="sig-name descname"><span class="pre">L1</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">l1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/regularizers.py#L122-L140"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.regularizers.L1" title="Permalink to this definition">¶</a></dt>
+<dd><p>A version of <code class="docutils literal notranslate"><span class="pre">tf.keras.regularizers.L1</span></code> that allows the user to specify a nonzero
+target output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>l1</strong><span class="classifier">float</span></dt><dd><p>Weight on L1 regularization penalty.</p>
+</dd>
+<dt><strong>target</strong><span class="classifier">float or tuple</span></dt><dd><p>The value that we want the regularized outputs to be driven towards. Can be a
+float, in which case all outputs will be driven towards that value, or a tuple
+specifying a range <code class="docutils literal notranslate"><span class="pre">(min,</span> <span class="pre">max)</span></code>, in which case outputs outside that range
+will be driven towards that range (but outputs within the range will not be
+penalized).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="keras_spiking.regularizers.L2">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">keras_spiking.regularizers.</span></code><code class="sig-name descname"><span class="pre">L2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">l2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/regularizers.py#L143-L161"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.regularizers.L2" title="Permalink to this definition">¶</a></dt>
+<dd><p>A version of <code class="docutils literal notranslate"><span class="pre">tf.keras.regularizers.L2</span></code> that allows the user to specify a nonzero
+target output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>l2</strong><span class="classifier">float</span></dt><dd><p>Weight on L2 regularization penalty.</p>
+</dd>
+<dt><strong>target</strong><span class="classifier">float or tuple</span></dt><dd><p>The value that we want the regularized outputs to be driven towards. Can be a
+float, in which case all outputs will be driven towards that value, or a tuple
+specifying a range <code class="docutils literal notranslate"><span class="pre">(min,</span> <span class="pre">max)</span></code>, in which case outputs outside that range
+will be driven towards that range (but outputs within the range will not be
+penalized).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="keras_spiking.regularizers.Percentile">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">keras_spiking.regularizers.</span></code><code class="sig-name descname"><span class="pre">Percentile</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">percentile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/regularizers.py#L164-L292"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.regularizers.Percentile" title="Permalink to this definition">¶</a></dt>
+<dd><p>A regularizer that penalizes a percentile of a tensor.</p>
+<p>This regularizer finds the requested <code class="docutils literal notranslate"><span class="pre">percentile</span></code> of the data over the <code class="docutils literal notranslate"><span class="pre">axis</span></code>,
+and then applies a regularizer to the percentile values with respect to <code class="docutils literal notranslate"><span class="pre">target</span></code>.
+This can be useful as it is makes the computed regularization penalty more invariant
+to outliers.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>percentile</strong><span class="classifier">float</span></dt><dd><p>Percentile to compute over the <code class="docutils literal notranslate"><span class="pre">axis</span></code>. Defaults to 100, which is equivalent to
+taking the maximum across the specified <code class="docutils literal notranslate"><span class="pre">axis</span></code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">percentile</span> <span class="pre">!=</span> <span class="pre">100</span></code>, requires
+<a class="reference external" href="https://www.tensorflow.org/probability/install">tensorflow-probability</a>.</p>
+</div>
+</dd>
+<dt><strong>axis</strong><span class="classifier">int or tuple of int</span></dt><dd><p>Axis or axes to take the percentile over.</p>
+</dd>
+<dt><strong>target</strong><span class="classifier">float or tuple</span></dt><dd><p>The value that we want the regularized outputs to be driven towards. Can be a
+float, in which case all outputs will be driven towards that value, or a tuple
+specifying a range <code class="docutils literal notranslate"><span class="pre">(min,</span> <span class="pre">max)</span></code>, in which case outputs outside that range
+will be driven towards that range (but outputs within the range will not be
+penalized).</p>
+</dd>
+<dt><strong>l1</strong><span class="classifier">float</span></dt><dd><p>Weight on L1 regularization penalty applied to percentiles.</p>
+</dd>
+<dt><strong>l2</strong><span class="classifier">float</span></dt><dd><p>Weight on L2 regularization penalty applied to percentiles.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>In the following example, we use <a class="reference internal" href="#keras_spiking.regularizers.Percentile" title="keras_spiking.regularizers.Percentile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Percentile</span></code></a> to ensure the neuron activities
+(a.k.a., firing rates) fall in the desired range of 5-10 Hz when computing the
+product of two inputs.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">train_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">train_y</span> <span class="o">=</span> <span class="n">train_x</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">train_x</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span>
+<span class="n">test_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">test_y</span> <span class="o">=</span> <span class="n">test_x</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">test_x</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span>
+
+<span class="c1"># train using one timestep, to speed things up</span>
+<span class="n">train_seq</span> <span class="o">=</span> <span class="n">train_x</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+
+<span class="c1"># test using 10 timesteps</span>
+<span class="n">n_steps</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">test_seq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">test_x</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="n">inp</span> <span class="o">=</span> <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">((</span><span class="kc">None</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">TimeDistributed</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">50</span><span class="p">))(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">spikes</span> <span class="o">=</span> <span class="n">keras_spiking</span><span class="o">.</span><span class="n">SpikingActivation</span><span class="p">(</span>
+    <span class="s2">&quot;relu&quot;</span><span class="p">,</span>
+    <span class="n">dt</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">activity_regularizer</span><span class="o">=</span><span class="n">keras_spiking</span><span class="o">.</span><span class="n">regularizers</span><span class="o">.</span><span class="n">Percentile</span><span class="p">(</span>
+        <span class="n">target</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">l2</span><span class="o">=</span><span class="mf">0.01</span>
+    <span class="p">),</span>
+<span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">GlobalAveragePooling1D</span><span class="p">()(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">spikes</span><span class="p">))</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+    <span class="c1"># note: we use a dict to specify loss/metrics because we only want to</span>
+    <span class="c1"># apply these to the final dense output, not the spike layer</span>
+    <span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;rmsprop&quot;</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;dense_1&quot;</span><span class="p">:</span> <span class="s2">&quot;mse&quot;</span><span class="p">},</span> <span class="n">metrics</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;dense_1&quot;</span><span class="p">:</span> <span class="s2">&quot;mae&quot;</span><span class="p">}</span>
+<span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_seq</span><span class="p">,</span> <span class="n">train_y</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="n">outputs</span><span class="p">,</span> <span class="n">spikes</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">test_seq</span><span class="p">)</span>
+
+<span class="c1"># estimate rates by averaging over time</span>
+<span class="n">rates</span> <span class="o">=</span> <span class="n">spikes</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">max_rates</span> <span class="o">=</span> <span class="n">rates</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Max rates: </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">max_rates</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">max_rates</span><span class="o">.</span><span class="n">std</span><span class="p">()))</span>
+
+<span class="n">error</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">outputs</span> <span class="o">-</span> <span class="n">test_y</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MAE: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">error</span><span class="p">,))</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt id="keras_spiking.regularizers.Percentile.get_config">
+<code class="sig-name descname"><span class="pre">get_config</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/regularizers.py#L287-L292"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.regularizers.Percentile.get_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return config (for serialization during model saving/loading).</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-keras_spiking.constraints">
+<span id="constraints"></span><h2>Constraints<a class="headerlink" href="#module-keras_spiking.constraints" title="Permalink to this headline">¶</a></h2>
+<p>Custom constraints for weight tensors in Keras models.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#keras_spiking.constraints.Mean" title="keras_spiking.constraints.Mean"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.constraints.Mean</span></code></a></p></td>
+<td><p>Constrains weight tensors to be their mean.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt id="keras_spiking.constraints.Mean">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">keras_spiking.constraints.</span></code><code class="sig-name descname"><span class="pre">Mean</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/constraints.py#L6-L28"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.constraints.Mean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constrains weight tensors to be their mean.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>axis</strong><span class="classifier">int</span></dt><dd><p>Axis used to compute the mean and repeat its value. Defaults to the last axis.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="keras_spiking.constraints.Mean.get_config">
+<code class="sig-name descname"><span class="pre">get_config</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/constraints.py#L26-L28"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.constraints.Mean.get_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return config of layer (for serialization during model saving/loading).</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-keras_spiking.callbacks">
+<span id="callbacks"></span><h2>Callbacks<a class="headerlink" href="#module-keras_spiking.callbacks" title="Permalink to this headline">¶</a></h2>
+<p>Callbacks for use with KerasSpiking models.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#keras_spiking.callbacks.DtScheduler" title="keras_spiking.callbacks.DtScheduler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.callbacks.DtScheduler</span></code></a></p></td>
+<td><p>A callback for updating Layer <code class="docutils literal notranslate"><span class="pre">dt</span></code> attributes during training.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt id="keras_spiking.callbacks.DtScheduler">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">keras_spiking.callbacks.</span></code><code class="sig-name descname"><span class="pre">DtScheduler</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheduler</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/callbacks.py#L6-L91"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.callbacks.DtScheduler" title="Permalink to this definition">¶</a></dt>
+<dd><p>A callback for updating Layer <code class="docutils literal notranslate"><span class="pre">dt</span></code> attributes during training.</p>
+<p>This uses the same scheduler interface as <a class="reference external" href="https://www.tensorflow.org/api_docs/python/tf/keras/optimizers/schedules">TensorFlow’s learning rate schedulers</a>,
+so any of those built-in schedules can be used to adjust <code class="docutils literal notranslate"><span class="pre">dt</span></code>, or a custom
+function implementing the same interface.</p>
+<p>When using this functionality, <code class="docutils literal notranslate"><span class="pre">dt</span></code> should be initialized as a <code class="docutils literal notranslate"><span class="pre">tf.Variable</span></code>,
+and that Variable should be passed as the <code class="docutils literal notranslate"><span class="pre">dt</span></code> parameter to any Layers that
+should be affected by this callback.</p>
+<p>For example:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">dt</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+
+<span class="n">inp</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">((</span><span class="kc">None</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras_spiking</span><span class="o">.</span><span class="n">SpikingActivation</span><span class="p">(</span><span class="s2">&quot;relu&quot;</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">)(</span><span class="n">inp</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras_spiking</span><span class="o">.</span><span class="n">Lowpass</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="n">callback</span> <span class="o">=</span> <span class="n">keras_spiking</span><span class="o">.</span><span class="n">callbacks</span><span class="o">.</span><span class="n">DtScheduler</span><span class="p">(</span>
+    <span class="n">dt</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">optimizers</span><span class="o">.</span><span class="n">schedules</span><span class="o">.</span><span class="n">ExponentialDecay</span><span class="p">(</span>
+        <span class="mf">1.0</span><span class="p">,</span> <span class="n">decay_steps</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">decay_rate</span><span class="o">=</span><span class="mf">0.9</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s2">&quot;mse&quot;</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="s2">&quot;sgd&quot;</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">)),</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">)),</span>
+    <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">batch_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">callback</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>dt</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">tf.Variable</span></code></span></dt><dd><p>Variable representing <code class="docutils literal notranslate"><span class="pre">dt</span></code> that has been passed to other Layers.</p>
+</dd>
+<dt><strong>scheduler</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">tf.optimizers.schedules.LearningRateSchedule</span></code></span></dt><dd><p>A schedule class that will update <code class="docutils literal notranslate"><span class="pre">dt</span></code> based on the training step (one
+training step is one minibatch worth of training).</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier">bool</span></dt><dd><p>If True, print out some information about <code class="docutils literal notranslate"><span class="pre">dt</span></code> updates during training.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Because Variable values persist over time, any changes made to <code class="docutils literal notranslate"><span class="pre">dt</span></code> by this
+callback will persist after training completes. For example, if you call <code class="docutils literal notranslate"><span class="pre">fit</span></code>
+with this callback and then <code class="docutils literal notranslate"><span class="pre">predict</span></code> later on, that <code class="docutils literal notranslate"><span class="pre">predict</span></code> call will be
+using the last <code class="docutils literal notranslate"><span class="pre">dt</span></code> value set by this callback.</p>
+<dl class="py method">
+<dt id="keras_spiking.callbacks.DtScheduler.on_epoch_begin">
+<code class="sig-name descname"><span class="pre">on_epoch_begin</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epoch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/callbacks.py#L79-L84"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.callbacks.DtScheduler.on_epoch_begin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Keep track of the current epoch so we can count the total number of steps.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.callbacks.DtScheduler.on_train_batch_begin">
+<code class="sig-name descname"><span class="pre">on_train_batch_begin</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/callbacks.py#L86-L91"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.callbacks.DtScheduler.on_train_batch_begin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update <code class="docutils literal notranslate"><span class="pre">dt</span></code> variable based on the current training step.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-keras_spiking.config">
+<span id="configuration"></span><h2>Configuration<a class="headerlink" href="#module-keras_spiking.config" title="Permalink to this headline">¶</a></h2>
+<p>Configuration options for KerasSpiking layers.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#keras_spiking.config.DefaultManager" title="keras_spiking.config.DefaultManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.config.DefaultManager</span></code></a></p></td>
+<td><p>Manages the default parameter values for KerasSpiking layers.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt id="keras_spiking.config.DefaultManager">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">keras_spiking.config.</span></code><code class="sig-name descname"><span class="pre">DefaultManager</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/config.py#L4-L20"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.config.DefaultManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manages the default parameter values for KerasSpiking layers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>Length of time (in seconds) represented by one time step. Defaults to 0.001s.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Do not instantiate this class directly, instead access it through
+<code class="docutils literal notranslate"><span class="pre">keras_spiking.default</span></code>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-keras_spiking.model_energy">
+<span id="energy-estimation"></span><h2>Energy estimation<a class="headerlink" href="#module-keras_spiking.model_energy" title="Permalink to this headline">¶</a></h2>
+<p>Estimate energy usage on various devices for Keras models.</p>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#keras_spiking.ModelEnergy" title="keras_spiking.ModelEnergy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.ModelEnergy</span></code></a></p></td>
+<td><p>Compute statistics and device energy estimates for a Keras model.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#keras_spiking.model_energy.layer_stats" title="keras_spiking.model_energy.layer_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.model_energy.layer_stats</span></code></a></p></td>
+<td><p>Fallback for computing stats on an unknown layer (assumes none).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#keras_spiking.model_energy.act_stats" title="keras_spiking.model_energy.act_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.model_energy.act_stats</span></code></a></p></td>
+<td><p>Compute activation layer stats.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#keras_spiking.model_energy.conv_stats" title="keras_spiking.model_energy.conv_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.model_energy.conv_stats</span></code></a></p></td>
+<td><p>Compute <code class="docutils literal notranslate"><span class="pre">Conv1D</span></code>/<code class="docutils literal notranslate"><span class="pre">Conv2D</span></code>/<code class="docutils literal notranslate"><span class="pre">Conv3D</span></code> layer stats.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#keras_spiking.model_energy.dense_stats" title="keras_spiking.model_energy.dense_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.model_energy.dense_stats</span></code></a></p></td>
+<td><p>Compute <code class="docutils literal notranslate"><span class="pre">Dense</span></code> layer stats.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#keras_spiking.model_energy.spikingactivation_stats" title="keras_spiking.model_energy.spikingactivation_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.model_energy.spikingactivation_stats</span></code></a></p></td>
+<td><p>Compute <a class="reference internal" href="#keras_spiking.SpikingActivation" title="keras_spiking.SpikingActivation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpikingActivation</span></code></a> layer stats.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#keras_spiking.model_energy.timedistributed_stats" title="keras_spiking.model_energy.timedistributed_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.model_energy.timedistributed_stats</span></code></a></p></td>
+<td><p>Compute <code class="docutils literal notranslate"><span class="pre">TimeDistributed</span></code> layer stats.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt id="keras_spiking.ModelEnergy">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">keras_spiking.</span></code><code class="sig-name descname"><span class="pre">ModelEnergy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">example_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/model_energy.py#L35-L751"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.ModelEnergy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute statistics and device energy estimates for a Keras model.</p>
+<p>Computes the following statistics on each layer:</p>
+<ul class="simple">
+<li><p>“connections”: The number of connections from all input elements to all
+activation units. The number of synaptic operations per second (“synops”) will be
+computed by multiplying this number by the average firing rate of the input to
+the layer.</p></li>
+<li><p>“neurons”: The number of neuron updates per timestep performed by the
+layer. The number of neuron updates per inference will be computed by
+multiplying this number by the number of timesteps per inference.</p></li>
+</ul>
+<p>Using expected average firing rates for each layer in the network, along with the
+above statistics, this class can estimate the energy usage on one of the following
+types of devices (see <a class="reference internal" href="#keras_spiking.ModelEnergy.total_energy" title="keras_spiking.ModelEnergy.total_energy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">total_energy</span></code></a> and <a class="reference internal" href="#keras_spiking.ModelEnergy.summary" title="keras_spiking.ModelEnergy.summary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code></a>):</p>
+<ul class="simple">
+<li><p>“cpu”: Estimate energy usage on a CPU (Intel i7-4960X), assuming each synop/neuron
+update is one MAC <a class="reference internal" href="#r40040ceff98f-1" id="id8">[1]</a>.</p></li>
+<li><p>“gpu”: Estimate energy usage on a GPU (Nvidia GTX Titan Black), assuming each
+synop/neuron update is one MAC <a class="reference internal" href="#r40040ceff98f-1" id="id9">[1]</a>. Note that this assumes significant
+parallelism (e.g., inputs being processed in large batches).</p></li>
+<li><p>“arm”: Estimate energy usage on an ARM Cortex-A, assuming each synop/neuron update
+is one MAC <a class="reference internal" href="#r40040ceff98f-1" id="id10">[1]</a>.</p></li>
+<li><p>“loihi”: Estimate energy usage on the Intel Loihi chip <a class="reference internal" href="#r40040ceff98f-2" id="id11">[2]</a>.</p></li>
+<li><p>“spinnaker” and “spinnaker2”: Estimate energy usage on SpiNNaker or
+SpiNNaker 2 <a class="reference internal" href="#r40040ceff98f-3" id="id12">[3]</a>.</p></li>
+</ul>
+<p>Note: on non-spiking devices (“cpu”/”gpu”/”arm”) this assumes
+the model is being run as a traditional non-spiking ANN (computing every synapse
+each timestep), not taking advantage of spike-based computation.
+This estimate is therefore independent of <code class="docutils literal notranslate"><span class="pre">example_data</span></code>.
+On spiking devices (“loihi”/”spinnaker1”/”spinnaker2”), we assume
+that the model has been fully converted to a spiking implementation in some way,
+even if <code class="docutils literal notranslate"><span class="pre">model</span></code> contains non-spiking elements.</p>
+<p>For example:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">inp</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="mi">784</span><span class="p">)</span>
+<span class="n">dense</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;relu&quot;</span><span class="p">)(</span><span class="n">inp</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">dense</span><span class="p">)</span>
+
+<span class="n">energy</span> <span class="o">=</span> <span class="n">keras_spiking</span><span class="o">.</span><span class="n">ModelEnergy</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">energy</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">line_length</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Layer (type)        |Output shape |Param #|Conn #|Neuron #|J/inf (cpu)
+--------------------|-------------|-------|------|--------|-----------
+input_3 (InputLayer)|[(None, 784)]|      0|     0|       0|          0
+dense_2 (Dense)     |  (None, 128)| 100480|100352|     128|    0.00086
+======================================================================
+Total energy per inference [Joules/inf] (cpu): 8.64e-04
+...
+</pre></div>
+</div>
+<p>Additional devices or different energy assumptions for a given device can be added
+with <a class="reference internal" href="#keras_spiking.ModelEnergy.register_device" title="keras_spiking.ModelEnergy.register_device"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register_device</span></code></a>, e.g.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">keras_spiking</span><span class="o">.</span><span class="n">ModelEnergy</span><span class="o">.</span><span class="n">register_device</span><span class="p">(</span>
+    <span class="s2">&quot;my-cpu&quot;</span><span class="p">,</span> <span class="n">energy_per_synop</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span> <span class="n">energy_per_neuron</span><span class="o">=</span><span class="mf">2e-9</span><span class="p">,</span> <span class="n">spiking</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+<span class="n">energy</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;energy cpu&quot;</span><span class="p">,</span> <span class="s2">&quot;energy my-cpu&quot;</span><span class="p">),</span> <span class="n">line_length</span><span class="o">=</span><span class="mi">80</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Layer (type)        |J/inf (cpu)|J/inf (my-cpu)
+--------------------|-----------|--------------
+input_3 (InputLayer)|          0|             0
+dense_2 (Dense)     |    0.00086|         1e-05
+===============================================
+Total energy per inference [Joules/inf] (cpu): 8.64e-04
+Total energy per inference [Joules/inf] (my-cpu): 1.03e-05
+...
+</pre></div>
+</div>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>model</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">tf.keras.Model</span></code></span></dt><dd><p>The model to compute statistics and energy estimates for.</p>
+</dd>
+<dt><strong>example_data</strong><span class="classifier">array_like</span></dt><dd><p>Input used to estimate average firing rates of each layer (used to estimate
+the number of synaptic events). It is passed directly to <code class="docutils literal notranslate"><span class="pre">model.predict</span></code> (see
+<code class="docutils literal notranslate"><span class="pre">tf.keras.Model.predict</span></code> for all acceptable types of input data). This is
+required to estimate energy on spiking devices, but does not affect non-spiking
+devices.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>It is important to keep in mind that actual power usage will be heavily dependent
+on the specific details of the underlying software and hardware implementation.
+The numbers provided by <a class="reference internal" href="#keras_spiking.ModelEnergy" title="keras_spiking.ModelEnergy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelEnergy</span></code></a> should be taken as very rough estimates only,
+and they rely on a number of assumptions:</p>
+<ul class="simple">
+<li><p><strong>Device specifications</strong>: In order to estimate the energy used by a model on a
+particular device, we need to know how much energy is used per synaptic
+operation/neuron update. We rely on published data for these numbers (see our
+sources below).
+Energy numbers in practice can differ significantly from published results.</p></li>
+<li><p><strong>Overhead</strong>: We do not account for any overhead in the energy estimates
+(e.g., the cost of transferring data on and off a device). We only estimate the
+energy usage of internal model computations (synaptic operations and neuron
+updates).
+In practice, overhead can be a significant contributor to the energy usage of
+a model.</p></li>
+<li><p><strong>Spiking implementation</strong>: We assume that the model being estimated has been
+fully converted to a spiking implementation when estimating the energy usage on
+a spiking device (even if the input model has non-spiking elements). For example,
+if the model contains <code class="docutils literal notranslate"><span class="pre">tf.keras.layers.Activation(&quot;relu&quot;)</span></code> layers (non-spiking),
+we assume that on a spiking device those layers will be converted to something
+equivalent to <code class="docutils literal notranslate"><span class="pre">keras_spiking.SpikingActivation(&quot;relu&quot;)</span></code>, and that any connecting
+layers (e.g. <code class="docutils literal notranslate"><span class="pre">tf.keras.layers.Dense</span></code>) are applied in an event-based fashion
+(i.e., processing only occurs when the input layer emits a spike). In practice,
+it is not trivial to map a neural network to a spiking device in this way, and
+implementation details can significantly affect energy usage.
+[Nengo](<a class="reference external" href="https://www.nengo.ai/nengo/">https://www.nengo.ai/nengo/</a>) and [NengoDL](<a class="reference external" href="https://www.nengo.ai/nengo-dl/">https://www.nengo.ai/nengo-dl/</a>)
+are designed to make this easier.</p></li>
+</ul>
+<p class="rubric">References</p>
+<dl class="citation">
+<dt class="label" id="r40040ceff98f-1"><span class="brackets">1</span><span class="fn-backref">(<a href="#id8">1</a>,<a href="#id9">2</a>,<a href="#id10">3</a>)</span></dt>
+<dd><p>Degnan, Brian, Bo Marr, and Jennifer Hasler. “Assessing trends in performance
+per watt for signal processing applications.” IEEE Transactions on Very Large
+Scale Integration (VLSI) Systems 24.1 (2015): 58-66.
+<a class="reference external" href="https://ieeexplore.ieee.org/abstract/document/7054508">https://ieeexplore.ieee.org/abstract/document/7054508</a></p>
+</dd>
+<dt class="label" id="r40040ceff98f-2"><span class="brackets"><a class="fn-backref" href="#id11">2</a></span></dt>
+<dd><p>Davies, Mike, et al. “Loihi: A neuromorphic manycore processor with on-chip
+learning.” IEEE Micro 38.1 (2018): 82-99.
+<a class="reference external" href="https://redwood.berkeley.edu/wp-content/uploads/2021/08/Davies2018.pdf">https://redwood.berkeley.edu/wp-content/uploads/2021/08/Davies2018.pdf</a></p>
+</dd>
+<dt class="label" id="r40040ceff98f-3"><span class="brackets"><a class="fn-backref" href="#id12">3</a></span></dt>
+<dd><p>Höppner, Sebastian, et al. “Dynamic power management for neuromorphic
+many-core systems.” IEEE Transactions on Circuits and Systems I: Regular Papers
+66.8 (2019): 2973-2986. <a class="reference external" href="https://arxiv.org/abs/1903.08941">https://arxiv.org/abs/1903.08941</a></p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="keras_spiking.ModelEnergy.compute_layer_stats">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">compute_layer_stats</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/model_energy.py#L222-L266"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.ModelEnergy.compute_layer_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute statistics for a given layer.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">inp</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+<span class="n">layer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">TimeDistributed</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;relu&quot;</span><span class="p">))</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="p">[</span><span class="n">layer</span><span class="p">(</span><span class="n">inp</span><span class="p">)])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">keras_spiking</span><span class="o">.</span><span class="n">ModelEnergy</span><span class="o">.</span><span class="n">compute_layer_stats</span><span class="p">(</span><span class="n">layer</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;connections&#39;: 50, &#39;neurons&#39;: 5, &#39;spiking&#39;: False}
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.ModelEnergy.register_layer">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">register_layer</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer_class</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/model_energy.py#L268-L324"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.ModelEnergy.register_layer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator to register a statistic calculator for a layer.</p>
+<p>The input to the decorated function is a node from a layer for which we want
+to compute statistics.</p>
+<p>The decorated function should return a dictionary with the following entries:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>“connections”: The number of connections from all input elements to all
+activation units. Defaults to 0.</p></li>
+<li><p>“neurons”: The number of neuron updates per timestep performed by this
+layer. Defaults to 0.</p></li>
+<li><p>“spiking”: Whether or not this layer could be implemented on a spiking
+device as-is (e.g. <code class="docutils literal notranslate"><span class="pre">tf.keras.layers.ReLU</span></code> returns <code class="docutils literal notranslate"><span class="pre">spiking=False</span></code>
+because non-spiking nonlinearities like ReLU can’t be directly implemented
+on a spiking device). Defaults to True.</p></li>
+</ul>
+</div></blockquote>
+<p class="rubric">Examples</p>
+<p>If we know that the <code class="docutils literal notranslate"><span class="pre">tf.keras.layers.UpSampling2D</span></code> layer uses one synaptic
+operation per output element, we can register the following function:</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@keras_spiking</span><span class="o">.</span><span class="n">ModelEnergy</span><span class="o">.</span><span class="n">register_layer</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">UpSampling2D</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">upsampling2d_stats</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+    <span class="c1"># note: ignore the batch dimension when computing output size</span>
+    <span class="n">output_size</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">output_shapes</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;connections&quot;</span><span class="p">:</span> <span class="n">output_size</span><span class="p">,</span> <span class="s2">&quot;neurons&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+
+<span class="c1"># use our registered stat calculator</span>
+<span class="n">inp</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="n">layer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">UpSampling2D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="p">[</span><span class="n">layer</span><span class="p">(</span><span class="n">inp</span><span class="p">)])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">keras_spiking</span><span class="o">.</span><span class="n">ModelEnergy</span><span class="o">.</span><span class="n">compute_layer_stats</span><span class="p">(</span><span class="n">layer</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;connections&#39;: 192, &#39;neurons&#39;: 0}
+</pre></div>
+</div>
+<p>We see that the synaptic operations is 192, which equals the number of pixels
+in the upsampled image size of <code class="docutils literal notranslate"><span class="pre">(8,</span> <span class="pre">8)</span></code>, times the number of channels (3).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.ModelEnergy.register_device">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">register_device</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">energy_per_synop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">energy_per_neuron</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spiking</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/model_energy.py#L326-L349"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.ModelEnergy.register_device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a new device type for estimating energy consumption.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>device_name</strong><span class="classifier">str</span></dt><dd><p>The string to use to refer to the device.</p>
+</dd>
+<dt><strong>energy_per_synop</strong><span class="classifier">float</span></dt><dd><p>The energy (in Joules) used by a single synaptic operation on the device.</p>
+</dd>
+<dt><strong>energy_per_neuron</strong><span class="classifier">float</span></dt><dd><p>The energy (in Joules) used by a single neuron update on the device.</p>
+</dd>
+<dt><strong>spiking</strong><span class="classifier">bool</span></dt><dd><p>Whether the device is spiking (event-based), and thus only computes
+synaptic updates for incoming spikes, rather than on every timestep.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.ModelEnergy.layer_energy">
+<code class="sig-name descname"><span class="pre">layer_energy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timesteps_per_inference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/model_energy.py#L402-L480"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.ModelEnergy.layer_energy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimate the energy used by one layer.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>layer</strong><span class="classifier"><code class="docutils literal notranslate"><span class="pre">tf.keras.layers.Layer</span></code></span></dt><dd><p>Layer to estimate energy for. Note that if the same layer is being reused
+multiple times in the model, this will return the total energy
+summed over all the applications.</p>
+</dd>
+<dt><strong>device</strong><span class="classifier">str</span></dt><dd><p>Device to estimate energy for. Can be a supported device
+(see <a class="reference internal" href="#keras_spiking.ModelEnergy" title="keras_spiking.ModelEnergy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelEnergy</span></code></a> for a list), or another device added with
+<a class="reference internal" href="#keras_spiking.ModelEnergy.register_device" title="keras_spiking.ModelEnergy.register_device"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelEnergy.register_device</span></code></a>.</p>
+</dd>
+<dt><strong>timesteps_per_inference</strong><span class="classifier">int</span></dt><dd><p>Timesteps used per inference (for example, if the model is classifying
+images and we want to present each image for 10 timesteps).</p>
+</dd>
+<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>The length of one timestep, in seconds, used by the device. Used to compute
+the number of synaptic events based on the firing rates (in Hz).
+Can differ from the <code class="docutils literal notranslate"><span class="pre">dt</span></code> used on any <code class="docutils literal notranslate"><span class="pre">keras_spiking</span></code> layers in the
+model. If None, uses
+<a class="reference internal" href="#keras_spiking.config.DefaultManager" title="keras_spiking.config.DefaultManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.default.dt</span></code></a>
+(which is 0.001 seconds by default).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>synop_energy</strong><span class="classifier">float</span></dt><dd><p>Estimated energy used (in Joules) for synaptic computations per inference.</p>
+</dd>
+<dt><strong>neuron_energy</strong><span class="classifier">float</span></dt><dd><p>Estimated energy used (in Joules) for neuron updates per inference.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.ModelEnergy.total_energy">
+<code class="sig-name descname"><span class="pre">total_energy</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timesteps_per_inference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/model_energy.py#L482-L517"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.ModelEnergy.total_energy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimate the energy usage for a whole model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>device</strong><span class="classifier">str</span></dt><dd><p>Device to estimate energy for. Can be a supported device
+(see <a class="reference internal" href="#keras_spiking.ModelEnergy" title="keras_spiking.ModelEnergy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelEnergy</span></code></a> for a list), or another device added with
+<a class="reference internal" href="#keras_spiking.ModelEnergy.register_device" title="keras_spiking.ModelEnergy.register_device"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelEnergy.register_device</span></code></a>.</p>
+</dd>
+<dt><strong>timesteps_per_inference</strong><span class="classifier">int</span></dt><dd><p>Timesteps used per inference (for example, if the model is classifying
+images and we want to present each image for 10 timesteps).</p>
+</dd>
+<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>The length of one timestep, in seconds, used by the device. Used to compute
+the number of synaptic events based on the firing rates (in Hz).
+Can differ from the <code class="docutils literal notranslate"><span class="pre">dt</span></code> used on any <code class="docutils literal notranslate"><span class="pre">keras_spiking</span></code> layers in the
+model. If None, uses
+<a class="reference internal" href="#keras_spiking.config.DefaultManager" title="keras_spiking.config.DefaultManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.default.dt</span></code></a>
+(which is 0.001 seconds by default).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>energy</strong><span class="classifier">float</span></dt><dd><p>Total estimated energy used by the model (in Joules) per inference.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.ModelEnergy.summary">
+<code class="sig-name descname"><span class="pre">summary</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('name',</span> <span class="pre">'output_shape',</span> <span class="pre">'params',</span> <span class="pre">'connections',</span> <span class="pre">'neurons',</span> <span class="pre">'energy</span> <span class="pre">cpu')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timesteps_per_inference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">98</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_warnings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/model_energy.py#L519-L587"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.ModelEnergy.summary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print a per-layer summary of computation statistics and energy estimates.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>columns</strong><span class="classifier">list or tuple of string</span></dt><dd><p>Columns to display. Can be any combination of the following:</p>
+<ul class="simple">
+<li><p>“name”: The layer name.</p></li>
+<li><p>“output_shape”: The output shape of the layer.</p></li>
+<li><p>“params”: The number of parameters in the layer.</p></li>
+<li><p>“connections”: The number of synaptic connections from inputs to
+the neurons of this layer (see <a class="reference internal" href="#keras_spiking.ModelEnergy" title="keras_spiking.ModelEnergy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelEnergy</span></code></a> for the definition of
+“connections”).</p></li>
+<li><p>“neurons”: The number of neuron updates performed by the layer each
+timestep (see <a class="reference internal" href="#keras_spiking.ModelEnergy" title="keras_spiking.ModelEnergy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelEnergy</span></code></a> for the definition of “neuron update”).</p></li>
+<li><p>“rate”: The average input firing rate to the layer, in spikes per
+second. Note that this is only relevant for layers that perform synaptic
+operations; for other layers (e.g. an activation layer that gets input
+from a convolutional layer), this number has no effect.</p></li>
+<li><p>“synop_energy &lt;device&gt;”: The estimated energy in Joules per inference used
+by the layer on &lt;device&gt; for synaptic operations.</p></li>
+<li><p>“neuron_energy &lt;device&gt;”: The estimated energy in Joules per inference
+used by the layer on &lt;device&gt; for neuron updates.</p></li>
+<li><p>“energy &lt;device&gt;”: The total estimated energy in Joules per inference used
+by the layer on &lt;device&gt;.</p></li>
+</ul>
+<p>Here, &lt;device&gt; can be any of the supported devices (see <a class="reference internal" href="#keras_spiking.ModelEnergy" title="keras_spiking.ModelEnergy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelEnergy</span></code></a>).
+Additional devices can be added with <a class="reference internal" href="#keras_spiking.ModelEnergy.register_device" title="keras_spiking.ModelEnergy.register_device"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelEnergy.register_device</span></code></a>.</p>
+</dd>
+<dt><strong>timesteps_per_inference</strong><span class="classifier">int</span></dt><dd><p>Timesteps used per inference (for example, if the model is classifying
+images and we want to present each image for 10 timesteps).</p>
+</dd>
+<dt><strong>dt</strong><span class="classifier">float</span></dt><dd><p>The length of one timestep, in seconds, used by the device. Used to compute
+the number of synaptic events based on the firing rates (in Hz).
+Can differ from the <code class="docutils literal notranslate"><span class="pre">dt</span></code> used on any <code class="docutils literal notranslate"><span class="pre">keras_spiking</span></code> layers in the
+model. If None, uses
+<a class="reference internal" href="#keras_spiking.config.DefaultManager" title="keras_spiking.config.DefaultManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">keras_spiking.default.dt</span></code></a>
+(which is 0.001 seconds by default).</p>
+</dd>
+<dt><strong>line_length</strong><span class="classifier">int</span></dt><dd><p>The length of each printed line.</p>
+</dd>
+<dt><strong>print_warnings</strong><span class="classifier">bool</span></dt><dd><p>Set to False to disable the warnings regarding assumptions made in the
+energy calculations.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="keras_spiking.ModelEnergy.summary_string">
+<code class="sig-name descname"><span class="pre">summary_string</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('name',</span> <span class="pre">'output_shape',</span> <span class="pre">'params',</span> <span class="pre">'connections',</span> <span class="pre">'neurons',</span> <span class="pre">'energy</span> <span class="pre">cpu')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timesteps_per_inference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">line_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">98</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_warnings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/model_energy.py#L589-L751"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.ModelEnergy.summary_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a per-layer summary of computation statistics and energy estimates.</p>
+<p>The same as <a class="reference internal" href="#keras_spiking.ModelEnergy.summary" title="keras_spiking.ModelEnergy.summary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code></a>, except returns the summary as a string, rather than
+printing it.</p>
+<p>For documentation on parameters and other features, see <a class="reference internal" href="#keras_spiking.ModelEnergy.summary" title="keras_spiking.ModelEnergy.summary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code></a>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="keras_spiking.model_energy.layer_stats">
+<code class="sig-prename descclassname"><span class="pre">keras_spiking.model_energy.</span></code><code class="sig-name descname"><span class="pre">layer_stats</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/model_energy.py#L775-L798"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.model_energy.layer_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fallback for computing stats on an unknown layer (assumes none).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="keras_spiking.model_energy.act_stats">
+<code class="sig-prename descclassname"><span class="pre">keras_spiking.model_energy.</span></code><code class="sig-name descname"><span class="pre">act_stats</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/model_energy.py#L801-L806"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.model_energy.act_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute activation layer stats.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="keras_spiking.model_energy.conv_stats">
+<code class="sig-prename descclassname"><span class="pre">keras_spiking.model_energy.</span></code><code class="sig-name descname"><span class="pre">conv_stats</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/model_energy.py#L809-L820"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.model_energy.conv_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute <code class="docutils literal notranslate"><span class="pre">Conv1D</span></code>/<code class="docutils literal notranslate"><span class="pre">Conv2D</span></code>/<code class="docutils literal notranslate"><span class="pre">Conv3D</span></code> layer stats.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="keras_spiking.model_energy.dense_stats">
+<code class="sig-prename descclassname"><span class="pre">keras_spiking.model_energy.</span></code><code class="sig-name descname"><span class="pre">dense_stats</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/model_energy.py#L823-L833"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.model_energy.dense_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute <code class="docutils literal notranslate"><span class="pre">Dense</span></code> layer stats.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="keras_spiking.model_energy.spikingactivation_stats">
+<code class="sig-prename descclassname"><span class="pre">keras_spiking.model_energy.</span></code><code class="sig-name descname"><span class="pre">spikingactivation_stats</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/model_energy.py#L836-L841"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.model_energy.spikingactivation_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute <a class="reference internal" href="#keras_spiking.SpikingActivation" title="keras_spiking.SpikingActivation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SpikingActivation</span></code></a> layer stats.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="keras_spiking.model_energy.timedistributed_stats">
+<code class="sig-prename descclassname"><span class="pre">keras_spiking.model_energy.</span></code><code class="sig-name descname"><span class="pre">timedistributed_stats</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/nengo/keras-spiking/blob/master/keras_spiking/model_energy.py#L844-L862"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#keras_spiking.model_energy.timedistributed_stats" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute <code class="docutils literal notranslate"><span class="pre">TimeDistributed</span></code> layer stats.</p>
+<p>Calls <a class="reference internal" href="#keras_spiking.ModelEnergy.compute_layer_stats" title="keras_spiking.ModelEnergy.compute_layer_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelEnergy.compute_layer_stats</span></code></a> on the wrapped layer.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div><footer class="text-light footer-main gradient-bottom-center">
+  <p class="text-center">
+    <a class="no-hover-line" href="https://appliedbrainresearch.com">
+      <img
+        class="abr-logo"
+        src="https://www.nengo.ai/img/abr-logo.svg"
+        height="32"
+      />
+    </a>
+    <a href="https://www.nengo.ai/">What is Nengo?</a>
+    <a href="https://www.nengo.ai/examples/">Examples</a>
+    <a href="https://www.nengo.ai/documentation/">Documentation</a>
+    <a href="https://www.nengo.ai/store/">Store</a>
+    <a href="https://www.nengo.ai/getting-started/">Getting started</a>
+    <a href="https://www.nengo.ai/privacy/">Privacy</a>
+  </p>
+  <p class="small text-center pb-0 mb-0">&copy; Applied Brain Research</p>
+</footer>
+<script>
+  var elements = document.querySelectorAll('.sidenav');
+  Stickyfill.add(elements);
+</script>
+<script>
+  ScrollReveal().reveal(".fade-in", {
+      scale: 0.85,
+      duration: 1000,
+      delay: 250,
+      interval: 50
+  });
+</script>
+<script>
+  $('a.toggle-sidenav').on('click', function(e) {
+    e.preventDefault();
+    if ( $(this).hasClass('active') ) {
+      $(this).removeClass('active');
+      $('.sidenav').removeClass('open');
+    } else {
+      $(this).addClass('active');
+      $('.sidenav').addClass('open');
+    }
+  });
+</script>
+<script>
+  var lists = document.querySelectorAll('.toctree ul');
+  lists.forEach((ul) => {
+      ul.classList.add("nav");
+  });
+  var links = document.querySelectorAll('.toctree a');
+  links.forEach((link) => {
+      link.classList.add("nav-link");
+  });
+  $("body").scrollspy({target: ".sidenav"});
+</script>
+  </body>
+</html>
