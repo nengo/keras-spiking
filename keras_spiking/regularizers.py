@@ -63,10 +63,10 @@ class RangedRegularizer(tf.keras.regularizers.Regularizer):
     def get_config(self):
         """Return config (for serialization during model saving/loading)."""
 
-        return dict(
-            target=self.target,
-            regularizer=tf.keras.regularizers.serialize(self.regularizer),
-        )
+        return {
+            "target": self.target,
+            "regularizer": tf.keras.regularizers.serialize(self.regularizer),
+        }
 
     @classmethod
     def from_config(cls, config):
@@ -288,10 +288,5 @@ class Percentile(L1L2):
         """Return config (for serialization during model saving/loading)."""
 
         cfg = super().get_config()
-        cfg.update(
-            dict(
-                percentile=self.percentile,
-                axis=self.axis,
-            )
-        )
+        cfg.update({"percentile": self.percentile, "axis": self.axis})
         return cfg

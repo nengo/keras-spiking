@@ -198,14 +198,14 @@ class KerasSpikingLayer(tf.keras.layers.Layer):
 
         cfg = super().get_config()
         cfg.update(
-            dict(
-                dt=self.dt,
-                return_sequences=self.return_sequences,
-                return_state=self.return_state,
-                stateful=self.stateful,
-                unroll=self.unroll,
-                time_major=self.time_major,
-            )
+            {
+                "dt": self.dt,
+                "return_sequences": self.return_sequences,
+                "return_state": self.return_state,
+                "stateful": self.stateful,
+                "unroll": self.unroll,
+                "time_major": self.time_major,
+            }
         )
 
         return cfg
@@ -363,13 +363,13 @@ class SpikingActivationCell(KerasSpikingCell):
 
         cfg = super().get_config()
         cfg.update(
-            dict(
-                size=self.size,
-                activation=tf.keras.activations.serialize(self.activation),
-                dt=self.dt,
-                seed=self.seed,
-                spiking_aware_training=self.spiking_aware_training,
-            )
+            {
+                "size": self.size,
+                "activation": tf.keras.activations.serialize(self.activation),
+                "dt": self.dt,
+                "seed": self.seed,
+                "spiking_aware_training": self.spiking_aware_training,
+            }
         )
 
         return cfg
@@ -486,11 +486,11 @@ class SpikingActivation(KerasSpikingLayer):
     def get_config(self):
         cfg = super().get_config()
         cfg.update(
-            dict(
-                activation=tf.keras.activations.serialize(self.activation),
-                seed=self.seed,
-                spiking_aware_training=self.spiking_aware_training,
-            )
+            {
+                "activation": tf.keras.activations.serialize(self.activation),
+                "seed": self.seed,
+                "spiking_aware_training": self.spiking_aware_training,
+            }
         )
 
         return cfg
@@ -619,19 +619,21 @@ class LowpassCell(KerasSpikingCell):
 
         cfg = super().get_config()
         cfg.update(
-            dict(
-                size=self.size,
-                tau_initializer=tf.keras.initializers.serialize(self.tau_initializer),
-                dt=self.dt,
-                apply_during_training=self.apply_during_training,
-                level_initializer=tf.keras.initializers.serialize(
+            {
+                "size": self.size,
+                "tau_initializer": tf.keras.initializers.serialize(
+                    self.tau_initializer
+                ),
+                "dt": self.dt,
+                "apply_during_training": self.apply_during_training,
+                "level_initializer": tf.keras.initializers.serialize(
                     self.level_initializer
                 ),
-                initial_level_constraint=tf.keras.constraints.serialize(
+                "initial_level_constraint": tf.keras.constraints.serialize(
                     self.initial_level_constraint
                 ),
-                tau_constraint=tf.keras.constraints.serialize(self.tau_constraint),
-            )
+                "tau_constraint": tf.keras.constraints.serialize(self.tau_constraint),
+            }
         )
 
         return cfg
@@ -763,17 +765,19 @@ class Lowpass(KerasSpikingLayer):
     def get_config(self):
         cfg = super().get_config()
         cfg.update(
-            dict(
-                tau_initializer=tf.keras.initializers.serialize(self.tau_initializer),
-                apply_during_training=self.apply_during_training,
-                level_initializer=tf.keras.initializers.serialize(
+            {
+                "tau_initializer": tf.keras.initializers.serialize(
+                    self.tau_initializer
+                ),
+                "apply_during_training": self.apply_during_training,
+                "level_initializer": tf.keras.initializers.serialize(
                     self.level_initializer
                 ),
-                initial_level_constraint=tf.keras.constraints.serialize(
+                "initial_level_constraint": tf.keras.constraints.serialize(
                     self.initial_level_constraint
                 ),
-                tau_constraint=tf.keras.constraints.serialize(self.tau_constraint),
-            )
+                "tau_constraint": tf.keras.constraints.serialize(self.tau_constraint),
+            }
         )
 
         return cfg
@@ -940,19 +944,21 @@ class AlphaCell(KerasSpikingCell):
 
         cfg = super().get_config()
         cfg.update(
-            dict(
-                size=self.size,
-                tau_initializer=tf.keras.initializers.serialize(self.tau_initializer),
-                dt=self.dt,
-                apply_during_training=self.apply_during_training,
-                level_initializer=tf.keras.initializers.serialize(
+            {
+                "size": self.size,
+                "tau_initializer": tf.keras.initializers.serialize(
+                    self.tau_initializer
+                ),
+                "dt": self.dt,
+                "apply_during_training": self.apply_during_training,
+                "level_initializer": tf.keras.initializers.serialize(
                     self.level_initializer
                 ),
-                initial_level_constraint=tf.keras.constraints.serialize(
+                "initial_level_constraint": tf.keras.constraints.serialize(
                     self.initial_level_constraint
                 ),
-                tau_constraint=tf.keras.constraints.serialize(self.tau_constraint),
-            )
+                "tau_constraint": tf.keras.constraints.serialize(self.tau_constraint),
+            }
         )
 
         return cfg
@@ -1080,17 +1086,17 @@ class Alpha(KerasSpikingLayer):
     def get_config(self):
         cfg = super().get_config()
         cfg.update(
-            dict(
-                tau_initializer=self.tau_initializer,
-                apply_during_training=self.apply_during_training,
-                level_initializer=tf.keras.initializers.serialize(
+            {
+                "tau_initializer": self.tau_initializer,
+                "apply_during_training": self.apply_during_training,
+                "level_initializer": tf.keras.initializers.serialize(
                     self.level_initializer
                 ),
-                initial_level_constraint=tf.keras.constraints.serialize(
+                "initial_level_constraint": tf.keras.constraints.serialize(
                     self.initial_level_constraint
                 ),
-                tau_constraint=tf.keras.constraints.serialize(self.tau_constraint),
-            )
+                "tau_constraint": tf.keras.constraints.serialize(self.tau_constraint),
+            }
         )
 
         return cfg

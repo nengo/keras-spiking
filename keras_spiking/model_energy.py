@@ -173,22 +173,38 @@ class ModelEnergy:
     devices = {
         # https://ieeexplore.ieee.org/abstract/document/7054508
         # TODO: CPU neuron energy depends on neuron type
-        "cpu": dict(spiking=False, energy_per_synop=8.6e-9, energy_per_neuron=8.6e-9),
-        "gpu": dict(spiking=False, energy_per_synop=0.3e-9, energy_per_neuron=0.3e-9),
-        "arm": dict(spiking=False, energy_per_synop=0.9e-9, energy_per_neuron=0.9e-9),
+        "cpu": {
+            "spiking": False,
+            "energy_per_synop": 8.6e-9,
+            "energy_per_neuron": 8.6e-9,
+        },
+        "gpu": {
+            "spiking": False,
+            "energy_per_synop": 0.3e-9,
+            "energy_per_neuron": 0.3e-9,
+        },
+        "arm": {
+            "spiking": False,
+            "energy_per_synop": 0.9e-9,
+            "energy_per_neuron": 0.9e-9,
+        },
         # https://redwood.berkeley.edu/wp-content/uploads/2021/08/Davies2018.pdf
-        "loihi": dict(
-            spiking=True,
-            energy_per_synop=(23.6 + 3.5) * 1e-12,
-            energy_per_neuron=81e-12,
-        ),
+        "loihi": {
+            "spiking": True,
+            "energy_per_synop": (23.6 + 3.5) * 1e-12,
+            "energy_per_neuron": 81e-12,
+        },
         # https://arxiv.org/abs/1903.08941
-        "spinnaker": dict(
-            spiking=True, energy_per_synop=13.3e-9, energy_per_neuron=26e-9
-        ),
-        "spinnaker2": dict(
-            spiking=True, energy_per_synop=450e-12, energy_per_neuron=2.19e-9
-        ),
+        "spinnaker": {
+            "spiking": True,
+            "energy_per_synop": 13.3e-9,
+            "energy_per_neuron": 26e-9,
+        },
+        "spinnaker2": {
+            "spiking": True,
+            "energy_per_synop": 450e-12,
+            "energy_per_neuron": 2.19e-9,
+        },
     }
 
     layer_stats_computers = {}
@@ -280,7 +296,7 @@ class ModelEnergy:
                # note: ignore the batch dimension when computing output size
                output_size = np.prod(node.output_shapes[1:])
 
-               return dict(connections=output_size, neurons=0)
+               return {"connections": output_size, "neurons": 0}
 
            # use our registered stat calculator
            inp = tf.keras.Input([4, 4, 3])
@@ -326,11 +342,11 @@ class ModelEnergy:
         """
         if device_name in cls.devices:
             warnings.warn(f"Device '{device_name}' already registered. Overwriting.")
-        cls.devices[device_name] = dict(
-            energy_per_synop=energy_per_synop,
-            energy_per_neuron=energy_per_neuron,
-            spiking=spiking,
-        )
+        cls.devices[device_name] = {
+            "energy_per_synop": energy_per_synop,
+            "energy_per_neuron": energy_per_neuron,
+            "spiking": spiking,
+        }
 
     def _compute_model_stats(self):
         """Compute statistics for ``self.model``."""
@@ -621,28 +637,28 @@ class ModelEnergy:
 
             return f"{energy:.2g}"
 
-        col_value = dict(
-            name=lambda layer, _: f"{layer.name} ({layer.__class__.__name__})",
-            output_shape=layer_output_shape,
-            params=lambda layer, _: str(layer.count_params()),
-            rate=lambda layer, _: f"{self.layer_rates.get(layer, np.nan):.2g}",
-            connections=lambda layer, _: str(self.layer_stats[layer]["connections"]),
-            neurons=lambda layer, _: str(self.layer_stats[layer]["neurons"]),
-            energy=layer_energy,
-            synop_energy=partial(layer_energy, kind="synop_energy"),
-            neuron_energy=partial(layer_energy, kind="neuron_energy"),
-        )
-        col_names = dict(
-            name=lambda _: "Layer (type)",
-            output_shape=lambda _: "Output shape",
-            params=lambda _: "Param #",
-            rate=lambda _: "Rate [Hz]",
-            connections=lambda _: "Conn #",
-            neurons=lambda _: "Neuron #",
-            energy=lambda device: f"J/inf ({device})",
-            synop_energy=lambda device: f"Synop J/inf ({device})",
-            neuron_energy=lambda device: f"Neuron J/inf ({device})",
-        )
+        col_value = {
+            "name": lambda layer, _: f"{layer.name} ({layer.__class__.__name__})",
+            "output_shape": layer_output_shape,
+            "params": lambda layer, _: str(layer.count_params()),
+            "rate": lambda layer, _: f"{self.layer_rates.get(layer, np.nan):.2g}",
+            "connections": lambda layer, _: str(self.layer_stats[layer]["connections"]),
+            "neurons": lambda layer, _: str(self.layer_stats[layer]["neurons"]),
+            "energy": layer_energy,
+            "synop_energy": partial(layer_energy, kind="synop_energy"),
+            "neuron_energy": partial(layer_energy, kind="neuron_energy"),
+        }
+        col_names = {
+            "name": lambda _: "Layer (type)",
+            "output_shape": lambda _: "Output shape",
+            "params": lambda _: "Param #",
+            "rate": lambda _: "Rate [Hz]",
+            "connections": lambda _: "Conn #",
+            "neurons": lambda _: "Neuron #",
+            "energy": lambda device: f"J/inf ({device})",
+            "synop_energy": lambda device: f"Synop J/inf ({device})",
+            "neuron_energy": lambda device: f"Neuron J/inf ({device})",
+        }
 
         for c in columns:
             if c.split()[0] not in col_names:
