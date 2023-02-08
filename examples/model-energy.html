@@ -1,0 +1,1390 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Estimating model energy &#8212; KerasSpiking 0.3.1.dev0 docs</title>
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/basic.css" type="text/css" />
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+<link rel="stylesheet" href="https://www.nengo.ai/css/bootstrap.css" type="text/css">
+<style>
+ body .title-bar,
+ body .documentation-source h1:after {
+   background-color: #a8acaf;
+ }
+</style>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/scrollreveal"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stickyfill/2.1.0/stickyfill.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+<!-- From basic/layout.html -->
+<script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+
+
+<script src="../_static/underscore.js"></script>
+
+
+<script src="../_static/doctools.js"></script>
+
+
+<script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+
+
+<script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+
+<script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-GT8XEDLTMJ"></script>
+        <script>
+         window.dataLayer = window.dataLayer || [];
+         function gtag(){dataLayer.push(arguments);}
+         gtag('js', new Date());
+         gtag('config', 'G-GT8XEDLTMJ');
+        </script>
+        <!-- End Google tag (gtag.js) -->
+        <!-- Matomo -->
+        <script>
+         var _paq = window._paq = window._paq || [];
+         _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
+         _paq.push(["setCookieDomain", "*.appliedbrainresearch.com"]);
+         _paq.push(["setDomains", ["*.appliedbrainresearch.com","*.edge.nengo.ai","*.forum.nengo.ai","*.labs.nengo.ai","*.nengo.ai"]]);
+         _paq.push(["enableCrossDomainLinking"]);
+         _paq.push(["setDoNotTrack", true]);
+         _paq.push(['trackPageView']);
+         _paq.push(['enableLinkTracking']);
+         (function() {
+           var u="https://appliedbrainresearch.matomo.cloud/";
+           _paq.push(['setTrackerUrl', u+'matomo.php']);
+           _paq.push(['setSiteId', '3']);
+           var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+           g.async=true; g.src='//cdn.matomo.cloud/appliedbrainresearch.matomo.cloud/matomo.js'; s.parentNode.insertBefore(g,s);
+         })();
+        </script>
+        <!-- End Matomo Code -->
+    
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API reference" href="../reference.html" />
+    <link rel="prev" title="Classifying Fashion MNIST with spiking activations" href="spiking-fashion-mnist.html" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  </head><body class="bg-dark">
+
+<header class="fixed-top header-top shadow-sm">
+  <nav class="navbar navbar-expand-md navbar-light bg-white">
+    <a class="navbar-brand" href="https://www.nengo.ai/">
+      <img
+        src="https://www.nengo.ai/design/_images/general-full-light.svg"
+        alt="Nengo"
+        class="logo"
+      />
+    </a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbar-collapse"
+      aria-controls="navbar-collapse"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbar-collapse">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="https://www.nengo.ai/">What is Nengo?</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="https://www.nengo.ai/examples/">Examples</a>
+        </li>
+        <li class="nav-item dropdown active">
+          <a
+            class="nav-link dropdown-toggle"
+            id="navbar-dropdown-docs"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            href="#"
+            >Documentation</a
+          >
+          <div
+            class="dropdown-menu shadow-lg border-0"
+            aria-labelledby="navbar-dropdown-docs"
+          >
+            
+            <a class="dropdown-item" href="https://www.nengo.ai/nengo/">Nengo core</a>
+            <a class="dropdown-item" href="https://github.com/nengo/nengo-gui/">NengoGUI</a>
+            <a class="dropdown-item" href="https://www.nengo.ai/nengo-dl/">NengoDL</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="https://www.nengo.ai/nengo-spa/">NengoSPA</a>
+            <a class="dropdown-item" href="https://www.nengo.ai/nengo-extras/">NengoExtras</a>
+            <a class="dropdown-item" href="https://arvoelke.github.io/nengolib-docs/">Nengolib</a>
+            <a class="dropdown-item" href="https://www.nengo.ai/keras-spiking">KerasSpiking</a>
+            <a class="dropdown-item" href="https://www.nengo.ai/pytorch-spiking">PyTorchSpiking</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="https://www.nengo.ai/nengo-fpga/">NengoFPGA</a>
+            <a class="dropdown-item" href="https://www.nengo.ai/nengo-loihi/">NengoLoihi</a>
+            <a class="dropdown-item" href="https://labs.nengo.ai/nengo-ocl/">NengoOCL</a>
+            <a class="dropdown-item" href="https://github.com/project-rig/nengo_spinnaker">NengoSpiNNaker</a>
+            <a class="dropdown-item" href="https://github.com/nengo-labs/nengo-mpi">NengoMPI</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="https://www.nengo.ai/documentation/"
+              >All documentation</a
+            >
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            id="navbar-dropdown-community"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+            href="#"
+            >Community</a
+          >
+          <div
+            class="dropdown-menu shadow-lg border-0"
+            aria-labelledby="navbar-dropdown-community"
+          >
+            <a class="dropdown-item" href="https://forum.nengo.ai">Forum</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="https://www.nengo.ai/people/"
+              >People</a
+            >
+            <a class="dropdown-item" href="https://www.nengo.ai/summer-school/"
+              >Summer school</a
+            >
+            <a class="dropdown-item" href="https://www.nengo.ai/contributing/"
+              >Contributing</a
+            >
+            <a class="dropdown-item" href="https://www.nengo.ai/publications/"
+              >Publications</a
+            >
+            <a class="dropdown-item" href="https://www.nengo.ai/videos/"
+              >Videos</a
+            >
+            <a class="dropdown-item" href="https://www.nengo.ai/conduct/"
+              >Code of conduct</a
+            >
+            <a class="dropdown-item" href="https://www.nengo.ai/caa/">CAA</a>
+          </div>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a
+            class="nav-link btn btn-success btn-sm text-white"
+            href="https://www.nengo.ai/getting-started/"
+          >Getting started</a
+        >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link btn btn-success btn-sm text-white"
+            href="https://www.nengo.ai/store/"
+          >Store</a
+        >
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>
+<div class="main-content gradient-top">
+  <div class="container-fluid">
+    <div class="row"><a class="toggle-sidenav d-block d-md-none" href="#"
+  ><i class="icon-close fa fa-fw fa-arrow-left"></i
+  ><i class="icon-open fa fa-fw fa-arrow-right"></i
+></a>
+<div role="complementary" class="sidenav col-4 col-xl-3 p-0 border-right">
+  <h3 class="pt-5 px-5">
+    <a href="../index.html">
+      KerasSpiking
+    </a>
+  </h3>
+<form class="px-5 py-3 my-0 border-bottom" action="../search.html" method="get">
+  <div class="form-group form-group-single">
+    <input type="text" name="q" class="form-control" placeholder="Search" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+    <button type="submit" class="btn btn-link">
+      <img src="https://www.nengo.ai/img/icon-search.svg" alt="Go" />
+    </button>
+  </div>
+</form><div class="p-5 toctree">
+  
+    <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../examples.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="spiking-fashion-mnist.html">Classifying Fashion MNIST with spiking activations</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Estimating model energy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Assumptions">Assumptions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Using-ModelEnergy">Using ModelEnergy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Adding-custom-devices">Adding custom devices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Temporal-processing">Temporal processing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Using-SpikingActivation-layers">Using SpikingActivation layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Deploying-to-real-devices">Deploying to real devices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Summary">Summary</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../project.html">Project information</a></li>
+</ul>
+
+  
+  </div>
+  
+</div>
+      
+
+      <div class="col-12 col-md-8 col-xl-9">
+        <div class="container">
+          <div class="row">
+            <div class="col-10 offset-1 pb-5 documentation-source" role="main">
+              
+              
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars and line breaks on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+    white-space: pre;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt .copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+.jp-RenderedHTMLCommon table,
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+.jp-RenderedHTMLCommon thead,
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+.jp-RenderedHTMLCommon tr,
+.jp-RenderedHTMLCommon th,
+.jp-RenderedHTMLCommon td,
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+.jp-RenderedHTMLCommon th,
+div.rendered_html th {
+  font-weight: bold;
+}
+.jp-RenderedHTMLCommon tbody tr:nth-child(odd),
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+.jp-RenderedHTMLCommon tbody tr:hover,
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<div class="section" id="Estimating-model-energy">
+<h1>Estimating model energy<a class="headerlink" href="#Estimating-model-energy" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://colab.research.google.com/github/nengo/keras-spiking/blob/master/docs/examples/model-energy.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg" /></a></p>
+<p>One of the main motivations for using spiking methods is the potential for significant energy savings over standard techniques. Thus it is useful to be able to estimate how much energy would be used by a model on different devices, so that we can get an idea of how different model/device parameters affect the energy usage before pursuing a full deployment.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+<span class="kn">import</span> <span class="nn">keras_spiking</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+<span class="n">tf</span><span class="o">.</span><span class="n">get_logger</span><span class="p">()</span><span class="o">.</span><span class="n">addFilter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">rec</span><span class="p">:</span> <span class="s2">&quot;Tracing is expensive&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rec</span><span class="o">.</span><span class="n">msg</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+2023-02-08 15:43:00.423598: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE4.1 SSE4.2 AVX AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+</pre></div></div>
+</div>
+<div class="section" id="Assumptions">
+<h2>Assumptions<a class="headerlink" href="#Assumptions" title="Permalink to this headline">¶</a></h2>
+<p>It is important to keep in mind that actual power usage will be heavily dependent on the specific details of the underlying software and hardware implementation. The numbers provided by KerasSpiking should be taken as very rough estimates only, and they rely on a number of assumptions:</p>
+<ul class="simple">
+<li><p><strong>Device specifications</strong>: In order to estimate the energy used by a model on a particular device, we need to know how much energy is used per synaptic operation/neuron update. We rely on published data for these numbers (see our sources for <a class="reference external" href="https://ieeexplore.ieee.org/abstract/document/7054508">CPU/GPU/ARM</a>, <a class="reference external" href="https://redwood.berkeley.edu/wp-content/uploads/2021/08/Davies2018.pdf">Loihi</a>, and <a class="reference external" href="https://arxiv.org/abs/1903.08941">SpiNNaker 1/2</a>). Energy numbers in practice can differ
+significantly from published results.</p></li>
+<li><p><strong>Overhead</strong>: We do not account for any overhead in the energy estimates (e.g., the cost of transferring data on and off a device). We only estimate the energy usage of internal model computations (synaptic operations and neuron updates). In practice, overhead can be a significant contributor to the energy usage of a model.</p></li>
+<li><p><strong>Spiking implementation</strong>: When estimating the energy usage for spiking devices, such as Loihi and Spinnaker, we assume that the model being estimated can be fully converted to a spiking implementation for deployment on the device (even if the input model has non-spiking elements). For example, if the model contains <code class="docutils literal notranslate"><span class="pre">tf.keras.layers.Activation(&quot;relu&quot;)</span></code> layers (non-spiking), we assume that on a spiking device those layers will be converted to something equivalent to
+<code class="docutils literal notranslate"><span class="pre">keras_spiking.SpikingActivation(&quot;relu&quot;)</span></code>, and that any connecting layers (e.g. <code class="docutils literal notranslate"><span class="pre">tf.keras.layers.Dense</span></code>) are applied in an event-based fashion (i.e., processing only occurs when the input layer emits a spike). In practice, it is not trivial to map a neural network to a spiking device in this way, and implementation details can significantly affect energy usage. <a class="reference external" href="https://www.nengo.ai/nengo/">Nengo</a> and <a class="reference external" href="https://www.nengo.ai/nengo-dl/">NengoDL</a> are designed to make this easier.</p></li>
+</ul>
+<p>On non-spiking devices, such as CPU and GPU, we assume that the network runs as a traditional (non-spiking) ANN, and is able to compute the output without iterating over time using non-spiking neurons.</p>
+</div>
+<div class="section" id="Using-ModelEnergy">
+<h2>Using ModelEnergy<a class="headerlink" href="#Using-ModelEnergy" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">keras_spiking.ModelEnergy</span></code> class provides the entry point for energy estimation. It takes a Keras model as input, and computes relevant statistics for that model.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># build an example model</span>
+<span class="n">inp</span> <span class="o">=</span> <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">((</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">))(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Flatten</span><span class="p">()(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="mi">128</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="mi">10</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Model: &#34;model&#34;
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #
+=================================================================
+ input_1 (InputLayer)        [(None, 28, 28, 1)]       0
+
+ conv2d (Conv2D)             (None, 22, 22, 2)         100
+
+ re_lu (ReLU)                (None, 22, 22, 2)         0
+
+ flatten (Flatten)           (None, 968)               0
+
+ dense (Dense)               (None, 128)               124032
+
+ re_lu_1 (ReLU)              (None, 128)               0
+
+ dense_1 (Dense)             (None, 10)                1290
+
+=================================================================
+Total params: 125,422
+Trainable params: 125,422
+Non-trainable params: 0
+_________________________________________________________________
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+2023-02-08 15:43:06.953653: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE4.1 SSE4.2 AVX AVX2 FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-02-08 15:43:07.495095: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1616] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 10784 MB memory:  -&gt; device: 0, name: Tesla K80, pci bus id: 0001:00:00.0, compute capability: 3.7
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># estimate model energy</span>
+<span class="n">energy</span> <span class="o">=</span> <span class="n">keras_spiking</span><span class="o">.</span><span class="n">ModelEnergy</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">energy</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">print_warnings</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Layer (type)        |Output shape       |Param #|Conn #|Neuron #|J/inf (cpu)
+--------------------|-------------------|-------|------|--------|-----------
+input_1 (InputLayer)|[(None, 28, 28, 1)]|      0|     0|       0|          0
+conv2d (Conv2D)     |  (None, 22, 22, 2)|    100| 47432|       0|    0.00041
+re_lu (ReLU)        |  (None, 22, 22, 2)|      0|     0|     968|    8.3e-06
+flatten (Flatten)   |        (None, 968)|      0|     0|       0|          0
+dense (Dense)       |        (None, 128)| 124032|123904|       0|     0.0011
+re_lu_1 (ReLU)      |        (None, 128)|      0|     0|     128|    1.1e-06
+dense_1 (Dense)     |         (None, 10)|   1290|  1280|       0|    1.1e-05
+============================================================================
+Total energy per inference [Joules/inf] (cpu): 1.49e-03
+</pre></div></div>
+</div>
+<p>The first three columns show the layer name/type, the output shape, and the number of parameters in each layer, and are identical to the corresponding columns in <code class="docutils literal notranslate"><span class="pre">model.summary()</span></code>.</p>
+<p>The next column shows the number of connections; two units are connected if a change in the input unit’s value changes the output unit’s value (assuming non-zero parameters). In a dense connection, the number of connections is the input size times the output size (since each output unit is connected to each input unit); in a convolutional connection, it equals the kernel size times the number of input filters times the output shape. Note that the number of connections can be quite different than
+the number of parameters, particularly for layers like <code class="docutils literal notranslate"><span class="pre">Conv2D</span></code> where parameters are shared between many connections.</p>
+<p>The next column shows the number of neurons in a layer; for activation layers, this equals the number of output units (i.e. the output size), otherwise it is zero.</p>
+<p>The last column shows the estimated energy consumption in Joules per inference on a CPU (specifically an Intel i7-4960X). All comparisons made by <code class="docutils literal notranslate"><span class="pre">ModelEnergy</span></code> are done using energy per inference, to account for the fact that spiking devices must iterate over a number of timesteps to get an accurate inference, whereas non-spiking devices (such as the CPU here) do not require such iteration. This number represents a lower bound on the amount of energy that might be used by a CPU, since it does
+not include any overhead, such as energy required to get data on and off the device.</p>
+<p>We can customize the summary by specifying the columns we want displayed (see <a class="reference external" href="https://www.nengo.ai/keras-spiking/reference.html#keras_spiking.ModelEnergy.summary">the documentation</a> for the available options, and <a class="reference external" href="https://www.nengo.ai/keras-spiking/reference.html#keras_spiking.ModelEnergy">here</a> for the built-in devices).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">energy</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">(</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;energy cpu&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;energy gpu&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;synop_energy cpu&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;synop_energy gpu&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;neuron_energy cpu&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;neuron_energy gpu&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">print_warnings</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Layer (type)    |J/inf (cpu)|J/inf (gpu)|Synop J/inf (|Synop J/inf (|Neuron J/inf (|Neuron J/inf (
+----------------|-----------|-----------|-------------|-------------|--------------|--------------
+input_1 (InputLa|          0|          0|            0|            0|             0|             0
+conv2d (Conv2D) |    0.00041|    1.4e-05|      0.00041|      1.4e-05|             0|             0
+re_lu (ReLU)    |    8.3e-06|    2.9e-07|            0|            0|       8.3e-06|       2.9e-07
+flatten (Flatten|          0|          0|            0|            0|             0|             0
+dense (Dense)   |     0.0011|    3.7e-05|       0.0011|      3.7e-05|             0|             0
+re_lu_1 (ReLU)  |    1.1e-06|    3.8e-08|            0|            0|       1.1e-06|       3.8e-08
+dense_1 (Dense) |    1.1e-05|    3.8e-07|      1.1e-05|      3.8e-07|             0|             0
+==================================================================================================
+Total energy per inference [Joules/inf] (cpu): 1.49e-03
+Total energy per inference [Joules/inf] (gpu): 5.21e-05
+</pre></div></div>
+</div>
+<p>Here, we can see the individual components contributing to the energy usage on each device. The energy spent on synops (short for “synaptic operations”) is used to multiply values by connection weights; on non-spiking hardware, this has to be done for all connections, but on spiking hardware it is only done when a pre-synaptic neuron spikes. The energy spent on neurons is used to compute neural non-linearities; these neuron updates must happen for all neurons, regardless of input.</p>
+<p>ModelEnergy has one other parameter, <code class="docutils literal notranslate"><span class="pre">example_data</span></code>. This data will be passed to the model and used to compute the average firing rate of each layer. This is necessary information for estimating the energy usage of spiking devices, as the number of synaptic updates that need to be performed will be proportional to the firing rates (but has no impact on non-spiking devices, as they perform all synaptic updates every timestep regardless).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">energy</span> <span class="o">=</span> <span class="n">keras_spiking</span><span class="o">.</span><span class="n">ModelEnergy</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">example_data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">32</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">)))</span>
+<span class="n">energy</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">(</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;rate&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;synop_energy cpu&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;synop_energy loihi&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;neuron_energy cpu&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;neuron_energy loihi&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">print_warnings</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+2023-02-08 15:43:08.226443: I tensorflow/stream_executor/cuda/cuda_dnn.cc:384] Loaded cuDNN version 8401
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1/1 [==============================] - 1s 867ms/step
+Layer (type)      |Rate [Hz]|Synop J/inf (cp|Synop J/inf (loih|Neuron J/inf (cp|Neuron J/inf (loih
+------------------|---------|---------------|-----------------|----------------|------------------
+input_1 (InputLaye|        1|              0|                0|               0|                 0
+conv2d (Conv2D)   |        1|        0.00041|          1.3e-09|               0|                 0
+re_lu (ReLU)      |      0.5|              0|                0|         8.3e-06|           7.8e-08
+flatten (Flatten) |     0.28|              0|                0|               0|                 0
+dense (Dense)     |     0.28|         0.0011|          9.5e-10|               0|                 0
+re_lu_1 (ReLU)    |     0.36|              0|                0|         1.1e-06|             1e-08
+dense_1 (Dense)   |      0.2|        1.1e-05|            7e-12|               0|                 0
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+2023-02-08 15:43:08.606407: I tensorflow/core/platform/default/subprocess.cc:304] Start cannot spawn child process: No such file or directory
+2023-02-08 15:43:08.606734: I tensorflow/core/platform/default/subprocess.cc:304] Start cannot spawn child process: No such file or directory
+2023-02-08 15:43:08.606759: W tensorflow/stream_executor/gpu/asm_compiler.cc:80] Couldn&#39;t get ptxas version string: INTERNAL: Couldn&#39;t invoke ptxas --version
+2023-02-08 15:43:08.607093: I tensorflow/core/platform/default/subprocess.cc:304] Start cannot spawn child process: No such file or directory
+2023-02-08 15:43:08.607150: W tensorflow/stream_executor/gpu/redzone_allocator.cc:314] INTERNAL: Failed to launch ptxas
+Relying on driver to perform ptx compilation.
+Modify $PATH to customize ptxas location.
+This message will be only logged once.
+</pre></div></div>
+</div>
+<p>We can see that if we increase the magnitude of the input (and thereby increase the firing rate), the energy estimate increases for the spiking device (Loihi), but not the CPU. Note that only the synaptic energy increases, the neuron energy is unaffected (since it is not dependent on input activity).</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">energy</span> <span class="o">=</span> <span class="n">keras_spiking</span><span class="o">.</span><span class="n">ModelEnergy</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">example_data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">32</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">energy</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">(</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;rate&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;synop_energy cpu&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;synop_energy loihi&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;neuron_energy cpu&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;neuron_energy loihi&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">print_warnings</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1/1 [==============================] - 0s 51ms/step
+Layer (type)      |Rate [Hz]|Synop J/inf (cp|Synop J/inf (loih|Neuron J/inf (cp|Neuron J/inf (loih
+------------------|---------|---------------|-----------------|----------------|------------------
+input_1 (InputLaye|        5|              0|                0|               0|                 0
+conv2d (Conv2D)   |        5|        0.00041|          6.4e-09|               0|                 0
+re_lu (ReLU)      |      2.5|              0|                0|         8.3e-06|           7.8e-08
+flatten (Flatten) |      1.4|              0|                0|               0|                 0
+dense (Dense)     |      1.4|         0.0011|          4.7e-09|               0|                 0
+re_lu_1 (ReLU)    |      1.8|              0|                0|         1.1e-06|             1e-08
+dense_1 (Dense)   |        1|        1.1e-05|          3.5e-11|               0|                 0
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Adding-custom-devices">
+<h2>Adding custom devices<a class="headerlink" href="#Adding-custom-devices" title="Permalink to this headline">¶</a></h2>
+<p>We can use <code class="docutils literal notranslate"><span class="pre">ModelEnergy.register_device</span></code> to add the specification for new devices, thereby allowing ModelEnergy to provide energy estimates for those devices. This function takes four parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: An identifying name for the device.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">energy_per_synop</span></code>: The energy (in Joules) required for one synaptic update. A synaptic update is the computation that occurs whenever some input is received by a neuron and multiplied by a weight.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">energy_per_neuron</span></code>: The energy (in Joules) required for one neuron update. A neuron update is the computation that occurs in a neuron every timestep (regardless of whether or not it has received some input).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spiking</span></code>: Whether or not this is a spiking, or event-based, device. That is, do all synaptic updates occur every timestep (i.e. all the output of one layer is communicated to the next layer every timestep), or do synaptic updates only occur when a neuron in the input layer emits a spike?</p></li>
+</ul>
+<p>In addition to registering new devices, this can be used to modify the assumptions for existing devices. For example, if you think the <code class="docutils literal notranslate"><span class="pre">gpu</span></code> device specs are too optimistic, you could increase the energy estimates and see what effect that has.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">keras_spiking</span><span class="o">.</span><span class="n">ModelEnergy</span><span class="o">.</span><span class="n">register_device</span><span class="p">(</span>
+    <span class="s2">&quot;my-gpu&quot;</span><span class="p">,</span> <span class="n">energy_per_synop</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">,</span> <span class="n">energy_per_neuron</span><span class="o">=</span><span class="mf">2e-9</span><span class="p">,</span> <span class="n">spiking</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+<span class="n">energy</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;energy gpu&quot;</span><span class="p">,</span> <span class="s2">&quot;energy my-gpu&quot;</span><span class="p">),</span> <span class="n">print_warnings</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Layer (type)        |J/inf (gpu)|J/inf (my-gpu)
+--------------------|-----------|--------------
+input_1 (InputLayer)|          0|             0
+conv2d (Conv2D)     |    1.4e-05|       4.7e-05
+re_lu (ReLU)        |    2.9e-07|       1.9e-06
+flatten (Flatten)   |          0|             0
+dense (Dense)       |    3.7e-05|       0.00012
+re_lu_1 (ReLU)      |    3.8e-08|       2.6e-07
+dense_1 (Dense)     |    3.8e-07|       1.3e-06
+===============================================
+Total energy per inference [Joules/inf] (gpu): 5.21e-05
+Total energy per inference [Joules/inf] (my-gpu): 1.75e-04
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Temporal-processing">
+<h2>Temporal processing<a class="headerlink" href="#Temporal-processing" title="Permalink to this headline">¶</a></h2>
+<p>Whenever we are working with spiking models it is important to think about how time affects the model. For example, often when working with spiking models we need to run them for multiple timesteps in order to get an accurate estimate of the model’s output (see <a class="reference external" href="https://www.nengo.ai/keras-spiking/examples/spiking-fashion-mnist.html">this example</a> for more details). So in order to make a fair comparison between spiking and non-spiking devices (which only need a single timestep to compute their
+output), we can specify how many timesteps per inference we expect to run on spiking devices.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">energy</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;energy cpu&quot;</span><span class="p">,</span> <span class="s2">&quot;energy loihi&quot;</span><span class="p">),</span>
+    <span class="n">timesteps_per_inference</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">print_warnings</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Layer (type)        |J/inf (cpu)|J/inf (loihi)
+--------------------|-----------|-------------
+input_1 (InputLayer)|          0|            0
+conv2d (Conv2D)     |    0.00041|      6.4e-08
+re_lu (ReLU)        |    8.3e-06|      7.8e-07
+flatten (Flatten)   |          0|            0
+dense (Dense)       |     0.0011|      4.7e-08
+re_lu_1 (ReLU)      |    1.1e-06|        1e-07
+dense_1 (Dense)     |    1.1e-05|      3.5e-10
+==============================================
+Total energy per inference [Joules/inf] (cpu): 1.49e-03
+Total energy per inference [Joules/inf] (loihi): 1.00e-06
+</pre></div></div>
+</div>
+<p>Note that if we use more timesteps per inference that increases the energy estimate for the spiking device, but not the non-spiking:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">energy</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;energy cpu&quot;</span><span class="p">,</span> <span class="s2">&quot;energy loihi&quot;</span><span class="p">),</span>
+    <span class="n">timesteps_per_inference</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">print_warnings</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Layer (type)        |J/inf (cpu)|J/inf (loihi)
+--------------------|-----------|-------------
+input_1 (InputLayer)|          0|            0
+conv2d (Conv2D)     |    0.00041|      1.3e-07
+re_lu (ReLU)        |    8.3e-06|      1.6e-06
+flatten (Flatten)   |          0|            0
+dense (Dense)       |     0.0011|      9.5e-08
+re_lu_1 (ReLU)      |    1.1e-06|      2.1e-07
+dense_1 (Dense)     |    1.1e-05|        7e-10
+==============================================
+Total energy per inference [Joules/inf] (cpu): 1.49e-03
+Total energy per inference [Joules/inf] (loihi): 2.00e-06
+</pre></div></div>
+</div>
+<p>We also need to consider the simulation timestep, <code class="docutils literal notranslate"><span class="pre">dt</span></code>, being used in each of those inference timesteps. This will affect the number of spike events observed, since longer timesteps will result in more spikes (the number of spikes is proportional to <code class="docutils literal notranslate"><span class="pre">firing_rate*timesteps_per_inference*dt</span></code>). Note that the <code class="docutils literal notranslate"><span class="pre">dt</span></code> used on the device could be different than the <code class="docutils literal notranslate"><span class="pre">dt</span></code> used when training/running the model in KerasSpiking. However, it will default to the same value as
+<code class="docutils literal notranslate"><span class="pre">keras_spiking.default.dt</span></code>.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">energy</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;energy cpu&quot;</span><span class="p">,</span> <span class="s2">&quot;energy loihi&quot;</span><span class="p">),</span> <span class="n">dt</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">print_warnings</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Layer (type)        |J/inf (cpu)|J/inf (loihi)
+--------------------|-----------|-------------
+input_1 (InputLayer)|          0|            0
+conv2d (Conv2D)     |    0.00041|      6.4e-09
+re_lu (ReLU)        |    8.3e-06|      7.8e-08
+flatten (Flatten)   |          0|            0
+dense (Dense)       |     0.0011|      4.7e-09
+re_lu_1 (ReLU)      |    1.1e-06|        1e-08
+dense_1 (Dense)     |    1.1e-05|      3.5e-11
+==============================================
+Total energy per inference [Joules/inf] (cpu): 1.49e-03
+Total energy per inference [Joules/inf] (loihi): 1.00e-07
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">energy</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;energy cpu&quot;</span><span class="p">,</span> <span class="s2">&quot;energy loihi&quot;</span><span class="p">),</span> <span class="n">dt</span><span class="o">=</span><span class="mf">0.002</span><span class="p">,</span> <span class="n">print_warnings</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Layer (type)        |J/inf (cpu)|J/inf (loihi)
+--------------------|-----------|-------------
+input_1 (InputLayer)|          0|            0
+conv2d (Conv2D)     |    0.00041|      1.3e-08
+re_lu (ReLU)        |    8.3e-06|      7.8e-08
+flatten (Flatten)   |          0|            0
+dense (Dense)       |     0.0011|      9.5e-09
+re_lu_1 (ReLU)      |    1.1e-06|        1e-08
+dense_1 (Dense)     |    1.1e-05|        7e-11
+==============================================
+Total energy per inference [Joules/inf] (cpu): 1.49e-03
+Total energy per inference [Joules/inf] (loihi): 1.11e-07
+</pre></div></div>
+</div>
+<p>We can see that increasing <code class="docutils literal notranslate"><span class="pre">dt</span></code> increases the energy estimate on the spiking device, but not the non-spiking (since the output of a non-spiking neuron is not affected by <code class="docutils literal notranslate"><span class="pre">dt</span></code>). Note that increasing <code class="docutils literal notranslate"><span class="pre">dt</span></code> is not exactly equivalent to increasing <code class="docutils literal notranslate"><span class="pre">timesteps_per_inference</span></code>, because <code class="docutils literal notranslate"><span class="pre">dt</span></code> only increases the number of synaptic updates, it leaves the number of neuron updates unchanged.</p>
+<p>One final factor to keep in mind regarding temporal models is how time is represented in the Keras model itself. The above models did not have a temporal component, they were simply a single-step feedforward model. ModelEnergy assumes that a non-temporal model represents the computations that will be performed each timestep on a spiking device. But we can also directly define a Keras model that operates over time, which gives us more control over how time is represented. For example, this is
+equivalent to our original model definition above, but we have added a time dimension:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># add a new input dimension (None) representing</span>
+<span class="c1"># temporal data of unknown length</span>
+<span class="n">inp</span> <span class="o">=</span> <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">((</span><span class="kc">None</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="c1"># the TimeDistributed wrapper can be used to apply</span>
+<span class="c1"># non-temporal layers to temporal inputs</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">TimeDistributed</span><span class="p">(</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Conv2D</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+<span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">TimeDistributed</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Flatten</span><span class="p">())(</span><span class="n">x</span><span class="p">)</span>
+<span class="c1"># some layers, like Dense, can operate on temporal data</span>
+<span class="c1"># without requiring a TimeDistributed wrapper</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="mi">128</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="mi">10</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">temporal_model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="n">temporal_model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Model: &#34;model_3&#34;
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #
+=================================================================
+ input_2 (InputLayer)        [(None, None, 28, 28, 1)  0
+                             ]
+
+ time_distributed (TimeDistr  (None, None, 22, 22, 2)  100
+ ibuted)
+
+ re_lu_2 (ReLU)              (None, None, 22, 22, 2)   0
+
+ time_distributed_1 (TimeDis  (None, None, 968)        0
+ tributed)
+
+ dense_2 (Dense)             (None, None, 128)         124032
+
+ re_lu_3 (ReLU)              (None, None, 128)         0
+
+ dense_3 (Dense)             (None, None, 10)          1290
+
+=================================================================
+Total params: 125,422
+Trainable params: 125,422
+Non-trainable params: 0
+_________________________________________________________________
+</pre></div></div>
+</div>
+<p>If we compare the energy estimates of the temporal and non-temporal models we can see that they are the same, because KerasSpiking is automatically assuming that the non-temporal model will be translated into a temporal model:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">energy</span> <span class="o">=</span> <span class="n">keras_spiking</span><span class="o">.</span><span class="n">ModelEnergy</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">example_data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">32</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+<span class="n">energy</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;energy cpu&quot;</span><span class="p">,</span> <span class="s2">&quot;energy loihi&quot;</span><span class="p">),</span>
+    <span class="n">timesteps_per_inference</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">print_warnings</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1/1 [==============================] - 0s 50ms/step
+Layer (type)        |J/inf (cpu)|J/inf (loihi)
+--------------------|-----------|-------------
+input_1 (InputLayer)|          0|            0
+conv2d (Conv2D)     |    0.00041|      1.3e-08
+re_lu (ReLU)        |    8.3e-06|      7.8e-07
+flatten (Flatten)   |          0|            0
+dense (Dense)       |     0.0011|      9.5e-09
+re_lu_1 (ReLU)      |    1.1e-06|        1e-07
+dense_1 (Dense)     |    1.1e-05|        7e-11
+==============================================
+Total energy per inference [Joules/inf] (cpu): 1.49e-03
+Total energy per inference [Joules/inf] (loihi): 9.10e-07
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># note that we add a temporal dimension to our example data (which does not need to be</span>
+<span class="c1"># the same length as timesteps_per_inference)</span>
+<span class="n">energy</span> <span class="o">=</span> <span class="n">keras_spiking</span><span class="o">.</span><span class="n">ModelEnergy</span><span class="p">(</span>
+    <span class="n">temporal_model</span><span class="p">,</span> <span class="n">example_data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">32</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="p">)</span>
+<span class="n">energy</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;energy cpu&quot;</span><span class="p">,</span> <span class="s2">&quot;energy loihi&quot;</span><span class="p">),</span>
+    <span class="n">timesteps_per_inference</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">print_warnings</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1/1 [==============================] - 0s 78ms/step
+Layer (type)                        |J/inf (cpu)|J/inf (loihi)
+------------------------------------|-----------|-------------
+input_2 (InputLayer)                |          0|            0
+time_distributed (TimeDistributed)  |    0.00041|      1.3e-08
+re_lu_2 (ReLU)                      |    8.3e-06|      7.8e-07
+time_distributed_1 (TimeDistributed)|          0|            0
+dense_2 (Dense)                     |     0.0011|      1.3e-08
+re_lu_3 (ReLU)                      |    1.1e-06|        1e-07
+dense_3 (Dense)                     |    1.1e-05|      1.1e-10
+==============================================================
+Total energy per inference [Joules/inf] (cpu): 1.49e-03
+Total energy per inference [Joules/inf] (loihi): 9.14e-07
+</pre></div></div>
+</div>
+<p>In the above example the model was assumed to be temporal because it had <code class="docutils literal notranslate"><span class="pre">None</span></code> as the shape of the first (non-batch) axis. However, in some cases the Keras model definition can be ambiguous as to whether it represents a temporal or non-temporal model.</p>
+<p>For example, consider the following model:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">inp</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">((</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">))</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()(</span><span class="n">inp</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Model: &#34;model_6&#34;
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #
+=================================================================
+ input_3 (InputLayer)        [(None, 28, 28)]          0
+
+ re_lu_4 (ReLU)              (None, 28, 28)            0
+
+=================================================================
+Total params: 0
+Trainable params: 0
+Non-trainable params: 0
+_________________________________________________________________
+</pre></div></div>
+</div>
+<p>Is this a temporal model, with 28 neurons being applied for 28 timesteps? Or is it a non-temporal model, with 784 neurons being applied to a 28x28 2D input? The definition is ambiguous, so <code class="docutils literal notranslate"><span class="pre">ModelEnergy</span></code> will assume that this is a non-temporal model:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">energy</span> <span class="o">=</span> <span class="n">keras_spiking</span><span class="o">.</span><span class="n">ModelEnergy</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">energy</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;output_shape&quot;</span><span class="p">,</span> <span class="s2">&quot;neurons&quot;</span><span class="p">,</span> <span class="s2">&quot;energy cpu&quot;</span><span class="p">),</span> <span class="n">print_warnings</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Layer (type)        |Output shape    |Neuron #|J/inf (cpu)
+--------------------|----------------|--------|-----------
+input_3 (InputLayer)|[(None, 28, 28)]|       0|          0
+re_lu_4 (ReLU)      |  (None, 28, 28)|     784|    6.7e-06
+==========================================================
+Total energy per inference [Joules/inf] (cpu): 6.74e-06
+</pre></div></div>
+</div>
+<p>You can signal to <code class="docutils literal notranslate"><span class="pre">ModelEnergy</span></code> that the ReLU layer should be considered temporal by wrapping it in a <code class="docutils literal notranslate"><span class="pre">TimeDistributed</span></code> layer:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">inp</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">((</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">))</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">TimeDistributed</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">ReLU</span><span class="p">())(</span><span class="n">inp</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="n">energy</span> <span class="o">=</span> <span class="n">keras_spiking</span><span class="o">.</span><span class="n">ModelEnergy</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">energy</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;output_shape&quot;</span><span class="p">,</span> <span class="s2">&quot;neurons&quot;</span><span class="p">,</span> <span class="s2">&quot;energy cpu&quot;</span><span class="p">),</span> <span class="n">print_warnings</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Layer (type)                        |Output shape    |Neuron #|J/inf (cpu)
+------------------------------------|----------------|--------|-----------
+input_4 (InputLayer)                |[(None, 28, 28)]|       0|          0
+time_distributed_2 (TimeDistributed)|  (None, 28, 28)|      28|    2.4e-07
+==========================================================================
+Total energy per inference [Joules/inf] (cpu): 2.41e-07
+</pre></div></div>
+</div>
+<p>Alternatively, we could have changed the shape of the first dimension to <code class="docutils literal notranslate"><span class="pre">None</span></code>, in which case ModelEnergy will assume that that dimension represents time, without the need for a TimeDistributed wrapper.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">inp</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">((</span><span class="kc">None</span><span class="p">,</span> <span class="mi">28</span><span class="p">))</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()(</span><span class="n">inp</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="n">energy</span> <span class="o">=</span> <span class="n">keras_spiking</span><span class="o">.</span><span class="n">ModelEnergy</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">energy</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;output_shape&quot;</span><span class="p">,</span> <span class="s2">&quot;neurons&quot;</span><span class="p">,</span> <span class="s2">&quot;energy cpu&quot;</span><span class="p">),</span> <span class="n">print_warnings</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Layer (type)        |Output shape      |Neuron #|J/inf (cpu)
+--------------------|------------------|--------|-----------
+input_5 (InputLayer)|[(None, None, 28)]|       0|          0
+re_lu_6 (ReLU)      |  (None, None, 28)|      28|    2.4e-07
+============================================================
+Total energy per inference [Joules/inf] (cpu): 2.41e-07
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Using-SpikingActivation-layers">
+<h2>Using SpikingActivation layers<a class="headerlink" href="#Using-SpikingActivation-layers" title="Permalink to this headline">¶</a></h2>
+<p>You may have noticed above that we have been silencing some warnings. Let’s see what those warnings are:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">inp</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">((</span><span class="kc">None</span><span class="p">,</span> <span class="mi">32</span><span class="p">))</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="mi">64</span><span class="p">)(</span><span class="n">inp</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="n">energy</span> <span class="o">=</span> <span class="n">keras_spiking</span><span class="o">.</span><span class="n">ModelEnergy</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">example_data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">32</span><span class="p">)))</span>
+<span class="n">energy</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;output_shape&quot;</span><span class="p">,</span> <span class="s2">&quot;energy loihi&quot;</span><span class="p">),</span> <span class="n">print_warnings</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1/1 [==============================] - 0s 53ms/step
+Layer (type)        |Output shape      |J/inf (loihi)
+--------------------|------------------|-------------
+input_6 (InputLayer)|[(None, None, 32)]|            0
+dense_4 (Dense)     |  (None, None, 64)|      5.6e-11
+re_lu_7 (ReLU)      |  (None, None, 64)|      5.2e-09
+=====================================================
+Total energy per inference [Joules/inf] (loihi): 5.24e-09
+* These are estimates only; see the documentation for a list of the assumptions being made.
+  https://bit.ly/3c3aKKH
+* This model contains non-spiking activations that would not actually behave in the manner we
+  assume in these calculations; we assume these layers will be converted to spiking equivalents.
+  Consider using `keras_spiking.SpikingActivation` to make this conversion explicit.
+</pre></div></div>
+</div>
+<p>The first warning highlights that these energy estimates are highly dependent on certain assumptions being made (which we <a class="reference external" href="#Assumptions">discussed above</a>).</p>
+<p>The second warning is due to the fact that we are estimating energy on a spiking device but our model contains non-spiking activation functions (ReLU). When estimating energy on spiking devices we assume that neurons will be outputting spikes (in order to compute the number of synaptic updates that need to occur). But if we were to directly map this model to a spiking device 1) that may not even be possible, many spiking devices can <em>only</em> simulating spiking neurons, and 2) these neurons would
+be triggering synaptic updates on every timestep, not at the rates displayed above.</p>
+<p>In order to provide a useful estimate for spiking devices, we assume that any non-spiking neurons will be converted to spiking neurons when the model is mapped to the device. However, that may not be a safe assumption; it is better to be explicit and directly convert the Keras model to a spiking one using <code class="docutils literal notranslate"><span class="pre">keras_spiking.SpikingActivation</span></code>:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">inp</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Input</span><span class="p">((</span><span class="kc">None</span><span class="p">,</span> <span class="mi">32</span><span class="p">))</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span><span class="n">units</span><span class="o">=</span><span class="mi">64</span><span class="p">)(</span><span class="n">inp</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">keras_spiking</span><span class="o">.</span><span class="n">SpikingActivation</span><span class="p">(</span><span class="s2">&quot;relu&quot;</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">keras</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+<span class="n">energy</span> <span class="o">=</span> <span class="n">keras_spiking</span><span class="o">.</span><span class="n">ModelEnergy</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">example_data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">32</span><span class="p">)))</span>
+<span class="n">energy</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;output_shape&quot;</span><span class="p">,</span> <span class="s2">&quot;energy loihi&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+1/1 [==============================] - 0s 61ms/step
+Layer (type)                          |Output shape      |J/inf (loihi)
+--------------------------------------|------------------|-------------
+input_7 (InputLayer)                  |[(None, None, 32)]|            0
+dense_5 (Dense)                       |  (None, None, 64)|      5.6e-11
+spiking_activation (SpikingActivation)|  (None, None, 64)|      5.2e-09
+=======================================================================
+Total energy per inference [Joules/inf] (loihi): 5.24e-09
+* These are estimates only; see the documentation for a list of the assumptions being made.
+  https://bit.ly/3c3aKKH
+</pre></div></div>
+</div>
+</div>
+<div class="section" id="Deploying-to-real-devices">
+<h2>Deploying to real devices<a class="headerlink" href="#Deploying-to-real-devices" title="Permalink to this headline">¶</a></h2>
+<p>Once we’ve gotten an idea what the energy usage might be for our model on different devices, we likely want to actually deploy our model on one of those devices and see how it performs in the real world. For this we can use <a class="reference external" href="https://www.nengo.ai">Nengo</a>, which provides a suite of tools for running neural models on different hardware platforms.</p>
+<p>For example, suppose we would like to run the above model on Loihi. First, we can use the NengoDL converter to automatically convert our Keras model to a Nengo model:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pylint: disable=wrong-import-order</span>
+
+<span class="kn">import</span> <span class="nn">nengo_dl</span>
+<span class="kn">import</span> <span class="nn">nengo_loihi</span>
+
+<span class="n">converter</span> <span class="o">=</span> <span class="n">nengo_dl</span><span class="o">.</span><span class="n">Converter</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">temporal_model</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inference_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>The advantage of the Nengo ecosystem is that once we have a Nengo model, we can run that model on any Nengo-supported hardware platform. For example, if we would like to run on Loihi, we just create a <code class="docutils literal notranslate"><span class="pre">nengo_loihi.Simulator</span></code> and run our model:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">nengo_loihi</span><span class="o">.</span><span class="n">Simulator</span><span class="p">(</span><span class="n">converter</span><span class="o">.</span><span class="n">net</span><span class="p">)</span> <span class="k">as</span> <span class="n">sim</span><span class="p">:</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">run_steps</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">sim</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">converter</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">output</span><span class="p">]]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(10, 64)
+</pre></div></div>
+</div>
+<p>Since we don’t have an actual Loihi board hooked up here this is just running in an emulator, but if we had a physical board attached the code would be the same (and NengoLoihi would automatically use the board). And that’s all that would be required to deploy your model to a spiking device, and start seeing how it performs in the real world!</p>
+</div>
+<div class="section" id="Summary">
+<h2>Summary<a class="headerlink" href="#Summary" title="Permalink to this headline">¶</a></h2>
+<p>We can use <code class="docutils literal notranslate"><span class="pre">ModelEnergy</span></code> to estimate the energy usage of a Keras model on different hardware platforms. We have looked at the various parameters of these estimates (example data, device specifications, the number of timesteps per inference, and the hardware simulation timestep), as well as how we can customize the input Keras model in different ways (adding temporal features or SpikingActivation layers).</p>
+<p>As we mentioned at the start, it is important to keep in mind that these numbers are only rough estimates; actual energy usage will be heavily dependent on the details of the hardware and software implementation when mapping your model to a physical device.</p>
+<p>After you have explored different options using ModelEnergy, you will likely want to actually deploy your model on one of these devices to see how it performs in the real world. This is where the Nengo ecosystem can be very helpful, as it allows you to run a neuron model on any Nengo-supported platform (non-spiking devices like standard CPUs and GPUs, or spiking devices like Loihi or SpiNNaker). You can use the <a class="reference external" href="https://www.nengo.ai/nengo-dl/converter.html">NengoDL Converter</a> to automatically
+convert a Keras model (including KerasSpiking) to a Nengo network, and then you can use any Nengo backend (e.g. <a class="reference external" href="https://www.nengo.ai/nengo-dl">NengoDL</a>, <a class="reference external" href="https://labs.nengo.ai/nengo-ocl">NengoOCL</a>, or <a class="reference external" href="https://www.nengo.ai/nengo-loihi">NengoLoihi</a>) to run that network on different hardware platforms. See <a class="reference external" href="https://www.nengo.ai/nengo-loihi/examples/keras-to-loihi.html">this example</a> for an end-to-end walkthrough of deploying a Keras model to Loihi.</p>
+</div>
+</div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div><footer class="text-light footer-main gradient-bottom-center">
+  <p class="text-center">
+    <a class="no-hover-line" href="https://appliedbrainresearch.com">
+      <img
+        class="abr-logo"
+        src="https://www.nengo.ai/img/abr-logo.svg"
+        height="32"
+      />
+    </a>
+    <a href="https://www.nengo.ai/">What is Nengo?</a>
+    <a href="https://www.nengo.ai/examples/">Examples</a>
+    <a href="https://www.nengo.ai/documentation/">Documentation</a>
+    <a href="https://www.nengo.ai/store/">Store</a>
+    <a href="https://www.nengo.ai/getting-started/">Getting started</a>
+    <a href="https://www.nengo.ai/privacy/">Privacy</a>
+  </p>
+  <p class="small text-center pb-0 mb-0">&copy; Applied Brain Research</p>
+</footer>
+<script>
+  var elements = document.querySelectorAll('.sidenav');
+  Stickyfill.add(elements);
+</script>
+<script>
+  ScrollReveal().reveal(".fade-in", {
+      scale: 0.85,
+      duration: 1000,
+      delay: 250,
+      interval: 50
+  });
+</script>
+<script>
+  $('a.toggle-sidenav').on('click', function(e) {
+    e.preventDefault();
+    if ( $(this).hasClass('active') ) {
+      $(this).removeClass('active');
+      $('.sidenav').removeClass('open');
+    } else {
+      $(this).addClass('active');
+      $('.sidenav').addClass('open');
+    }
+  });
+</script>
+<script>
+  var lists = document.querySelectorAll('.toctree ul');
+  lists.forEach((ul) => {
+      ul.classList.add("nav");
+  });
+  var links = document.querySelectorAll('.toctree a');
+  links.forEach((link) => {
+      link.classList.add("nav-link");
+  });
+  $("body").scrollspy({target: ".sidenav"});
+</script>
+  </body>
+</html>
