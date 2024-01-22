@@ -223,7 +223,7 @@ class SpikingActivationCell(KerasSpikingCell):
     spiking output will be the same as the integral of the base activation output).
     Note that if the base activation is outputting a negative value then the spikes
     will have height ``-1/dt``. Multiple spikes per timestep are also possible, in
-    which case the output will be ``n/dt`` (where ``n`` is the number of spikes).
+    which case the output will be ``n/dt`` (where ``n`` is the number of spikes). [1]_
 
     Notes
     -----
@@ -256,6 +256,13 @@ class SpikingActivationCell(KerasSpikingCell):
     kwargs : dict
         Passed on to `tf.keras.layers.Layer
         <https://www.tensorflow.org/api_docs/python/tf/keras/layers/Layer>`_.
+
+    References
+    ----------
+    .. [1] Voelker, A. R., Rasmussen, D., & Eliasmith, C. (2020). A Spike in
+       Performance: Training Hybrid-Spiking Neural Networks with Quantized Activation
+       Functions. arXiv preprint arXiv:2002.03553.
+       (https://export.arxiv.org/abs/2002.03553)
     """
 
     def __init__(
@@ -387,7 +394,7 @@ class SpikingActivation(KerasSpikingLayer):
     spiking output will be the same as the integral of the base activation output).
     Note that if the base activation is outputting a negative value then the spikes
     will have height ``-1/dt``. Multiple spikes per timestep are also possible, in
-    which case the output will be ``n/dt`` (where ``n`` is the number of spikes).
+    which case the output will be ``n/dt`` (where ``n`` is the number of spikes). [1]_
 
     When applying this layer to an input, make sure that the input has a time axis
     (the ``time_major`` option controls whether it comes before or after the batch
@@ -444,6 +451,13 @@ class SpikingActivation(KerasSpikingLayer):
     kwargs : dict
         Passed on to `tf.keras.layers.Layer
         <https://www.tensorflow.org/api_docs/python/tf/keras/layers/Layer>`_.
+
+    References
+    ----------
+    .. [1] Voelker, A. R., Rasmussen, D., & Eliasmith, C. (2020). A Spike in
+       Performance: Training Hybrid-Spiking Neural Networks with Quantized Activation
+       Functions. arXiv preprint arXiv:2002.03553.
+       (https://export.arxiv.org/abs/2002.03553)
     """
 
     def __init__(

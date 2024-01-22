@@ -21,6 +21,8 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: nengo/nengo-bones/actions/setup@main
+        with:
+          python-version: "3.10"
       - uses: nengo/nengo-bones/actions/generate-and-check@main
       - uses: nengo/nengo-bones/actions/run-script@main
         with:
@@ -38,7 +40,7 @@ jobs:
           - script: test
             coverage-name: oldest
             tf-version: tensorflow==2.3.4
-            python: "3.7"
+            python: "3.8"
       fail-fast: false
     env:
       TF_VERSION: ${{ matrix.tf-version || 'tensorflow' }}
