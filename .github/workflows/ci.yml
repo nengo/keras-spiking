@@ -25,6 +25,7 @@ jobs:
       - uses: nengo/nengo-bones/actions/run-script@main
         with:
           name: static
+          python-version: "3.10"
   test:
     needs:
       - static
@@ -38,7 +39,7 @@ jobs:
           - script: test
             coverage-name: oldest
             tf-version: tensorflow==2.3.4
-            python: "3.7"
+            python: "3.8"
       fail-fast: false
     env:
       TF_VERSION: ${{ matrix.tf-version || 'tensorflow' }}
